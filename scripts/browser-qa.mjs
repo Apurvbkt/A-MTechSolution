@@ -49,6 +49,7 @@ await new Promise((accept, reject) => { socket.addEventListener("open", accept, 
 let messageId = 0;
 const pending = new Map();
 const browserErrors = [];
+const loaderDurations = [];
 socket.addEventListener("message", (event) => {
   const message = JSON.parse(event.data);
   if (message.id && pending.has(message.id)) { const { accept, reject } = pending.get(message.id); pending.delete(message.id); message.error ? reject(new Error(message.error.message)) : accept(message.result); }
@@ -96,6 +97,11 @@ async function navigate(path, width, height) {
     await delay(100);
   }
   if (!loaderFinished) throw new Error("The global site loader did not finish and release the page.");
+  const loaderElapsed = await evaluate(`performance.now()`);
+  if (path === "/") {
+    loaderDurations.push({ width, milliseconds: Math.round(loaderElapsed) });
+    if (loaderElapsed < 750 || loaderElapsed > 1350) throw new Error(`Loader duration was outside the intended ~1 second window: ${Math.round(loaderElapsed)}ms at ${width}px.`);
+  }
   await delay(100);
 }
 
@@ -154,7 +160,7 @@ try {
   if (service.heading !== "CRM Development" || service.faqCount < 3 || service.overflow) throw new Error(`CRM service route failed QA: ${JSON.stringify(service)}`);
   if (browserErrors.length) throw new Error(`Browser errors detected: ${browserErrors.join(", ")}`);
 
-  console.log(JSON.stringify({ routes: routeResults.length, mobile, desktop, loaderVerified: true, routeTransitionVerified: true, contactStatusVerified: true, crmServiceVerified: true, browserErrors: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
+  console.log(JSON.stringify({ routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, routeTransitionVerified: true, contactStatusVerified: true, crmServiceVerified: true, browserErrors: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
 } finally {
   socket.close();
   browser.kill();

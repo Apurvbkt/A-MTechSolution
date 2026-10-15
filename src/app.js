@@ -406,9 +406,7 @@ async function playInitialLoader() {
   if (!siteLoader) return;
   document.body.classList.add("loader-active");
 
-  let seenThisSession = false;
-  try { seenThisSession = sessionStorage.getItem("am-intro-seen") === "true"; } catch { /* storage may be unavailable */ }
-  const minimumDuration = prefersReducedMotion ? 40 : seenThisSession ? 480 : 1180;
+  const minimumDuration = prefersReducedMotion ? 40 : 600;
   const startedAt = performance.now();
 
   const pageReady = document.readyState === "complete"
@@ -426,16 +424,14 @@ async function playInitialLoader() {
   await Promise.all([pageReady, fontsReady, minimumElapsed]);
   window.clearInterval(progressTimer);
   setLoaderProgress(100);
-  await new Promise((resolve) => window.setTimeout(resolve, prefersReducedMotion ? 10 : 140));
+  await new Promise((resolve) => window.setTimeout(resolve, prefersReducedMotion ? 10 : 60));
 
   siteLoader.classList.add("is-exiting");
   document.body.classList.remove("loader-active");
-  try { sessionStorage.setItem("am-intro-seen", "true"); } catch { /* storage may be unavailable */ }
-
   window.setTimeout(() => {
     siteLoader.classList.add("is-hidden");
     siteLoader.setAttribute("aria-hidden", "true");
-  }, prefersReducedMotion ? 20 : 680);
+  }, prefersReducedMotion ? 20 : 220);
 }
 
 function setupProjectForm(form) {

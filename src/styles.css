@@ -101,7 +101,7 @@ img, svg { display: block; max-width: 100%; }
   font: 500 0.67rem/1 var(--mono);
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  animation: loader-kicker-in 520ms 120ms both cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: loader-kicker-in 320ms 60ms both cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .loader-wordmark {
   display: flex;
@@ -112,7 +112,7 @@ img, svg { display: block; max-width: 100%; }
   line-height: 0.66;
   letter-spacing: -0.105em;
   white-space: nowrap;
-  animation: loader-word-in 760ms both cubic-bezier(0.16, 1, 0.3, 1);
+  animation: loader-word-in 450ms both cubic-bezier(0.16, 1, 0.3, 1);
 }
 .loader-amp {
   margin-inline: 0.03em 0.08em;
@@ -145,10 +145,10 @@ img, svg { display: block; max-width: 100%; }
 .loader-count strong { min-width: 3ch; font-size: 1.3rem; font-weight: 600; letter-spacing: -0.06em; text-align: right; }
 .site-loader.is-exiting {
   pointer-events: none;
-  animation: loader-exit 680ms forwards cubic-bezier(0.76, 0, 0.24, 1);
+  animation: loader-exit 220ms forwards cubic-bezier(0.76, 0, 0.24, 1);
 }
 .site-loader.is-exiting .loader-wordmark,
-.site-loader.is-exiting .loader-kicker { animation: loader-content-out 400ms forwards cubic-bezier(0.7, 0, 0.3, 1); }
+.site-loader.is-exiting .loader-kicker { animation: loader-content-out 180ms forwards cubic-bezier(0.7, 0, 0.3, 1); }
 .site-loader.is-hidden { visibility: hidden; transform: translateY(-100%); pointer-events: none; }
 
 .js .route-curtain {
