@@ -81,7 +81,22 @@ async function navigate(path, width, height) {
     const state = await evaluate(`({ href: location.href, title: document.title, ready: document.readyState, appLength: document.querySelector("#app")?.innerHTML.length || 0 })`);
     throw new Error(`Browser page did not become ready: ${JSON.stringify(state)}; errors: ${browserErrors.join(", ")}`);
   }
-  await delay(250);
+  await delay(120);
+  const loaderState = await evaluate(`(() => { const loader = document.querySelector("#site-loader"); return { present: Boolean(loader), visible: Boolean(loader && !loader.classList.contains("is-hidden")) }; })()`);
+  if (!loaderState.present) throw new Error("The global site loader is missing.");
+  if (!loaderState.visible) throw new Error("The global site loader was not visible during page startup.");
+  if (path === "/" && (width === 390 || width === 1440)) {
+    const loaderShot = await cdp("Page.captureScreenshot", { format: "png", fromSurface: true, captureBeyondViewport: false });
+    await writeFile(resolve(artifacts, width === 390 ? "loader-mobile.png" : "loader-desktop.png"), Buffer.from(loaderShot.data, "base64"));
+  }
+  let loaderFinished = false;
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    loaderFinished = await evaluate(`document.querySelector("#site-loader")?.classList.contains("is-hidden") === true`);
+    if (loaderFinished) break;
+    await delay(100);
+  }
+  if (!loaderFinished) throw new Error("The global site loader did not finish and release the page.");
+  await delay(100);
 }
 
 try {
@@ -110,6 +125,14 @@ try {
   if (!desktop.menuHidden) throw new Error("Desktop navigation did not replace the mobile control.");
   const desktopShot = await cdp("Page.captureScreenshot", { format: "png", fromSurface: true, captureBeyondViewport: false });
   await writeFile(resolve(artifacts, "home-desktop.png"), Buffer.from(desktopShot.data, "base64"));
+  const routeTransitionStarted = await evaluate(`(() => { const link = [...document.querySelectorAll("[data-link]")].find(a => new URL(a.href).pathname.endsWith("/services/")); link?.click(); return document.querySelector("#route-curtain")?.classList.contains("is-active") === true; })()`);
+  if (!routeTransitionStarted) throw new Error("The internal route curtain did not start.");
+  await delay(380);
+  const routeTransitionPage = await evaluate(`({ path: location.pathname, heading: document.querySelector("h1")?.textContent.trim() })`);
+  if (!routeTransitionPage.path.endsWith("/services/") || routeTransitionPage.heading !== "Technology shaped around the work.") throw new Error(`Route transition did not commit the destination: ${JSON.stringify(routeTransitionPage)}`);
+  await delay(450);
+  const routeTransitionFinished = await evaluate(`document.querySelector("#route-curtain")?.classList.contains("is-active") === false`);
+  if (!routeTransitionFinished) throw new Error("The internal route curtain did not finish.");
 
   await navigate("/contact/", 390, 844);
   const contact = await evaluate(`(async () => {
@@ -131,7 +154,7 @@ try {
   if (service.heading !== "CRM Development" || service.faqCount < 3 || service.overflow) throw new Error(`CRM service route failed QA: ${JSON.stringify(service)}`);
   if (browserErrors.length) throw new Error(`Browser errors detected: ${browserErrors.join(", ")}`);
 
-  console.log(JSON.stringify({ routes: routeResults.length, mobile, desktop, contactStatusVerified: true, crmServiceVerified: true, browserErrors: 0, screenshots: [resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
+  console.log(JSON.stringify({ routes: routeResults.length, mobile, desktop, loaderVerified: true, routeTransitionVerified: true, contactStatusVerified: true, crmServiceVerified: true, browserErrors: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
 } finally {
   socket.close();
   browser.kill();

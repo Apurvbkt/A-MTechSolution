@@ -1,6 +1,11 @@
 import { company, services, solutions, process, productCategories, legalPages, navItems } from "./content.js";
 
 const app = document.querySelector("#app");
+const siteLoader = document.querySelector("#site-loader");
+const loaderPercent = document.querySelector("[data-loader-percent]");
+const loaderStatus = document.querySelector("[data-loader-status]");
+const routeCurtain = document.querySelector("#route-curtain");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const config = window.AM_SITE_CONFIG || {};
 const basePath = config.basePath && config.basePath !== "/" ? `/${String(config.basePath).replace(/^\/+|\/+$/g, "")}` : "";
 
@@ -46,7 +51,7 @@ function header(path) {
         ${link("/", `<span class="brand-mark" aria-hidden="true">A&M</span><span class="brand-text">A&M Tech Solutions</span>`, "brand")}
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu"><span></span></button>
         <nav id="primary-navigation" class="nav-links" aria-label="Primary navigation">
-          ${navItems.map(([label, href]) => `<a class="nav-link" href="${href}" data-link ${path.startsWith(href) ? 'aria-current="page"' : ""}>${label}</a>`).join("")}
+          ${navItems.map(([label, href]) => `<a class="nav-link" href="${sitePath(href)}" data-link ${path.startsWith(href) ? 'aria-current="page"' : ""}>${label}</a>`).join("")}
           ${button("/contact/", "Start a Project", "nav-cta")}
         </nav>
       </div>
@@ -318,10 +323,24 @@ function updateMeta(route) {
 function navigate(path, { replace = false } = {}) {
   const normalized = normalizePath(path);
   const route = resolveRoute(normalized);
-  if (replace) history.replaceState({}, "", normalized); else history.pushState({}, "", normalized);
-  render(normalized, route);
-  window.scrollTo({ top: 0, behavior: "instant" });
-  requestAnimationFrame(() => document.querySelector("#main-content")?.focus({ preventScroll: true }));
+  const commitNavigation = () => {
+    const browserPath = sitePath(normalized);
+    if (replace) history.replaceState({}, "", browserPath); else history.pushState({}, "", browserPath);
+    render(normalized, route);
+    window.scrollTo({ top: 0, behavior: "instant" });
+    requestAnimationFrame(() => document.querySelector("#main-content")?.focus({ preventScroll: true }));
+  };
+
+  if (prefersReducedMotion || !routeCurtain) {
+    commitNavigation();
+    return;
+  }
+
+  routeCurtain.classList.remove("is-active");
+  void routeCurtain.offsetWidth;
+  routeCurtain.classList.add("is-active");
+  window.setTimeout(commitNavigation, 300);
+  window.setTimeout(() => routeCurtain.classList.remove("is-active"), 780);
 }
 
 function render(path = normalizePath(location.pathname), route = resolveRoute(path)) {
@@ -362,7 +381,7 @@ function bindInteractions() {
 
 function observeReveals() {
   const items = document.querySelectorAll(".reveal");
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
     items.forEach((item) => item.classList.add("is-visible"));
     return;
   }
@@ -372,6 +391,51 @@ function observeReveals() {
     });
   }, { threshold: 0.08, rootMargin: "0px 0px -35px" });
   items.forEach((item) => observer.observe(item));
+}
+
+function setLoaderProgress(value) {
+  const progress = Math.max(0, Math.min(100, Math.round(value)));
+  siteLoader?.style.setProperty("--loader-progress", `${progress}%`);
+  if (loaderPercent) loaderPercent.textContent = String(progress).padStart(2, "0");
+  if (loaderStatus) {
+    loaderStatus.textContent = progress < 34 ? "Initializing systems" : progress < 72 ? "Assembling interface" : progress < 100 ? "Preparing launch" : "Ready to move";
+  }
+}
+
+async function playInitialLoader() {
+  if (!siteLoader) return;
+  document.body.classList.add("loader-active");
+
+  let seenThisSession = false;
+  try { seenThisSession = sessionStorage.getItem("am-intro-seen") === "true"; } catch { /* storage may be unavailable */ }
+  const minimumDuration = prefersReducedMotion ? 40 : seenThisSession ? 480 : 1180;
+  const startedAt = performance.now();
+
+  const pageReady = document.readyState === "complete"
+    ? Promise.resolve()
+    : new Promise((resolve) => window.addEventListener("load", resolve, { once: true }));
+  const fontsReady = document.fonts?.ready || Promise.resolve();
+  const minimumElapsed = new Promise((resolve) => window.setTimeout(resolve, minimumDuration));
+
+  setLoaderProgress(4);
+  const progressTimer = window.setInterval(() => {
+    const elapsed = performance.now() - startedAt;
+    setLoaderProgress(Math.min(96, 4 + (elapsed / minimumDuration) * 92));
+  }, 40);
+
+  await Promise.all([pageReady, fontsReady, minimumElapsed]);
+  window.clearInterval(progressTimer);
+  setLoaderProgress(100);
+  await new Promise((resolve) => window.setTimeout(resolve, prefersReducedMotion ? 10 : 140));
+
+  siteLoader.classList.add("is-exiting");
+  document.body.classList.remove("loader-active");
+  try { sessionStorage.setItem("am-intro-seen", "true"); } catch { /* storage may be unavailable */ }
+
+  window.setTimeout(() => {
+    siteLoader.classList.add("is-hidden");
+    siteLoader.setAttribute("aria-hidden", "true");
+  }, prefersReducedMotion ? 20 : 680);
 }
 
 function setupProjectForm(form) {
@@ -447,3 +511,4 @@ document.body.addEventListener("keydown", (event) => {
 });
 
 render();
+playInitialLoader();

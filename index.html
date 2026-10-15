@@ -9,12 +9,31 @@
     <meta property="og:title" content="A&M Tech Solutions — Digital products that move business forward" />
     <meta property="og:description" content="Websites, business systems, and custom software built around the way you work." />
     <meta property="og:image" content="/brand-card.svg" />
+    <script>document.documentElement.classList.add("js");</script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/src/styles.css" />
     <title>A&M Tech Solutions — Digital products that move business forward</title>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
+    <div id="site-loader" class="site-loader" role="status" aria-live="polite" aria-label="Preparing A&M Tech Solutions">
+      <div class="loader-rail loader-rail-top">
+        <span>A&amp;M / 001</span>
+        <span>Digital product studio</span>
+      </div>
+      <div class="loader-core">
+        <p class="loader-kicker" data-loader-status>Initializing systems</p>
+        <div class="loader-wordmark" aria-hidden="true">
+          <span>A</span><span class="loader-amp">&amp;</span><span>M</span>
+        </div>
+      </div>
+      <div class="loader-rail loader-rail-bottom">
+        <span>Websites / Systems / Software</span>
+        <span class="loader-count"><span>Loading</span><strong data-loader-percent>00</strong></span>
+      </div>
+      <div class="loader-track" aria-hidden="true"><span class="loader-progress-fill"></span></div>
+    </div>
+    <div id="route-curtain" class="route-curtain" aria-hidden="true"><span>A&amp;M</span></div>
     <div id="app"></div>
     <script src="/site-config.js"></script>
     <script type="module" src="/src/app.js"></script>
