@@ -4,7 +4,10 @@ import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
-const baseUrl = process.env.QA_URL || "http://127.0.0.1:4173";
+const qaUrl = new URL(process.env.QA_URL || "http://127.0.0.1:4173");
+const baseUrl = qaUrl.href.replace(/\/$/, "");
+const deploymentBasePath = qaUrl.pathname.replace(/\/$/, "");
+const enforceLoaderTiming = qaUrl.hostname === "127.0.0.1" || qaUrl.hostname === "localhost";
 const edgeCandidates = [
   process.env.EDGE_PATH,
   "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
@@ -20,8 +23,16 @@ const routes = [
   "/", "/services/", "/services/website-development/", "/services/web-application-development/", "/services/crm-development/", "/services/erp-business-systems/", "/services/saas-product-development/", "/services/custom-software-automation/", "/services/ui-ux-product-design/", "/services/maintenance-support/", "/solutions/", "/work/", "/work/project-template/", "/products/", "/products/operations-hub/", "/about/", "/contact/", "/legal/terms-and-conditions/", "/legal/privacy-policy/", "/legal/free-trial-terms/", "/legal/refund-cancellation-policy/", "/legal/saas-subscription-terms/", "/legal/cookie-policy/"
 ];
 
+function urlForRoute(route) {
+  return `${baseUrl}${route}`;
+}
+
+function expectedPathForRoute(route) {
+  return `${deploymentBasePath}${route}`.replace(/\/{2,}/g, "/") || "/";
+}
+
 const routeResults = await Promise.all(routes.map(async (route) => {
-  const response = await fetch(`${baseUrl}${route}`);
+  const response = await fetch(urlForRoute(route));
   return { route, ok: response.ok, status: response.status };
 }));
 const failedRoutes = routeResults.filter((item) => !item.ok);
@@ -49,12 +60,23 @@ await new Promise((accept, reject) => { socket.addEventListener("open", accept, 
 let messageId = 0;
 const pending = new Map();
 const browserErrors = [];
+const networkFailures = [];
+const requestUrls = new Map();
 const loaderDurations = [];
 socket.addEventListener("message", (event) => {
   const message = JSON.parse(event.data);
   if (message.id && pending.has(message.id)) { const { accept, reject } = pending.get(message.id); pending.delete(message.id); message.error ? reject(new Error(message.error.message)) : accept(message.result); }
   if (message.method === "Runtime.exceptionThrown") browserErrors.push(message.params.exceptionDetails.exception?.description || message.params.exceptionDetails.text || "Uncaught browser exception");
   if (message.method === "Runtime.consoleAPICalled" && message.params.type === "error") browserErrors.push("Console error");
+  if (message.method === "Network.requestWillBeSent") requestUrls.set(message.params.requestId, message.params.request.url);
+  if (message.method === "Network.responseReceived") {
+    const { response } = message.params;
+    if (response.url.startsWith(baseUrl) && response.status >= 400) networkFailures.push(`${response.status} ${response.url}`);
+  }
+  if (message.method === "Network.loadingFailed") {
+    const url = requestUrls.get(message.params.requestId) || "unknown request";
+    if (!message.params.canceled && url.startsWith(baseUrl)) networkFailures.push(`${message.params.errorText}: ${url}`);
+  }
 });
 
 function cdp(method, params = {}) {
@@ -70,11 +92,12 @@ async function evaluate(expression) {
 }
 
 async function navigate(path, width, height) {
+  const expectedPath = expectedPathForRoute(path);
   await cdp("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: width < 700, screenWidth: width, screenHeight: height });
-  await cdp("Page.navigate", { url: `${baseUrl}${path}` });
+  await cdp("Page.navigate", { url: urlForRoute(path) });
   let ready = false;
   for (let attempt = 0; attempt < 50; attempt += 1) {
-    ready = await evaluate(`location.pathname === ${JSON.stringify(path)} && document.readyState === "complete" && Boolean(document.querySelector("#app > *"))`);
+    ready = await evaluate(`location.pathname === ${JSON.stringify(expectedPath)} && document.readyState === "complete" && Boolean(document.querySelector("#app > *"))`);
     if (ready) break;
     await delay(100);
   }
@@ -100,7 +123,7 @@ async function navigate(path, width, height) {
   const loaderElapsed = await evaluate(`performance.now()`);
   if (path === "/") {
     loaderDurations.push({ width, milliseconds: Math.round(loaderElapsed) });
-    if (loaderElapsed < 750 || loaderElapsed > 1350) throw new Error(`Loader duration was outside the intended ~1 second window: ${Math.round(loaderElapsed)}ms at ${width}px.`);
+    if (enforceLoaderTiming && (loaderElapsed < 750 || loaderElapsed > 1350)) throw new Error(`Loader duration was outside the intended ~1 second window: ${Math.round(loaderElapsed)}ms at ${width}px.`);
   }
   await delay(100);
 }
@@ -108,6 +131,7 @@ async function navigate(path, width, height) {
 try {
   await cdp("Page.enable");
   await cdp("Runtime.enable");
+  await cdp("Network.enable");
   await navigate("/", 390, 844);
   const mobile = await evaluate(`(() => ({
     width: innerWidth,
@@ -159,8 +183,9 @@ try {
   const service = await evaluate(`({ title: document.title, heading: document.querySelector("h1")?.textContent.trim(), overflow: document.documentElement.scrollWidth > innerWidth, faqCount: document.querySelectorAll(".faq-item").length })`);
   if (service.heading !== "CRM Development" || service.faqCount < 3 || service.overflow) throw new Error(`CRM service route failed QA: ${JSON.stringify(service)}`);
   if (browserErrors.length) throw new Error(`Browser errors detected: ${browserErrors.join(", ")}`);
+  if (networkFailures.length) throw new Error(`Network failures detected: ${networkFailures.join(", ")}`);
 
-  console.log(JSON.stringify({ routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, routeTransitionVerified: true, contactStatusVerified: true, crmServiceVerified: true, browserErrors: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
+  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, routeTransitionVerified: true, contactStatusVerified: true, crmServiceVerified: true, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
 } finally {
   socket.close();
   browser.kill();

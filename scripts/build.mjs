@@ -5,6 +5,8 @@ const root = resolve(import.meta.dirname, "..");
 const output = resolve(root, "dist");
 const siteUrl = (process.env.SITE_URL || "http://127.0.0.1:4173").replace(/\/$/, "");
 const basePath = process.env.BASE_PATH && process.env.BASE_PATH !== "/" ? `/${process.env.BASE_PATH.replace(/^\/+|\/+$/g, "")}` : "";
+const assetVersion = String(process.env.ASSET_VERSION || "").trim().slice(0, 12);
+const assetSuffix = assetVersion ? `?v=${encodeURIComponent(assetVersion)}` : "";
 
 const routes = [
   ["/", "A&M Tech Solutions — Digital products that move business forward", "Websites, business systems, and custom software built around the way you work."],
@@ -36,6 +38,11 @@ await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 await cp(resolve(root, "src"), resolve(output, "src"), { recursive: true });
 await cp(resolve(root, "public"), output, { recursive: true });
+if (assetSuffix) {
+  const builtAppPath = resolve(output, "src", "app.js");
+  const builtApp = (await readFile(builtAppPath, "utf8")).replace('from "./content.js"', `from "./content.js${assetSuffix}"`);
+  await writeFile(builtAppPath, builtApp);
+}
 const siteConfig = (await readFile(resolve(root, "site-config.js"), "utf8")).replace('basePath: ""', `basePath: "${basePath}"`);
 await writeFile(resolve(output, "site-config.js"), siteConfig);
 
@@ -52,11 +59,11 @@ function htmlForRoute(route, title, description) {
     .replace(/<meta name="description" content=".*?" \/>/, `<meta name="description" content="${escapeAttribute(description)}" />`)
     .replace(/<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="${escapeAttribute(title)}" />`)
     .replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${escapeAttribute(description)}" />`)
-    .replace('content="/brand-card.svg"', `content="${siteUrl}/brand-card.svg"`)
-    .replace('href="/favicon.svg"', `href="${basePath}/favicon.svg"`)
-    .replace('href="/src/styles.css"', `href="${basePath}/src/styles.css"`)
-    .replace('src="/site-config.js"', `src="${basePath}/site-config.js"`)
-    .replace('src="/src/app.js"', `src="${basePath}/src/app.js"`)
+    .replace('content="/brand-card.svg"', `content="${siteUrl}/brand-card.svg${assetSuffix}"`)
+    .replace('href="/favicon.svg"', `href="${basePath}/favicon.svg${assetSuffix}"`)
+    .replace('href="/src/styles.css"', `href="${basePath}/src/styles.css${assetSuffix}"`)
+    .replace('src="/site-config.js"', `src="${basePath}/site-config.js${assetSuffix}"`)
+    .replace('src="/src/app.js"', `src="${basePath}/src/app.js${assetSuffix}"`)
     .replace("<link rel=\"icon\"", `<link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />\n    <link rel="icon"`);
 }
 
@@ -74,3 +81,4 @@ await writeFile(resolve(output, "404.html"), htmlForRoute("/404/", "Page Not Fou
 console.log(`Built ${routes.length} routes in ${output}`);
 console.log(`Canonical site URL: ${siteUrl}`);
 console.log(`Deployment base path: ${basePath || "/"}`);
+console.log(`Asset version: ${assetVersion || "unversioned"}`);
