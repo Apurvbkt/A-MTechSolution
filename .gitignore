@@ -1,0 +1,7 @@
+dist/
+.DS_Store
+Thumbs.db
+.env
+*.log
+qa-artifacts/
+*-home.png

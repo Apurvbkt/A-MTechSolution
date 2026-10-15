@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">A&amp;M Tech Solutions</title>
+  <desc id="desc">Software that works as hard as your business.</desc>
+  <rect width="1200" height="630" fill="#f2f1ea"/>
+  <path d="M0 510h1200v120H0z" fill="#c8f135"/>
+  <g fill="#10110f">
+    <circle cx="110" cy="105" r="45"/>
+    <text x="110" y="113" fill="#c8f135" font-family="monospace" font-size="22" text-anchor="middle">A&amp;M</text>
+    <text x="180" y="95" font-family="Arial, sans-serif" font-weight="700" font-size="28">A&amp;M Tech</text>
+    <text x="180" y="126" font-family="Arial, sans-serif" font-weight="700" font-size="28">Solutions</text>
+    <text x="72" y="285" font-family="Arial, sans-serif" font-weight="600" font-size="78" letter-spacing="-4">Software that works as hard</text>
+    <text x="72" y="370" font-family="Arial, sans-serif" font-weight="600" font-size="78" letter-spacing="-4">as your business.</text>
+    <text x="72" y="575" font-family="monospace" font-size="22">WE BUILD DIGITAL PRODUCTS THAT MOVE BUSINESSES FORWARD.</text>
+  </g>
+</svg>

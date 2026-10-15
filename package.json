@@ -1,0 +1,12 @@
+{
+  "name": "am-tech-solutions-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "build": "node scripts/build.mjs",
+    "check": "node --check src/app.js && node --check src/content.js && node --check scripts/build.mjs && node --check scripts/dev-server.mjs && node --check scripts/browser-qa.mjs",
+    "qa:browser": "node scripts/browser-qa.mjs"
+  }
+}
