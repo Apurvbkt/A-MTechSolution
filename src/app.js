@@ -1,4 +1,4 @@
-import { company, services, solutions, process, productCategories, legalPages, navItems } from "./content.js";
+import { company, services, solutions, process, projects, productCategories, legalPages, navItems } from "./content.js";
 
 const app = document.querySelector("#app");
 const siteLoader = document.querySelector("#site-loader");
@@ -10,6 +10,7 @@ const config = window.AM_SITE_CONFIG || {};
 const basePath = config.basePath && config.basePath !== "/" ? `/${String(config.basePath).replace(/^\/+|\/+$/g, "")}` : "";
 
 const serviceBySlug = Object.fromEntries(services.map((service) => [service.slug, service]));
+const projectBySlug = Object.fromEntries(projects.map((project) => [project.slug, project]));
 const legalBySlug = legalPages;
 
 const icons = {
@@ -105,6 +106,28 @@ function interfaceVisual() {
     </div>`;
 }
 
+function projectVisual(project, detail = false) {
+  if (project.media) {
+    return `<div class="project-art project-art-image project-art-${project.visual}"><img src="${sitePath(project.media)}" alt="${project.name} interface preview" loading="${detail ? "eager" : "lazy"}" /><span>Demonstration interface</span></div>`;
+  }
+  return `<div class="project-art project-art-${project.visual}" aria-label="Illustrative visual for ${project.name}">
+    <div class="project-art-top"><span>A&amp;M / ${project.category}</span><i></i></div>
+    <div class="project-art-main"><small>${project.status}</small><strong>${project.visualCode}</strong><p>${project.visualLine}</p></div>
+    <div class="project-art-ui" aria-hidden="true"><span></span><span></span><span></span><b></b></div>
+  </div>`;
+}
+
+function projectCard(project, index = 0, featured = false) {
+  const technologies = project.technologies.slice(0, 3);
+  return `<a class="project-card ${featured ? "project-card-featured" : ""} reveal" href="${sitePath(`/work/${project.slug}/`)}" data-link>
+    <div class="project-card-media">${projectVisual(project)}</div>
+    <div class="project-card-copy">
+      <div><div class="project-meta"><span>${String(index + 1).padStart(2, "0")}</span><span>${project.category}</span></div><span class="project-status">${project.status}</span><h3>${project.name}</h3><p>${project.short}</p></div>
+      <div class="project-card-bottom"><div class="project-tags">${technologies.length ? technologies.map((technology) => `<span>${technology}</span>`).join("") : "<span>Details pending</span>"}</div><span class="project-open" aria-hidden="true">Open case study ↗</span></div>
+    </div>
+  </a>`;
+}
+
 function homePage() {
   const principles = [
     ["01", "Built around the workflow", "We begin with how the business actually operates—not with a list of fashionable features."],
@@ -155,11 +178,8 @@ function homePage() {
     </section>
     <section class="section section-soft">
       <div class="shell">
-        <div class="section-heading-row reveal"><div>${eyebrow("Featured work")}<h2 class="section-title small">Real work will live here.</h2></div><p class="section-lede">No invented client logos, outcomes, or screenshots. The portfolio is ready for verified case studies as they become publishable.</p></div>
-        <div class="work-placeholder reveal">
-          <div class="work-visual"><div class="work-frame"><div class="work-frame-inner">VERIFIED SCREENSHOT</div></div></div>
-          <div class="work-copy"><div><span class="status-chip">Content placeholder</span><h3>Project case study template</h3><p>Structured for the business problem, solution, technologies, screenshots, and verified project details.</p></div><div><p class="verified-note">This is intentionally presented as a placeholder—not a client project.</p>${link("/work/", "Open the work directory", "text-link")}</div></div>
-        </div>
+        <div class="section-heading-row reveal"><div>${eyebrow("Selected work")}<h2 class="section-title small">Products shaped around real workflows.</h2></div><div><p class="section-lede">A growing archive of operational systems, mobile products, and construction software—documented without invented outcomes or client claims.</p>${link("/work/", "View all projects", "text-link")}</div></div>
+        <div class="project-grid project-grid-home">${projects.slice(0, 3).map((project, index) => projectCard(project, index, index === 0)).join("")}</div>
       </div>
     </section>
     <section class="section section-dark">
@@ -210,8 +230,21 @@ function solutionsPage() {
 }
 
 function workPage() {
-  return `${pageHero({ label: "Work", title: "Evidence, not theatre.", intro: "This directory is intentionally honest. Verified project stories will be published when the client, screenshots, technologies, and outcomes are approved for public use." })}
-    <section class="section section-soft"><div class="shell"><div class="work-placeholder"><div class="work-visual"><div class="work-frame"><div class="work-frame-inner">REAL PROJECT MEDIA</div></div></div><div class="work-copy"><div><span class="status-chip">Template / not a client claim</span><h2>Case study structure</h2><p>Every project page supports a business category, problem statement, solution, verified technologies, screenshots, and additional project details.</p></div><div><p class="verified-note">Replace this record in the centralized content model only after project publication is approved.</p>${link("/work/project-template/", "Inspect the case study template", "text-link")}</div></div></div></div></section>${finalCta()}`;
+  return `${pageHero({ label: "Selected work", title: "Software with an operating context.", intro: "Five A&M projects across payments, workforce operations, construction, inventory, and business systems. Each record distinguishes verified detail from information still being prepared." })}
+    <section class="section section-soft"><div class="shell"><div class="project-index-head reveal"><span>05 projects</span><p>Full-stack systems, mobile products, and focused prototypes.</p></div><div class="project-grid">${projects.map((project, index) => projectCard(project, index, index === 0)).join("")}</div></div></section>${finalCta()}`;
+}
+
+function projectDetailPage(project) {
+  const related = projects.filter((item) => item.slug !== project.slug).slice(0, 2);
+  const technologies = project.technologies.length
+    ? `<div class="project-tech">${project.technologies.map((technology) => `<span>${technology}</span>`).join("")}</div>`
+    : `<p class="verified-note">Technology details are pending source verification and have not been guessed.</p>`;
+  return `${pageHero({ label: project.category, title: project.name, intro: project.short, code: project.status, crumbs: [{ label: "Work", href: "/work/" }, { label: project.name }] })}
+    <section class="section project-overview"><div class="shell"><div class="project-detail-visual reveal">${projectVisual(project, true)}</div><div class="project-detail-meta"><span>${project.category}</span><span>${project.status}</span></div></div></section>
+    <section class="section"><div class="shell project-story"><div>${eyebrow("The operating problem")}<h2 class="section-title small">Why this project needed to exist.</h2></div><div class="prose"><p>${project.problem}</p></div><div>${eyebrow("The product direction")}<h2 class="section-title small">What was built.</h2></div><div class="prose"><p>${project.solution}</p></div></div></section>
+    <section class="section section-dark"><div class="shell"><div class="section-heading-row"><div>${eyebrow("Verified scope")}<h2 class="section-title small">The work, at a glance.</h2></div><p class="section-lede">Only capabilities confirmed by the project source or supplied project record are included.</p></div><div class="project-highlight-list">${project.highlights.map((highlight, index) => `<div class="project-highlight reveal"><span>${String(index + 1).padStart(2, "0")}</span><strong>${highlight}</strong></div>`).join("")}</div></div></section>
+    <section class="section"><div class="shell two-col"><div>${eyebrow("Technology")}<h2 class="section-title small">Tools matched to the product.</h2></div><div>${technologies}<p class="project-note">${project.note}</p></div></div></section>
+    <section class="section section-soft"><div class="shell"><div class="section-heading-row"><div>${eyebrow("More work")}<h2 class="section-title small">Continue through the archive.</h2></div>${link("/work/", "View all projects", "text-link")}</div><div class="project-related">${related.map((item, index) => projectCard(item, index)).join("")}</div></div></section>${finalCta()}`;
 }
 
 function workTemplatePage() {
@@ -297,7 +330,9 @@ function resolveRoute(path) {
   const serviceMatch = path.match(/^\/services\/([^/]+)\/$/);
   if (serviceMatch && serviceBySlug[serviceMatch[1]]) { const service = serviceBySlug[serviceMatch[1]]; return { page: serviceDetailPage(service), title: `${service.title} — A&M Tech Solutions`, description: service.short }; }
   if (path === "/solutions/") return { page: solutionsPage(), title: "Business Solutions — A&M Tech Solutions", description: "Practical software directions for startups, small businesses, operations, retail, services, and growing companies." };
-  if (path === "/work/") return { page: workPage(), title: "Work — A&M Tech Solutions", description: "A verified portfolio structure for A&M Tech Solutions projects and case studies." };
+  if (path === "/work/") return { page: workPage(), title: "Work — A&M Tech Solutions", description: "A&M Tech Solutions projects across payments, attendance, construction, inventory, and business operations." };
+  const projectMatch = path.match(/^\/work\/([^/]+)\/$/);
+  if (projectMatch && projectBySlug[projectMatch[1]]) { const project = projectBySlug[projectMatch[1]]; return { page: projectDetailPage(project), title: `${project.name} — A&M Tech Solutions`, description: project.short }; }
   if (path === "/work/project-template/") return { page: workTemplatePage(), title: "Project Case Study Template — A&M Tech Solutions", description: "The project detail template for future verified case studies." };
   if (path === "/products/") return { page: productsPage(), title: "Products — A&M Tech Solutions", description: "Current product concepts and future software categories from A&M Tech Solutions." };
   const productMatch = path.match(/^\/products\/([^/]+)\/$/);

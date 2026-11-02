@@ -172,6 +172,85 @@ export const process = [
   ["06", "Improve", "Support agreed fixes, learning, and the next high-value improvements."]
 ];
 
+export const projects = [
+  {
+    slug: "costarica-labourtrack",
+    name: "Costarica LabourTrack",
+    category: "Labour operations / Attendance",
+    status: "Active full-stack project",
+    short: "A role-aware labour attendance and settlement system designed for practical construction-site operations.",
+    problem: "Site teams needed one dependable workflow for labour records, daily attendance, overtime, advances, settlements, and historical financial activity without weakening role boundaries or record safety.",
+    solution: "The application connects site-scoped access, labour management, Present and Half Day attendance, manual overtime, advances, fixed settlement periods, payment history, and operational dashboard views in one responsive system.",
+    highlights: ["Site-scoped roles and access", "Attendance, Half Day and overtime", "Advances and settlement history", "Responsive field-first workflows"],
+    technologies: ["React", "TypeScript", "Express", "Prisma"],
+    visual: "attendance",
+    visualCode: "ATT",
+    visualLine: "Present / OT / Settlement",
+    note: "Project details are based on the active Costarica LabourTrack source and handoff documentation. No client performance statistics are claimed."
+  },
+  {
+    slug: "paytrack",
+    name: "PayTrack",
+    category: "Payments / PWA / Mobile",
+    status: "Production PWA",
+    short: "A responsive payment and due-date manager built for iPhone, Android, and desktop workflows.",
+    problem: "Payment obligations, due dates, proof records, and reminders needed to stay organised across mobile and desktop without turning routine follow-up into another spreadsheet process.",
+    solution: "PayTrack brings clients, obligations, payments, proof uploads, staff permissions, reminders, web push, and installable mobile experiences into a shared product with a Cloudflare deployment path.",
+    highlights: ["Client and obligation tracking", "Payments and proof uploads", "Role-aware administration", "PWA and native mobile projects"],
+    technologies: ["React", "TypeScript", "Cloudflare Workers", "D1", "Capacitor"],
+    visual: "paytrack",
+    visualCode: "PAY",
+    visualLine: "Due / Paid / Reminder",
+    note: "A production deployment exists. Demo credentials and private administrative access are intentionally not published here."
+  },
+  {
+    slug: "buildestimate-ai",
+    name: "BuildEstimate AI",
+    category: "Construction / Estimation",
+    status: "Interactive prototype",
+    short: "A construction estimating workspace for material budgets, supplier quotations, and rate comparison.",
+    problem: "Early construction estimates and supplier prices are often spread across documents, manual calculations, and one-off comparisons that are difficult to review or reuse.",
+    solution: "The prototype combines project setup, editable material estimates, contingency, CSV and print exports, quotation upload and review, a supplier price book, and a project-aware assistant interface.",
+    highlights: ["Editable material estimates", "Quotation extraction review", "Supplier price comparison", "Project-aware assistant UI"],
+    technologies: ["HTML", "CSS", "JavaScript"],
+    visual: "estimate",
+    visualCode: "EST",
+    visualLine: "Area / Quantity / Rate",
+    note: "This is an interactive planning prototype. Estimate assumptions must be reviewed by qualified project professionals before real construction use."
+  },
+  {
+    slug: "onsite-teams-replica",
+    name: "Onsite Teams Replica",
+    category: "Construction operations / ERP",
+    status: "Full-stack prototype",
+    short: "An independent full-stack product study covering company and project operations for construction teams.",
+    problem: "The project explored how a large construction operations product coordinates company dashboards, projects, finance, payroll, CRM, reporting, and field-level workspaces without losing navigational clarity.",
+    solution: "The replica maps those workflows into a responsive interface backed by an Express API, role checks, Prisma data access, audit logging, protected uploads, and company-scoped operational records.",
+    highlights: ["Company and project workspaces", "Finance, payroll and CRM flows", "Role-aware REST API", "Audit logs and protected uploads"],
+    technologies: ["JavaScript", "Express", "Prisma", "SQLite"],
+    visual: "onsite",
+    visualCode: "ON",
+    visualLine: "Projects / Finance / Field",
+    media: "/projects/onsite-replica-login.png",
+    note: "Independent replica built for product study and implementation practice. A&M Tech Solutions is not affiliated with or endorsed by Onsite Teams."
+  },
+  {
+    slug: "inventory-management-system",
+    name: "Inventory Management System",
+    category: "Inventory / Operations",
+    status: "Project archive",
+    short: "An inventory-focused A&M project whose public scope, technology details, and approved media are being prepared.",
+    problem: "The project has been confirmed for the A&M portfolio, but its operating context and approved public problem statement have not yet been documented for this website.",
+    solution: "The portfolio record is published without inventing features or outcomes. Workflow details, screenshots, release status, and technology choices will be added after the source material is confirmed.",
+    highlights: ["Inventory-focused project", "Documentation in progress", "Public media pending"],
+    technologies: [],
+    visual: "inventory",
+    visualCode: "INV",
+    visualLine: "Project details pending",
+    note: "Public details are intentionally limited until the project source, screenshots, and approved claims are available."
+  }
+];
+
 export const productCategories = [
   { slug: "operations-hub", status: "Concept / coming soon", name: "Operations Hub", category: "Business operations", description: "A configurable workspace concept for coordinating stock, work, approvals, and reporting. No public release or trial is currently available.", audience: "Growing operational teams exploring a more connected way to work.", features: ["Configurable workflows", "Role-aware workspaces", "Operational records", "Reporting views"], trial: false },
   { status: "Future category", name: "CRM", category: "Customer management", description: "Lead, customer, pipeline, and follow-up tools may be introduced as verified products become available." },
@@ -275,6 +354,7 @@ export const legalPages = {
 export const navItems = [
   ["Services", "/services/"],
   ["Solutions", "/solutions/"],
+  ["Work", "/work/"],
   ["Products", "/products/"],
   ["About", "/about/"],
   ["Contact", "/contact/"]
