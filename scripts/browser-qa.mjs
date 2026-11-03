@@ -20,7 +20,7 @@ const edgePath = edgeCandidates.find(existsSync);
 if (!edgePath) throw new Error("No supported Edge or Chrome executable was found. Set EDGE_PATH to run rendered QA.");
 
 const routes = [
-  "/", "/services/", "/services/website-development/", "/services/web-application-development/", "/services/crm-development/", "/services/erp-business-systems/", "/services/saas-product-development/", "/services/custom-software-automation/", "/services/ui-ux-product-design/", "/services/maintenance-support/", "/solutions/", "/work/", "/work/costarica-labourtrack/", "/work/paytrack/", "/work/buildestimate-ai/", "/work/onsite-teams-replica/", "/work/inventory-management-system/", "/work/project-template/", "/products/", "/products/operations-hub/", "/about/", "/contact/", "/legal/terms-and-conditions/", "/legal/privacy-policy/", "/legal/free-trial-terms/", "/legal/refund-cancellation-policy/", "/legal/saas-subscription-terms/", "/legal/cookie-policy/"
+  "/", "/services/", "/services/website-development/", "/services/web-application-development/", "/services/crm-development/", "/services/erp-business-systems/", "/services/saas-product-development/", "/services/custom-software-automation/", "/services/ui-ux-product-design/", "/services/maintenance-support/", "/solutions/", "/work/", "/work/costarica-labourtrack/", "/work/paytrack/", "/work/buildestimate-ai/", "/work/onsite-teams-replica/", "/work/inventory-management-system/", "/work/project-template/", "/downloads/", "/downloads/costarica-labourtrack/", "/downloads/paytrack/", "/downloads/buildestimate-ai/", "/downloads/onsite-teams-replica/", "/downloads/inventory-management-system/", "/products/", "/products/operations-hub/", "/about/", "/contact/", "/legal/terms-and-conditions/", "/legal/privacy-policy/", "/legal/free-trial-terms/", "/legal/refund-cancellation-policy/", "/legal/saas-subscription-terms/", "/legal/cookie-policy/"
 ];
 
 function urlForRoute(route) {
@@ -183,8 +183,8 @@ try {
   const service = await evaluate(`({ title: document.title, heading: document.querySelector("h1")?.textContent.trim(), overflow: document.documentElement.scrollWidth > innerWidth, faqCount: document.querySelectorAll(".faq-item").length })`);
   if (service.heading !== "CRM Development" || service.faqCount < 3 || service.overflow) throw new Error(`CRM service route failed QA: ${JSON.stringify(service)}`);
   await navigate("/work/paytrack/", 390, 844);
-  const project = await evaluate(`({ title: document.title, heading: document.querySelector("h1")?.textContent.trim(), overflow: document.documentElement.scrollWidth > innerWidth, highlights: document.querySelectorAll(".project-highlight").length, imageFailures: [...document.images].filter(image => image.complete && image.naturalWidth === 0).length })`);
-  if (project.heading !== "PayTrack" || project.highlights < 3 || project.overflow || project.imageFailures) throw new Error(`PayTrack project route failed QA: ${JSON.stringify(project)}`);
+  const project = await evaluate(`({ title: document.title, heading: document.querySelector("h1")?.textContent.trim(), overflow: document.documentElement.scrollWidth > innerWidth, highlights: document.querySelectorAll(".project-highlight").length, imageFailures: [...document.images].filter(image => image.complete && image.naturalWidth === 0).length, demoHref: [...document.querySelectorAll("a")].find(anchor => anchor.textContent.includes("Open Live Demo"))?.href, accessHref: [...document.querySelectorAll("a")].find(anchor => anchor.textContent.includes("Download / Access"))?.href })`);
+  if (project.heading !== "PayTrack" || project.highlights < 3 || project.overflow || project.imageFailures || project.demoHref !== "https://paytrack.paytrack-apurv.workers.dev/" || !project.accessHref?.endsWith("/downloads/paytrack/")) throw new Error(`PayTrack project route failed QA: ${JSON.stringify(project)}`);
   await navigate("/work/onsite-teams-replica/", 390, 844);
   for (let attempt = 0; attempt < 20; attempt += 1) {
     if (await evaluate(`document.querySelector(".project-detail-visual img")?.naturalWidth > 0`)) break;
@@ -192,10 +192,26 @@ try {
   }
   const onsite = await evaluate(`({ heading: document.querySelector("h1")?.textContent.trim(), imageLoaded: document.querySelector(".project-detail-visual img")?.naturalWidth > 0, disclaimer: document.querySelector(".project-note")?.textContent.trim(), overflow: document.documentElement.scrollWidth > innerWidth })`);
   if (onsite.heading !== "Onsite Teams Replica" || !onsite.imageLoaded || !onsite.disclaimer?.includes("not affiliated") || onsite.overflow) throw new Error(`Onsite replica project route failed QA: ${JSON.stringify(onsite)}`);
+
+  await navigate("/downloads/paytrack/", 390, 844);
+  const access = await evaluate(`(async () => {
+    const form = document.querySelector("#access-request-form");
+    const forbiddenDownloads = [...document.querySelectorAll("a")].filter(anchor => anchor.hasAttribute("download") || /\\.(apk|exe|dmg|zip)(?:$|\\?)/i.test(anchor.href)).length;
+    form.elements.name.value = "Demo User";
+    form.elements.phone.value = "+91 98765 43210";
+    form.elements.email.value = "demo@example.com";
+    form.elements.interest.value = "Demo and download access";
+    form.elements.consent.checked = true;
+    form.elements.formStartedAt.value = String(Date.now() - 5000);
+    form.requestSubmit();
+    await new Promise(resolve => setTimeout(resolve, 100));
+    return { heading: document.querySelector("h1")?.textContent.trim(), forbiddenDownloads, status: document.querySelector("#access-form-status")?.textContent.trim(), success: document.querySelector("#access-form-status")?.classList.contains("success"), overflow: document.documentElement.scrollWidth > innerWidth };
+  })()`);
+  if (access.heading !== "PayTrack" || access.forbiddenDownloads || access.success || !access.status?.includes("no request was sent") || access.overflow) throw new Error(`PayTrack access gate failed QA: ${JSON.stringify(access)}`);
   if (browserErrors.length) throw new Error(`Browser errors detected: ${browserErrors.join(", ")}`);
   if (networkFailures.length) throw new Error(`Network failures detected: ${networkFailures.join(", ")}`);
 
-  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, routeTransitionVerified: true, contactStatusVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
+  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, routeTransitionVerified: true, contactStatusVerified: true, accessGateVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
 } finally {
   socket.close();
   browser.kill();

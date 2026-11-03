@@ -37,6 +37,10 @@ function button(href, label, variant = "") {
   return link(href, label, `button ${variant}`.trim());
 }
 
+function externalButton(href, label, variant = "") {
+  return `<a class="button ${variant}" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+}
+
 function eyebrow(text) {
   return `<p class="eyebrow">${text}</p>`;
 }
@@ -71,7 +75,7 @@ function footer() {
             <p class="verified-note">Contact details will appear here once verified and added to the central site configuration.</p>
           </div>
           <nav class="footer-nav" aria-label="Footer navigation">
-            <div class="footer-col"><h3>Build</h3>${link("/services/", "Services")}${link("/solutions/", "Solutions")}${link("/work/", "Work")}${link("/products/", "Products")}</div>
+            <div class="footer-col"><h3>Build</h3>${link("/services/", "Services")}${link("/solutions/", "Solutions")}${link("/work/", "Work")}${link("/products/", "Products")}${link("/downloads/", "Software access")}</div>
             <div class="footer-col"><h3>Company</h3>${link("/about/", "About")}${link("/contact/", "Contact")}${link("/contact/", "Start a project")}</div>
             <div class="footer-col"><h3>Policies</h3>${link("/legal/terms-and-conditions/", "Terms")}${link("/legal/privacy-policy/", "Privacy")}${link("/legal/refund-cancellation-policy/", "Refunds & cancellations")}${link("/legal/cookie-policy/", "Cookies")}</div>
             <div class="footer-col"><h3>Product terms</h3>${link("/legal/free-trial-terms/", "Free trial terms")}${link("/legal/saas-subscription-terms/", "SaaS terms")}<span>No public trials are active</span></div>
@@ -239,12 +243,49 @@ function projectDetailPage(project) {
   const technologies = project.technologies.length
     ? `<div class="project-tech">${project.technologies.map((technology) => `<span>${technology}</span>`).join("")}</div>`
     : `<p class="verified-note">Technology details are pending source verification and have not been guessed.</p>`;
+  const demoAction = project.demoUrl
+    ? externalButton(project.demoUrl, "Open Live Demo")
+    : button(`/downloads/${project.slug}/`, "Request Demo");
   return `${pageHero({ label: project.category, title: project.name, intro: project.short, code: project.status, crumbs: [{ label: "Work", href: "/work/" }, { label: project.name }] })}
     <section class="section project-overview"><div class="shell"><div class="project-detail-visual reveal">${projectVisual(project, true)}</div><div class="project-detail-meta"><span>${project.category}</span><span>${project.status}</span></div></div></section>
+    <section class="section section-accent project-access"><div class="shell access-strip"><div><span class="page-code">Demo / controlled access</span><h2>See the product. Request the right release.</h2><p>${project.demoStatus}. Software files are never exposed as anonymous public downloads.</p></div><div class="button-row">${demoAction}${button(`/downloads/${project.slug}/`, "Download / Access", "button-ghost")}</div></div></section>
     <section class="section"><div class="shell project-story"><div>${eyebrow("The operating problem")}<h2 class="section-title small">Why this project needed to exist.</h2></div><div class="prose"><p>${project.problem}</p></div><div>${eyebrow("The product direction")}<h2 class="section-title small">What was built.</h2></div><div class="prose"><p>${project.solution}</p></div></div></section>
     <section class="section section-dark"><div class="shell"><div class="section-heading-row"><div>${eyebrow("Verified scope")}<h2 class="section-title small">The work, at a glance.</h2></div><p class="section-lede">Only capabilities confirmed by the project source or supplied project record are included.</p></div><div class="project-highlight-list">${project.highlights.map((highlight, index) => `<div class="project-highlight reveal"><span>${String(index + 1).padStart(2, "0")}</span><strong>${highlight}</strong></div>`).join("")}</div></div></section>
     <section class="section"><div class="shell two-col"><div>${eyebrow("Technology")}<h2 class="section-title small">Tools matched to the product.</h2></div><div>${technologies}<p class="project-note">${project.note}</p></div></div></section>
     <section class="section section-soft"><div class="shell"><div class="section-heading-row"><div>${eyebrow("More work")}<h2 class="section-title small">Continue through the archive.</h2></div>${link("/work/", "View all projects", "text-link")}</div><div class="project-related">${related.map((item, index) => projectCard(item, index)).join("")}</div></div></section>${finalCta()}`;
+}
+
+function downloadsPage() {
+  return `${pageHero({ label: "Software access", title: "Downloads begin with a real conversation.", intro: "Explore available demos and request the correct software release. No application file is exposed as an anonymous public download." })}
+    <section class="section section-soft"><div class="shell"><div class="project-index-head reveal"><span>05 access records</span><p>Demo, install, and evaluation requests are reviewed by the administrator.</p></div><div class="access-directory">${projects.map((project, index) => `<article class="access-card reveal"><div><span class="access-index">${String(index + 1).padStart(2, "0")} / ${project.demoStatus}</span><h2>${project.name}</h2><p>${project.downloadSummary}</p></div><div class="access-card-actions">${project.demoUrl ? externalButton(project.demoUrl, "Live Demo", "button-ghost") : ""}${button(`/downloads/${project.slug}/`, "Request Access")}</div></article>`).join("")}</div></div></section>${finalCta()}`;
+}
+
+function accessRequestPage(project) {
+  const publicDemo = project.demoUrl
+    ? `<div class="access-public-demo"><span class="availability-dot"></span><div><strong>Public web demo available</strong><p>You can explore the browser demo now. Download and private access still require approval.</p></div>${externalButton(project.demoUrl, "Open Demo", "button-ghost")}</div>`
+    : `<div class="access-public-demo"><span class="access-lock" aria-hidden="true">↗</span><div><strong>Guided access only</strong><p>The administrator will review your details before arranging a demo or sharing any release.</p></div></div>`;
+  return `${pageHero({ label: "Demo & download access", title: project.name, intro: project.downloadSummary, code: "Admin approval required", crumbs: [{ label: "Software access", href: "/downloads/" }, { label: project.name }] })}
+    <section class="section"><div class="shell access-layout"><aside class="access-aside"><div><span class="status-chip">No automatic download</span><h2>Contact the administrator.</h2><p>Tell us who you are and what you need. This request does not start a download or create a product account.</p></div>${publicDemo}</aside>
+      <form id="access-request-form" data-project="${project.slug}" novalidate>
+        <div class="form-grid">
+          ${formField("name", "Name", "text", true, "Your full name")}
+          <div class="field"><label for="phone">Phone number <span aria-hidden="true">*</span></label><input id="phone" name="phone" type="tel" required minlength="7" maxlength="24" autocomplete="tel" inputmode="tel" placeholder="Your contact number" /><p class="field-error" id="phone-error"></p></div>
+          ${formField("email", "Email", "email", true, "you@example.com")}
+          ${formField("company", "Company name", "text", false, "Optional")}
+          <div class="field field-full"><label for="interest">What do you need? <span aria-hidden="true">*</span></label><select id="interest" name="interest" required><option value="">Select an option</option><option>Live demo</option><option>Installation / download access</option><option>Demo and download access</option><option>Commercial enquiry</option></select><p class="field-error" id="interest-error"></p></div>
+          <div class="field field-full"><label for="message">Message</label><textarea id="message" name="message" maxlength="2000" placeholder="Tell the administrator how you plan to use ${project.name}."></textarea><small>Do not include passwords, OTPs, credentials, or sensitive information.</small><p class="field-error"></p></div>
+          <div class="field field-full consent-field"><label><input name="consent" type="checkbox" required /> <span>I agree that A&amp;M Tech Solutions may use these details to respond to this access request.</span></label><p class="field-error" id="consent-error"></p></div>
+          <div class="hp-field" aria-hidden="true"><label for="website">Leave this field empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off" /></div>
+        </div>
+        <input type="hidden" name="project" value="${project.name}" />
+        <input type="hidden" name="projectSlug" value="${project.slug}" />
+        <input type="hidden" name="formType" value="software-access" />
+        <input type="hidden" name="formStartedAt" value="${Date.now()}" />
+        <div class="form-actions"><button class="button" type="submit">Contact Admin</button><button class="button button-ghost" type="button" id="copy-access-request">Copy Request</button></div>
+        <p class="form-note">No software will download automatically. The administrator must approve and respond to the request.</p>
+        <div id="access-form-status" class="form-status" role="status" aria-live="polite"></div>
+      </form>
+    </div></section>`;
 }
 
 function workTemplatePage() {
@@ -334,6 +375,9 @@ function resolveRoute(path) {
   const projectMatch = path.match(/^\/work\/([^/]+)\/$/);
   if (projectMatch && projectBySlug[projectMatch[1]]) { const project = projectBySlug[projectMatch[1]]; return { page: projectDetailPage(project), title: `${project.name} — A&M Tech Solutions`, description: project.short }; }
   if (path === "/work/project-template/") return { page: workTemplatePage(), title: "Project Case Study Template — A&M Tech Solutions", description: "The project detail template for future verified case studies." };
+  if (path === "/downloads/") return { page: downloadsPage(), title: "Software Access — A&M Tech Solutions", description: "Request approved demo, installation, or download access for A&M Tech Solutions software projects." };
+  const accessMatch = path.match(/^\/downloads\/([^/]+)\/$/);
+  if (accessMatch && projectBySlug[accessMatch[1]]) { const project = projectBySlug[accessMatch[1]]; return { page: accessRequestPage(project), title: `${project.name} Access — A&M Tech Solutions`, description: `Request administrator-approved demo or download access for ${project.name}.` }; }
   if (path === "/products/") return { page: productsPage(), title: "Products — A&M Tech Solutions", description: "Current product concepts and future software categories from A&M Tech Solutions." };
   const productMatch = path.match(/^\/products\/([^/]+)\/$/);
   const product = productMatch ? productCategories.find((item) => item.slug === productMatch[1]) : undefined;
@@ -412,6 +456,8 @@ function bindInteractions() {
 
   const form = document.querySelector("#project-form");
   if (form) setupProjectForm(form);
+  const accessForm = document.querySelector("#access-request-form");
+  if (accessForm) setupAccessForm(accessForm);
 }
 
 function observeReveals() {
@@ -528,6 +574,72 @@ function setupProjectForm(form) {
     const data = Object.fromEntries(new FormData(form));
     const text = `Project inquiry for A&M Tech Solutions\n\nName: ${data.name}\nBusiness email: ${data.email}\nCompany: ${data.company || "Not provided"}\nService: ${data.service}\nBudget: ${data.budget || "Not provided"}\nPreferred contact: ${data.contactMethod || "Email"}\n\nProject description:\n${data.description}`;
     try { await navigator.clipboard.writeText(text); showStatus("Inquiry copied to your clipboard. No message was sent.", "success"); }
+    catch { showStatus("Clipboard access was unavailable. Select and copy the details from the form manually.", "error"); }
+  });
+}
+
+function setupAccessForm(form) {
+  const status = form.querySelector("#access-form-status");
+  const submit = form.querySelector('button[type="submit"]');
+  const fields = ["name", "phone", "email", "interest", "consent"];
+
+  function showStatus(message, type) {
+    status.textContent = message;
+    status.className = `form-status visible ${type}`;
+  }
+
+  function validate() {
+    let valid = true;
+    fields.forEach((name) => {
+      const field = form.elements[name];
+      const error = form.querySelector(`#${name}-error`);
+      let message = "";
+      if (name === "consent" && !field.checked) message = "Consent is required so we can respond to your request.";
+      else if (name !== "consent" && !String(field.value).trim()) message = "This field is required.";
+      else if (name === "name" && String(field.value).trim().length < 2) message = "Enter your full name.";
+      else if (name === "phone" && !/^[+()\-\s0-9]{7,24}$/.test(String(field.value).trim())) message = "Enter a valid phone number.";
+      else if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)) message = "Enter a valid email address.";
+      field.setAttribute("aria-invalid", String(Boolean(message)));
+      if (error) error.textContent = message;
+      if (message) valid = false;
+    });
+    return valid;
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    status.className = "form-status";
+    if (!validate()) { showStatus("Please review the highlighted fields.", "error"); form.querySelector('[aria-invalid="true"]')?.focus(); return; }
+    const data = Object.fromEntries(new FormData(form));
+    if (data.website) return;
+    const elapsed = Date.now() - Number(data.formStartedAt || 0);
+    if (elapsed < 2500) { showStatus("Please take a moment to review your request and try again.", "error"); return; }
+    const endpoint = config.accessEndpoint || config.contactEndpoint;
+    if (!endpoint) {
+      showStatus("Email delivery is not configured yet, so no request was sent. Use “Copy Request” to keep your details and contact the site administrator.", "error");
+      return;
+    }
+    submit.disabled = true;
+    submit.textContent = "Sending…";
+    try {
+      const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify({ ...data, consent: Boolean(data.consent), formStartedAt: undefined, website: undefined }) });
+      if (!response.ok) throw new Error(`Submission failed with status ${response.status}`);
+      form.reset();
+      showStatus("Your access request was received. No file was downloaded; the administrator will contact you using the details provided.", "success");
+    } catch (error) {
+      console.error("Software access request delivery failed", error);
+      showStatus("We couldn't deliver your request. Your details remain in the form; please try again or use “Copy Request.”", "error");
+    } finally {
+      submit.disabled = false;
+      submit.textContent = "Contact Admin";
+    }
+  });
+
+  form.querySelector("#copy-access-request")?.addEventListener("click", async () => {
+    if (!validate()) { showStatus("Complete the required fields before copying the request.", "error"); return; }
+    const data = Object.fromEntries(new FormData(form));
+    const text = `Software access request for A&M Tech Solutions\n\nProject: ${data.project}\nRequest: ${data.interest}\nName: ${data.name}\nPhone: ${data.phone}\nEmail: ${data.email}\nCompany: ${data.company || "Not provided"}\n\nMessage:\n${data.message || "Not provided"}`;
+    try { await navigator.clipboard.writeText(text); showStatus("Request copied to your clipboard. No message was sent and no file was downloaded.", "success"); }
     catch { showStatus("Clipboard access was unavailable. Select and copy the details from the form manually.", "error"); }
   });
 }

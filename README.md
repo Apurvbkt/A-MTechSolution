@@ -34,7 +34,7 @@ For a custom domain, configure the domain in GitHub Pages first, then set a repo
 
 ## Contact delivery
 
-The contact interface validates inputs, includes a honeypot and minimum-completion-time check, handles loading and server failures, and never reports success without a successful server response.
+The contact and software-access interfaces validate inputs, include a honeypot and minimum-completion-time check, handle loading and server failures, and never report success without a successful server response. Access pages do not contain direct application, APK, archive, or installer links.
 
 Set `contactEndpoint` in `site-config.js` to a secure HTTPS endpoint that:
 
@@ -44,6 +44,8 @@ Set `contactEndpoint` in `site-config.js` to a secure HTTPS endpoint that:
 - stores or delivers the enquiry before returning a 2xx response;
 - does not expose provider secrets to the browser;
 - returns a non-2xx status on delivery failure.
+
+Set `accessEndpoint` for demo/download requests. If it is empty, the access form falls back to `contactEndpoint`. The endpoint payload includes `formType: "software-access"`, project, name, phone, email, company, requested access type, consent, and message. The receiving service must deliver the request to the verified administrator email before it returns success.
 
 For a stricter production configuration, inject `site-config.js` during deployment rather than editing it manually. Content Security Policy and HSTS should be added by the production host after the verified form, font, and hosting origins are known.
 
@@ -55,7 +57,7 @@ For a stricter production configuration, inject `site-config.js` during deployme
 - Route-specific build metadata and sitemap: `scripts/build.mjs`
 - Visual assets: `public/`
 
-Routes include the home page, services overview, eight service details, solutions, work directory and case-study template, products directory and product concept page, about, contact, and six legal documents.
+Routes include the home page, services overview, eight service details, solutions, work directory and case studies, a controlled software-access directory with five project request pages, products, about, contact, and six legal documents.
 
 ## Required before public launch
 
