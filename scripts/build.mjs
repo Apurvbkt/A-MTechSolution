@@ -49,6 +49,9 @@ await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 await cp(resolve(root, "src"), resolve(output, "src"), { recursive: true });
 await cp(resolve(root, "public"), output, { recursive: true });
+await mkdir(resolve(output, "vendor"), { recursive: true });
+await cp(resolve(root, "node_modules", "gsap", "dist", "gsap.min.js"), resolve(output, "vendor", "gsap.min.js"));
+await cp(resolve(root, "node_modules", "gsap", "dist", "ScrollTrigger.min.js"), resolve(output, "vendor", "ScrollTrigger.min.js"));
 if (assetSuffix) {
   const builtAppPath = resolve(output, "src", "app.js");
   const builtApp = (await readFile(builtAppPath, "utf8")).replace('from "./content.js"', `from "./content.js${assetSuffix}"`);
@@ -73,6 +76,8 @@ function htmlForRoute(route, title, description) {
     .replace('content="/brand-card.svg"', `content="${siteUrl}/brand-card.svg${assetSuffix}"`)
     .replace('href="/favicon.svg"', `href="${basePath}/favicon.svg${assetSuffix}"`)
     .replace('href="/src/styles.css"', `href="${basePath}/src/styles.css${assetSuffix}"`)
+    .replace('src="/vendor/gsap.min.js"', `src="${basePath}/vendor/gsap.min.js${assetSuffix}"`)
+    .replace('src="/vendor/ScrollTrigger.min.js"', `src="${basePath}/vendor/ScrollTrigger.min.js${assetSuffix}"`)
     .replace('src="/site-config.js"', `src="${basePath}/site-config.js${assetSuffix}"`)
     .replace('src="/src/app.js"', `src="${basePath}/src/app.js${assetSuffix}"`)
     .replace("<link rel=\"icon\"", `<link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />\n    <link rel="icon"`);

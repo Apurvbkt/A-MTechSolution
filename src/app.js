@@ -8,6 +8,7 @@ const routeCurtain = document.querySelector("#route-curtain");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const config = window.AM_SITE_CONFIG || {};
 const basePath = config.basePath && config.basePath !== "/" ? `/${String(config.basePath).replace(/^\/+|\/+$/g, "")}` : "";
+let manifestoAnimationContext = null;
 
 const serviceBySlug = Object.fromEntries(services.map((service) => [service.slug, service]));
 const projectBySlug = Object.fromEntries(projects.map((project) => [project.slug, project]));
@@ -133,6 +134,8 @@ function projectCard(project, index = 0, featured = false) {
 }
 
 function homePage() {
+  const manifesto = "Technology should remove friction, reveal what matters, and make the next move easier to see.";
+  const manifestoWords = manifesto.split(" ").map((word) => `<span class="manifesto-word">${word}</span>`).join(" ");
   const principles = [
     ["01", "Built around the workflow", "We begin with how the business actually operates—not with a list of fashionable features."],
     ["02", "Clean, maintainable software", "Structure and clarity matter after launch, when real people need to understand and improve the product."],
@@ -155,10 +158,10 @@ function homePage() {
         <div class="reveal">${interfaceVisual()}</div>
       </div>
     </section>
-    <section class="section section-dark">
-      <div class="shell manifesto-line reveal">
-        <span class="page-code">What we believe</span>
-        <p>Technology should remove friction, reveal what matters, and make the next move <span>easier to see.</span></p>
+    <section class="section section-dark manifesto-section" data-manifesto>
+      <div class="shell manifesto-line">
+        <span class="page-code reveal">What we believe</span>
+        <p class="manifesto-copy" aria-label="${manifesto}"><span class="manifesto-words" aria-hidden="true">${manifestoWords}</span></p>
       </div>
     </section>
     <section class="section" id="services">
@@ -427,6 +430,7 @@ function render(path = normalizePath(location.pathname), route = resolveRoute(pa
   updateMeta(route);
   bindInteractions();
   observeReveals();
+  setupManifestoAnimation();
 }
 
 function bindInteractions() {
@@ -472,6 +476,34 @@ function observeReveals() {
     });
   }, { threshold: 0.08, rootMargin: "0px 0px -35px" });
   items.forEach((item) => observer.observe(item));
+}
+
+function setupManifestoAnimation() {
+  manifestoAnimationContext?.revert();
+  manifestoAnimationContext = null;
+
+  const section = document.querySelector("[data-manifesto]");
+  const words = section ? [...section.querySelectorAll(".manifesto-word")] : [];
+  const gsap = window.gsap;
+  const ScrollTrigger = window.ScrollTrigger;
+  if (!section || !words.length || prefersReducedMotion || !gsap || !ScrollTrigger) return;
+
+  gsap.registerPlugin(ScrollTrigger);
+  manifestoAnimationContext = gsap.context(() => {
+    gsap.set(words, { opacity: 0.16 });
+    gsap.to(words, {
+      opacity: 1,
+      stagger: { each: 0.34 },
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        start: "top 72%",
+        end: "bottom 42%",
+        scrub: 0.55,
+        invalidateOnRefresh: true
+      }
+    });
+  }, section);
 }
 
 function setLoaderProgress(value) {

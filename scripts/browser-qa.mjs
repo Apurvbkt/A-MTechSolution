@@ -155,6 +155,18 @@ try {
   if (!desktop.menuHidden) throw new Error("Desktop navigation did not replace the mobile control.");
   const desktopShot = await cdp("Page.captureScreenshot", { format: "png", fromSurface: true, captureBeyondViewport: false });
   await writeFile(resolve(artifacts, "home-desktop.png"), Buffer.from(desktopShot.data, "base64"));
+  await evaluate(`(() => { scrollTo(0, 0); window.ScrollTrigger?.refresh(); window.ScrollTrigger?.update(); })()`);
+  await delay(120);
+  const manifestoInitial = await evaluate(`(() => { const items = [...document.querySelectorAll(".manifesto-word")]; const trigger = window.ScrollTrigger?.getAll()[0]; return { gsap: Boolean(window.gsap && window.ScrollTrigger), triggers: window.ScrollTrigger?.getAll().length || 0, words: items.length, first: Number(getComputedStyle(items[0]).opacity), last: Number(getComputedStyle(items.at(-1)).opacity), firstInline: items[0]?.style.opacity, lastInline: items.at(-1)?.style.opacity, scrollY, trigger: trigger ? { start: trigger.start, end: trigger.end, progress: trigger.progress, animation: trigger.animation?.progress() } : null }; })()`);
+  if (!manifestoInitial.gsap || manifestoInitial.words < 10 || manifestoInitial.first > 0.25 || manifestoInitial.last > 0.25) throw new Error(`GSAP manifesto did not initialise: ${JSON.stringify(manifestoInitial)}`);
+  await evaluate(`(() => { const section = document.querySelector("[data-manifesto]"); scrollTo(0, section.offsetTop + section.offsetHeight * 0.5 - innerHeight * 0.5); })()`);
+  await delay(700);
+  const manifestoMid = await evaluate(`({ first: Number(getComputedStyle(document.querySelector(".manifesto-word")).opacity), last: Number(getComputedStyle([...document.querySelectorAll(".manifesto-word")].at(-1)).opacity) })`);
+  if (manifestoMid.first < 0.75 || manifestoMid.last > 0.55) throw new Error(`GSAP manifesto did not reveal progressively: ${JSON.stringify(manifestoMid)}`);
+  await evaluate(`(() => { const section = document.querySelector("[data-manifesto]"); scrollTo(0, section.offsetTop + section.offsetHeight - innerHeight * 0.35); })()`);
+  await delay(900);
+  const manifestoComplete = await evaluate(`({ first: Number(getComputedStyle(document.querySelector(".manifesto-word")).opacity), last: Number(getComputedStyle([...document.querySelectorAll(".manifesto-word")].at(-1)).opacity) })`);
+  if (manifestoComplete.first < 0.98 || manifestoComplete.last < 0.9) throw new Error(`GSAP manifesto did not complete with scroll: ${JSON.stringify(manifestoComplete)}`);
   const routeTransitionStarted = await evaluate(`(() => { const link = [...document.querySelectorAll("[data-link]")].find(a => new URL(a.href).pathname.endsWith("/services/")); link?.click(); return document.querySelector("#route-curtain")?.classList.contains("is-active") === true; })()`);
   if (!routeTransitionStarted) throw new Error("The internal route curtain did not start.");
   await delay(380);
@@ -211,7 +223,7 @@ try {
   if (browserErrors.length) throw new Error(`Browser errors detected: ${browserErrors.join(", ")}`);
   if (networkFailures.length) throw new Error(`Network failures detected: ${networkFailures.join(", ")}`);
 
-  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, routeTransitionVerified: true, contactStatusVerified: true, accessGateVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
+  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, manifestoScrollVerified: true, routeTransitionVerified: true, contactStatusVerified: true, accessGateVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
 } finally {
   socket.close();
   browser.kill();
