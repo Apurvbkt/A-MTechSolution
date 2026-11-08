@@ -378,7 +378,7 @@ img, svg { display: block; max-width: 100%; }
 .manifesto-section { min-height: 112svh; display: grid; align-items: center; overflow: clip; }
 .manifesto-line { display: grid; grid-template-columns: 0.27fr 1fr; gap: 2rem; align-items: start; }
 .manifesto-copy { max-width: 23ch; margin: 0; font-size: clamp(2.2rem, 6.5vw, 6.4rem); line-height: 1.02; letter-spacing: -0.065em; font-weight: 500; }
-.manifesto-word { color: var(--white); will-change: opacity; }
+.manifesto-word { color: var(--white); will-change: color; }
 
 .service-list { border-top: 1px solid var(--line); }
 .service-row { display: grid; grid-template-columns: 0.14fr 0.5fr 0.36fr auto; gap: 1.5rem; align-items: start; padding-block: 2rem; border-bottom: 1px solid var(--line); transition: background 180ms ease, padding 180ms ease; }

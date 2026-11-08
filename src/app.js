@@ -490,19 +490,20 @@ function setupManifestoAnimation() {
 
   gsap.registerPlugin(ScrollTrigger);
   manifestoAnimationContext = gsap.context(() => {
-    gsap.set(words, { opacity: 0.16 });
+    const activeColor = getComputedStyle(section).getPropertyValue("--white").trim() || "#fafaf6";
+    gsap.set(words, { opacity: 1, color: "#343630" });
     const hold = { value: 0 };
     const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: section,
         start: "top 82%",
-        end: "top 22%",
-        scrub: 0.35,
+        end: "top -20%",
+        scrub: 0.45,
         invalidateOnRefresh: true
       }
     });
-    timeline.to(words, { opacity: 1, duration: 0.18, stagger: 0.08, ease: "none" });
-    timeline.to(hold, { value: 1, duration: 1, ease: "none" });
+    timeline.to(words, { color: activeColor, duration: 0.18, stagger: 0.08, ease: "none" });
+    timeline.to(hold, { value: 1, duration: 0.32, ease: "none" });
   }, section);
 }
 
