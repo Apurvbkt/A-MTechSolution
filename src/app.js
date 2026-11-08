@@ -9,6 +9,8 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const config = window.AM_SITE_CONFIG || {};
 const basePath = config.basePath && config.basePath !== "/" ? `/${String(config.basePath).replace(/^\/+|\/+$/g, "")}` : "";
 let manifestoAnimationContext = null;
+let smoothScrollTween = null;
+let smoothScrollTarget = window.scrollY;
 
 const serviceBySlug = Object.fromEntries(services.map((service) => [service.slug, service]));
 const projectBySlug = Object.fromEntries(projects.map((project) => [project.slug, project]));
@@ -403,6 +405,7 @@ function updateMeta(route) {
 }
 
 function navigate(path, { replace = false } = {}) {
+  cancelSmoothScroll();
   const normalized = normalizePath(path);
   const route = resolveRoute(normalized);
   const commitNavigation = () => {
@@ -476,6 +479,81 @@ function observeReveals() {
     });
   }, { threshold: 0.08, rootMargin: "0px 0px -35px" });
   items.forEach((item) => observer.observe(item));
+}
+
+function nestedScrollerCanMove(target, deltaY) {
+  let element = target instanceof Element ? target : null;
+  while (element && element !== document.body) {
+    const { overflowY } = getComputedStyle(element);
+    if (/(auto|scroll)/.test(overflowY) && element.scrollHeight > element.clientHeight + 1) {
+      const canMoveUp = deltaY < 0 && element.scrollTop > 0;
+      const canMoveDown = deltaY > 0 && element.scrollTop + element.clientHeight < element.scrollHeight - 1;
+      if (canMoveUp || canMoveDown) return true;
+    }
+    element = element.parentElement;
+  }
+  return false;
+}
+
+function cancelSmoothScroll() {
+  smoothScrollTween?.kill();
+  smoothScrollTween = null;
+  smoothScrollTarget = window.scrollY;
+}
+
+function setupSmoothScroll() {
+  const gsap = window.gsap;
+  const ScrollToPlugin = window.ScrollToPlugin;
+  const coarsePointer = window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+  if (prefersReducedMotion || coarsePointer || !gsap || !ScrollToPlugin) return;
+
+  gsap.registerPlugin(ScrollToPlugin);
+  document.documentElement.classList.add("gsap-smooth-scroll");
+
+  const onWheel = (event) => {
+    if (
+      event.defaultPrevented ||
+      event.ctrlKey ||
+      document.body.classList.contains("loader-active") ||
+      document.body.classList.contains("menu-open") ||
+      Math.abs(event.deltaX) > Math.abs(event.deltaY) ||
+      Math.abs(event.deltaY) < 0.01 ||
+      nestedScrollerCanMove(event.target, event.deltaY)
+    ) return;
+
+    event.preventDefault();
+    const deltaScale = event.deltaMode === WheelEvent.DOM_DELTA_LINE ? 28 : event.deltaMode === WheelEvent.DOM_DELTA_PAGE ? window.innerHeight : 1;
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const delta = event.deltaY * deltaScale * 1.08;
+    smoothScrollTarget = gsap.utils.clamp(0, maxScroll, smoothScrollTarget + delta);
+    const distance = Math.abs(smoothScrollTarget - window.scrollY);
+    const duration = gsap.utils.clamp(0.48, 0.92, 0.48 + distance / 1800);
+
+    smoothScrollTween?.kill();
+    smoothScrollTween = gsap.to(window, {
+      scrollTo: { y: smoothScrollTarget, autoKill: false },
+      duration,
+      ease: "power3.out",
+      onUpdate: () => window.ScrollTrigger?.update(),
+      onComplete: () => {
+        smoothScrollTarget = window.scrollY;
+        smoothScrollTween = null;
+      }
+    });
+  };
+
+  const syncScrollTarget = () => {
+    if (!smoothScrollTween) smoothScrollTarget = window.scrollY;
+  };
+  const cancelForKeyboard = (event) => {
+    if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) cancelSmoothScroll();
+  };
+
+  window.addEventListener("wheel", onWheel, { passive: false });
+  window.addEventListener("scroll", syncScrollTarget, { passive: true });
+  window.addEventListener("pointerdown", cancelSmoothScroll, { passive: true });
+  window.addEventListener("resize", cancelSmoothScroll, { passive: true });
+  document.addEventListener("keydown", cancelForKeyboard);
 }
 
 function setupManifestoAnimation() {
@@ -686,5 +764,6 @@ document.body.addEventListener("keydown", (event) => {
   }
 });
 
+setupSmoothScroll();
 render();
 playInitialLoader();

@@ -155,8 +155,16 @@ try {
   if (!desktop.menuHidden) throw new Error("Desktop navigation did not replace the mobile control.");
   const desktopShot = await cdp("Page.captureScreenshot", { format: "png", fromSurface: true, captureBeyondViewport: false });
   await writeFile(resolve(artifacts, "home-desktop.png"), Buffer.from(desktopShot.data, "base64"));
+  const smoothScrollRuntime = await evaluate(`({ plugin: Boolean(window.ScrollToPlugin), enabled: document.documentElement.classList.contains("gsap-smooth-scroll"), y: scrollY })`);
+  if (!smoothScrollRuntime.plugin || !smoothScrollRuntime.enabled) throw new Error(`GSAP smooth scrolling did not initialise: ${JSON.stringify(smoothScrollRuntime)}`);
+  await cdp("Input.dispatchMouseEvent", { type: "mouseWheel", x: 720, y: 500, deltaX: 0, deltaY: 700 });
+  await delay(90);
+  const smoothScrollMid = await evaluate(`scrollY`);
+  await delay(1000);
+  const smoothScrollEnd = await evaluate(`scrollY`);
+  if (smoothScrollMid < 20 || smoothScrollEnd < smoothScrollMid + 100 || smoothScrollEnd > 900) throw new Error(`GSAP wheel smoothing failed: ${JSON.stringify({ smoothScrollMid, smoothScrollEnd })}`);
   await evaluate(`(() => { scrollTo(0, 0); window.ScrollTrigger?.refresh(); window.ScrollTrigger?.update(); })()`);
-  await delay(120);
+  await delay(650);
   const manifestoInitial = await evaluate(`(() => { const items = [...document.querySelectorAll(".manifesto-word")]; const brightness = (item) => getComputedStyle(item).color.match(/\\d+/g).slice(0, 3).reduce((sum, value) => sum + Number(value), 0) / 3; const trigger = window.ScrollTrigger?.getAll()[0]; return { gsap: Boolean(window.gsap && window.ScrollTrigger), triggers: window.ScrollTrigger?.getAll().length || 0, words: items.length, first: brightness(items[0]), last: brightness(items.at(-1)), firstInline: items[0]?.style.color, lastInline: items.at(-1)?.style.color, scrollY, trigger: trigger ? { start: trigger.start, end: trigger.end, progress: trigger.progress, animation: trigger.animation?.progress() } : null }; })()`);
   if (!manifestoInitial.gsap || manifestoInitial.words < 10 || manifestoInitial.first > 70 || manifestoInitial.last > 70) throw new Error(`GSAP manifesto did not initialise: ${JSON.stringify(manifestoInitial)}`);
   await evaluate(`(() => { const section = document.querySelector("[data-manifesto]"); scrollTo(0, section.offsetTop - innerHeight * 0.52); })()`);
@@ -223,7 +231,7 @@ try {
   if (browserErrors.length) throw new Error(`Browser errors detected: ${browserErrors.join(", ")}`);
   if (networkFailures.length) throw new Error(`Network failures detected: ${networkFailures.join(", ")}`);
 
-  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, manifestoScrollVerified: true, routeTransitionVerified: true, contactStatusVerified: true, accessGateVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
+  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, smoothScrollVerified: true, manifestoScrollVerified: true, routeTransitionVerified: true, contactStatusVerified: true, accessGateVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
 } finally {
   socket.close();
   browser.kill();
