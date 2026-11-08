@@ -53,6 +53,11 @@ await mkdir(resolve(output, "vendor"), { recursive: true });
 await cp(resolve(root, "node_modules", "gsap", "dist", "gsap.min.js"), resolve(output, "vendor", "gsap.min.js"));
 await cp(resolve(root, "node_modules", "gsap", "dist", "ScrollToPlugin.min.js"), resolve(output, "vendor", "ScrollToPlugin.min.js"));
 await cp(resolve(root, "node_modules", "gsap", "dist", "ScrollTrigger.min.js"), resolve(output, "vendor", "ScrollTrigger.min.js"));
+await mkdir(resolve(output, "fonts"), { recursive: true });
+await cp(resolve(root, "node_modules", "@fontsource-variable", "instrument-sans", "files", "instrument-sans-latin-wght-normal.woff2"), resolve(output, "fonts", "instrument-sans-latin-wght-normal.woff2"));
+for (const weight of [400, 500, 600]) {
+  await cp(resolve(root, "node_modules", "@fontsource", "ibm-plex-mono", "files", `ibm-plex-mono-latin-${weight}-normal.woff2`), resolve(output, "fonts", `ibm-plex-mono-latin-${weight}-normal.woff2`));
+}
 if (assetSuffix) {
   const builtAppPath = resolve(output, "src", "app.js");
   const builtApp = (await readFile(builtAppPath, "utf8")).replace('from "./content.js"', `from "./content.js${assetSuffix}"`);
@@ -76,12 +81,12 @@ function htmlForRoute(route, title, description) {
     .replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${escapeAttribute(description)}" />`)
     .replace('content="/brand-card.svg"', `content="${siteUrl}/brand-card.svg${assetSuffix}"`)
     .replace('href="/favicon.svg"', `href="${basePath}/favicon.svg${assetSuffix}"`)
-    .replace('href="/src/styles.css"', `href="${basePath}/src/styles.css${assetSuffix}"`)
+    .replace('href="/src/styles.css?v=dev-5"', `href="${basePath}/src/styles.css${assetSuffix}"`)
     .replace('src="/vendor/gsap.min.js"', `src="${basePath}/vendor/gsap.min.js${assetSuffix}"`)
     .replace('src="/vendor/ScrollToPlugin.min.js"', `src="${basePath}/vendor/ScrollToPlugin.min.js${assetSuffix}"`)
     .replace('src="/vendor/ScrollTrigger.min.js"', `src="${basePath}/vendor/ScrollTrigger.min.js${assetSuffix}"`)
     .replace('src="/site-config.js"', `src="${basePath}/site-config.js${assetSuffix}"`)
-    .replace('src="/src/app.js?v=dev-4"', `src="${basePath}/src/app.js${assetSuffix}"`)
+    .replace('src="/src/app.js?v=dev-5"', `src="${basePath}/src/app.js${assetSuffix}"`)
     .replace("<link rel=\"icon\"", `<link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />\n    <link rel="icon"`);
 }
 

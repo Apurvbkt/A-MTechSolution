@@ -9,6 +9,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const config = window.AM_SITE_CONFIG || {};
 const basePath = config.basePath && config.basePath !== "/" ? `/${String(config.basePath).replace(/^\/+|\/+$/g, "")}` : "";
 let manifestoAnimationContext = null;
+let premiumMotionContext = null;
 let smoothScrollTween = null;
 let smoothScrollTarget = window.scrollY;
 
@@ -95,21 +96,24 @@ function layout(content, path) {
 
 function interfaceVisual() {
   return `
-    <div class="interface-stage" aria-label="Illustrative business operations interface">
-      <div class="stage-grid"></div>
-      <div class="dashboard" aria-hidden="true">
-        <div class="dash-top"><div class="dash-dots"><i></i><i></i><i></i></div><span class="dash-status">Operations / Live view</span></div>
-        <div class="dash-body">
-          <div class="dash-rail"><i></i><i></i><i></i><i></i></div>
-          <div class="dash-content">
-            <span class="dash-label">Morning overview</span>
-            <h2 class="dash-heading">Work in motion.</h2>
-            <div class="dash-stats"><div class="dash-stat"><b>18</b><span>Active jobs</span></div><div class="dash-stat"><b>07</b><span>Approvals</span></div><div class="dash-stat"><b>04</b><span>Alerts</span></div></div>
-            <div class="dash-flow"><div class="dash-chart"><span class="dash-label">Weekly flow</span><div class="bars"><i></i><i></i><i></i><i></i><i></i></div></div><div class="dash-list"><span class="dash-label">Priority</span><i></i><i></i><i></i></div></div>
-          </div>
-        </div>
+    <div class="premium-stage" data-hero-art aria-label="A&M project interface composition">
+      <div class="premium-stage-grid" aria-hidden="true"></div>
+      <div class="premium-stage-index" data-hero-layer data-depth="1"><span>Selected systems</span><span>01—03 / 2026</span></div>
+      <div class="premium-screen" data-hero-layer data-depth="2">
+        <div class="premium-browser-bar"><span><i></i><i></i><i></i></span><b>Onsite / independent product study</b></div>
+        <img src="${sitePath("/projects/onsite-replica-login.png")}" alt="Onsite Teams Replica login interface preview" loading="eager" fetchpriority="high" />
       </div>
-      <div class="stage-note">Interface illustration<br />Not a released product</div>
+      <div class="premium-card premium-card-paytrack" data-hero-layer data-depth="3" aria-label="PayTrack project summary">
+        <div><span>PAY / 02</span><i>Production PWA</i></div>
+        <strong>Payments,<br />kept visible.</strong>
+        <small>PayTrack / Browser + mobile</small>
+      </div>
+      <div class="premium-card premium-card-labour" data-hero-layer data-depth="4" aria-label="Costarica LabourTrack project summary">
+        <div><span>ATT / 01</span><i>Active project</i></div>
+        <strong>Field records.<br />Clear settlements.</strong>
+        <small>LabourTrack / Site operations</small>
+      </div>
+      <p class="premium-stage-caption" data-hero-layer data-depth="1">Real project media + verified interface summaries</p>
     </div>`;
 }
 
@@ -138,6 +142,7 @@ function projectCard(project, index = 0, featured = false) {
 function homePage() {
   const manifesto = "Technology should remove friction, reveal what matters, and make the next move easier to see.";
   const manifestoWords = manifesto.split(" ").map((word) => `<span class="manifesto-word">${word}</span>`).join(" ");
+  const homeProjects = [projectBySlug["onsite-teams-replica"], projectBySlug.paytrack, projectBySlug["costarica-labourtrack"]].filter(Boolean);
   const principles = [
     ["01", "Built around the workflow", "We begin with how the business actually operates—not with a list of fashionable features."],
     ["02", "Clean, maintainable software", "Structure and clarity matter after launch, when real people need to understand and improve the product."],
@@ -156,6 +161,7 @@ function homePage() {
           <p class="hero-copy">Websites, business systems, and custom software built around the way you work. From a new digital presence to the tools that power your operations, we help you move forward.</p>
           <div class="button-row">${button("/contact/", "Start a Project")}${button("/services/", "Explore Our Services", "button-ghost")}</div>
           <p class="availability"><span class="availability-dot"></span>${company.availability}</p>
+          <div class="hero-disciplines" aria-label="A&M delivery disciplines"><span>Discover</span><span>Design</span><span>Build</span><span>Support</span></div>
         </div>
         <div class="reveal">${interfaceVisual()}</div>
       </div>
@@ -188,7 +194,7 @@ function homePage() {
     <section class="section section-soft">
       <div class="shell">
         <div class="section-heading-row reveal"><div>${eyebrow("Selected work")}<h2 class="section-title small">Products shaped around real workflows.</h2></div><div><p class="section-lede">A growing archive of operational systems, mobile products, and construction software—documented without invented outcomes or client claims.</p>${link("/work/", "View all projects", "text-link")}</div></div>
-        <div class="project-grid project-grid-home">${projects.slice(0, 3).map((project, index) => projectCard(project, index, index === 0)).join("")}</div>
+        <div class="project-grid project-grid-home">${homeProjects.map((project, index) => projectCard(project, index, index === 0)).join("")}</div>
       </div>
     </section>
     <section class="section section-dark">
@@ -434,6 +440,7 @@ function render(path = normalizePath(location.pathname), route = resolveRoute(pa
   bindInteractions();
   observeReveals();
   setupManifestoAnimation();
+  setupPremiumMotion();
 }
 
 function bindInteractions() {
@@ -583,6 +590,58 @@ function setupManifestoAnimation() {
     timeline.to(words, { color: activeColor, duration: 0.18, stagger: 0.08, ease: "none" });
     timeline.to(hold, { value: 1, duration: 0.32, ease: "none" });
   }, section);
+}
+
+function setupPremiumMotion() {
+  premiumMotionContext?.revert();
+  premiumMotionContext = null;
+
+  const gsap = window.gsap;
+  const ScrollTrigger = window.ScrollTrigger;
+  if (prefersReducedMotion || !gsap || !ScrollTrigger) return;
+
+  gsap.registerPlugin(ScrollTrigger);
+  premiumMotionContext = gsap.context(() => {
+    const header = document.querySelector(".site-header");
+    if (header) {
+      ScrollTrigger.create({
+        start: 48,
+        end: "max",
+        onToggle: (self) => header.classList.toggle("is-compact", self.isActive)
+      });
+    }
+
+    const stage = document.querySelector("[data-hero-art]");
+    const layers = stage ? [...stage.querySelectorAll("[data-hero-layer]")] : [];
+    if (!stage || !layers.length) return;
+
+    gsap.fromTo(layers, {
+      y: 30,
+      opacity: 0
+    }, {
+      y: 0,
+      opacity: 1,
+      duration: 1.05,
+      delay: 0.58,
+      stagger: 0.08,
+      ease: "power3.out",
+      clearProps: "opacity"
+    });
+
+    layers.forEach((layer) => {
+      const depth = Number(layer.dataset.depth || 1);
+      gsap.to(layer, {
+        yPercent: depth * -3.5,
+        ease: "none",
+        scrollTrigger: {
+          trigger: stage,
+          start: "top 82%",
+          end: "bottom top",
+          scrub: 0.8
+        }
+      });
+    });
+  }, app);
 }
 
 function setLoaderProgress(value) {

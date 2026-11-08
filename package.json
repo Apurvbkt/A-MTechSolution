@@ -10,6 +10,8 @@
     "qa:browser": "node scripts/browser-qa.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/instrument-sans": "5.2.8",
+    "@fontsource/ibm-plex-mono": "5.2.7",
     "gsap": "3.13.0"
   }
 }
