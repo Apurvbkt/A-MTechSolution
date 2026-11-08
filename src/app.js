@@ -491,18 +491,18 @@ function setupManifestoAnimation() {
   gsap.registerPlugin(ScrollTrigger);
   manifestoAnimationContext = gsap.context(() => {
     gsap.set(words, { opacity: 0.16 });
-    gsap.to(words, {
-      opacity: 1,
-      stagger: { each: 0.34 },
-      ease: "none",
+    const hold = { value: 0 };
+    const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: section,
-        start: "top 72%",
-        end: "bottom 42%",
-        scrub: 0.55,
+        start: "top 82%",
+        end: "top 22%",
+        scrub: 0.35,
         invalidateOnRefresh: true
       }
     });
+    timeline.to(words, { opacity: 1, duration: 0.18, stagger: 0.08, ease: "none" });
+    timeline.to(hold, { value: 1, duration: 1, ease: "none" });
   }, section);
 }
 

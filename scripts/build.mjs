@@ -79,7 +79,7 @@ function htmlForRoute(route, title, description) {
     .replace('src="/vendor/gsap.min.js"', `src="${basePath}/vendor/gsap.min.js${assetSuffix}"`)
     .replace('src="/vendor/ScrollTrigger.min.js"', `src="${basePath}/vendor/ScrollTrigger.min.js${assetSuffix}"`)
     .replace('src="/site-config.js"', `src="${basePath}/site-config.js${assetSuffix}"`)
-    .replace('src="/src/app.js"', `src="${basePath}/src/app.js${assetSuffix}"`)
+    .replace('src="/src/app.js?v=dev-2"', `src="${basePath}/src/app.js${assetSuffix}"`)
     .replace("<link rel=\"icon\"", `<link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />\n    <link rel="icon"`);
 }
 
