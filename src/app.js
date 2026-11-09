@@ -162,7 +162,7 @@ function projectCard(project, index = 0, featured = false) {
 
 function homePage() {
   const manifesto = "Technology should remove friction, reveal what matters, and make the next move easier to see.";
-  const manifestoWords = manifesto.split(" ").map((word) => `<span class="manifesto-word">${word}</span>`).join(" ");
+  const manifestoWords = manifesto.split(" ").map((word) => `<span class="manifesto-word">${[...word].map((character) => `<span class="manifesto-char">${character}</span>`).join("")}</span>`).join(" ");
   const homeProjects = [projectBySlug["onsite-teams-replica"], projectBySlug.paytrack, projectBySlug["costarica-labourtrack"]].filter(Boolean);
   const principles = [
     ["01", "Built around the workflow", "We begin with how the business actually operates—not with a list of fashionable features."],
@@ -624,27 +624,46 @@ function setupManifestoAnimation() {
   manifestoAnimationContext = null;
 
   const section = document.querySelector("[data-manifesto]");
-  const words = section ? [...section.querySelectorAll(".manifesto-word")] : [];
+  const characters = section ? [...section.querySelectorAll(".manifesto-char")] : [];
   const gsap = window.gsap;
   const ScrollTrigger = window.ScrollTrigger;
-  if (!section || !words.length || prefersReducedMotion || !gsap || !ScrollTrigger) return;
+  if (!section || !characters.length || prefersReducedMotion || !gsap || !ScrollTrigger) return;
 
   gsap.registerPlugin(ScrollTrigger);
   manifestoAnimationContext = gsap.context(() => {
     const activeColor = getComputedStyle(section).getPropertyValue("--white").trim() || "#fafaf6";
-    gsap.set(words, { opacity: 1, color: "#343630" });
+    const orbitRadius = Math.min(210, Math.max(76, window.innerWidth * 0.14));
+    gsap.set(characters, {
+      opacity: 0,
+      color: activeColor,
+      x: (index) => Math.cos(index * 0.76 - Math.PI / 2) * orbitRadius * (0.72 + (index % 5) * 0.07),
+      y: (index) => Math.sin(index * 0.76 - Math.PI / 2) * orbitRadius * 0.62,
+      scale: (index) => 1.9 + (index % 4) * 0.18,
+      rotation: (index) => ((index * 47) % 260) - 130,
+      transformOrigin: "50% 50%",
+      force3D: true
+    });
     const hold = { value: 0 };
     const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: section,
-        start: "top 82%",
-        end: "top -20%",
-        scrub: 0.45,
+        start: "top 86%",
+        end: "top -16%",
+        scrub: 0.55,
         invalidateOnRefresh: true
       }
     });
-    timeline.to(words, { color: activeColor, duration: 0.18, stagger: 0.08, ease: "none" });
-    timeline.to(hold, { value: 1, duration: 0.32, ease: "none" });
+    timeline.to(characters, {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      scale: 1,
+      rotation: 0,
+      duration: 0.34,
+      stagger: 0.018,
+      ease: "power3.out"
+    });
+    timeline.to(hold, { value: 1, duration: 0.22, ease: "none" });
   }, section);
 }
 
