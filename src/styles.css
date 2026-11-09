@@ -554,6 +554,7 @@ img, svg { display: block; max-width: 100%; }
 .footer-top { display: grid; grid-template-columns: 1.1fr 1.9fr; gap: 5rem; padding-bottom: 5rem; }
 .footer-brand p { max-width: 25rem; color: #aeb0a8; }
 .footer-brand .brand { font-size: 1rem; }
+.site-footer .verified-note, .site-footer .verified-note a { color: var(--ink); }
 .footer-socials { display: flex; gap: 0.65rem; margin-top: 1.25rem; }
 .social-placeholder { width: 2.5rem; height: 2.5rem; display: grid; place-items: center; color: #aeb0a8; border: 1px solid #41443d; border-radius: 50%; background: #171914; cursor: default; }
 .social-placeholder svg { width: 1.05rem; height: 1.05rem; fill: currentColor; }
