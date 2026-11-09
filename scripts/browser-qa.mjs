@@ -201,9 +201,9 @@ try {
     form.requestSubmit();
     await new Promise(resolve => setTimeout(resolve, 150));
     window.fetch = originalFetch;
-    return { endpoint, status: document.querySelector("#form-status").textContent.trim(), success: document.querySelector("#form-status").classList.contains("success"), overflow: document.documentElement.scrollWidth > innerWidth };
+    return { endpoint, phoneHref: document.querySelector('.contact-status a[href^="tel:"]')?.href, whatsappHref: document.querySelector('.contact-status a[href^="https://wa.me/"]')?.href, status: document.querySelector("#form-status").textContent.trim(), success: document.querySelector("#form-status").classList.contains("success"), overflow: document.documentElement.scrollWidth > innerWidth };
   })()`);
-  if (!contact.endpoint?.startsWith("https://formspree.io/f/") || !contact.success || !contact.status.includes("received")) throw new Error(`The configured contact form failed QA: ${JSON.stringify(contact)}`);
+  if (!contact.endpoint?.startsWith("https://formspree.io/f/") || contact.phoneHref !== "tel:+917004375813" || contact.whatsappHref !== "https://wa.me/917004375813" || !contact.success || !contact.status.includes("received")) throw new Error(`The configured contact form failed QA: ${JSON.stringify(contact)}`);
   if (contact.overflow) throw new Error("Contact page overflows at 390px.");
 
   await navigate("/services/crm-development/", 390, 844);
