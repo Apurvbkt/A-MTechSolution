@@ -81,6 +81,14 @@ function footer() {
             ${link("/", `<span class="brand-mark" aria-hidden="true">A&M</span><span class="brand-text">A&M Tech Solutions</span>`, "brand")}
             <p>${company.description}</p>
             <p class="verified-note">Email: <a href="mailto:${contactEmail}">${contactEmail}</a><br />Phone: <a href="tel:${contactPhoneHref}">${contactPhone}</a> · <a href="https://wa.me/${whatsappPhone}" target="_blank" rel="noopener noreferrer">WhatsApp</a></p>
+            <div class="footer-socials" aria-label="Social profiles coming soon">
+              <span class="social-placeholder" role="img" aria-label="LinkedIn profile link coming soon" title="LinkedIn — link coming soon">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5.2 7.7A2.2 2.2 0 1 0 5.2 3.3a2.2 2.2 0 0 0 0 4.4ZM3.4 20.7H7V9.2H3.4v11.5ZM9.2 9.2h3.4v1.6h.1c.5-.9 1.7-2 3.6-2 3.8 0 4.5 2.5 4.5 5.8v6.1h-3.6v-5.4c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.5H9.7V9.2h-.5Z" /></svg>
+              </span>
+              <span class="social-placeholder" role="img" aria-label="Instagram profile link coming soon" title="Instagram — link coming soon">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5" /><circle cx="12" cy="12" r="4.1" /><circle cx="17.45" cy="6.65" r="1" class="social-icon-dot" /></svg>
+              </span>
+            </div>
           </div>
           <nav class="footer-nav" aria-label="Footer navigation">
             <div class="footer-col"><h3>Build</h3>${link("/services/", "Services")}${link("/solutions/", "Solutions")}${link("/work/", "Work")}${link("/products/", "Products")}${link("/downloads/", "Software access")}</div>
@@ -89,7 +97,16 @@ function footer() {
             <div class="footer-col"><h3>Product terms</h3>${link("/legal/free-trial-terms/", "Free trial terms")}${link("/legal/saas-subscription-terms/", "SaaS terms")}<span>No public trials are active</span></div>
           </nav>
         </div>
-        <div class="footer-bottom"><span>© ${year} ${company.name}. All rights reserved.</span><span>Built for clarity, utility, and forward motion.</span></div>
+        <div class="footer-bottom">
+          <span>© ${year} ${company.name}. All rights reserved.</span>
+          <div class="footer-bottom-actions">
+            <span>Built for clarity, utility, and forward motion.</span>
+            <button class="back-to-top" type="button" data-back-to-top aria-label="Scroll back to the top">
+              <span>Back to top</span>
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 13V3M4.25 6.75 8 3l3.75 3.75" /></svg>
+            </button>
+          </div>
+        </div>
       </div>
     </footer>`;
 }
@@ -470,6 +487,25 @@ function bindInteractions() {
 
   document.querySelectorAll(".faq-question").forEach((question) => {
     question.addEventListener("click", () => question.setAttribute("aria-expanded", String(question.getAttribute("aria-expanded") !== "true")));
+  });
+
+  document.querySelector("[data-back-to-top]")?.addEventListener("click", () => {
+    cancelSmoothScroll();
+    const finish = () => document.querySelector(".site-header .brand")?.focus({ preventScroll: true });
+    if (prefersReducedMotion || !window.gsap || !window.ScrollToPlugin) {
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "instant" : "smooth" });
+      window.setTimeout(finish, prefersReducedMotion ? 0 : 500);
+      return;
+    }
+    window.gsap.registerPlugin(window.ScrollToPlugin);
+    smoothScrollTarget = 0;
+    smoothScrollTween = window.gsap.to(window, {
+      scrollTo: { y: 0, autoKill: false },
+      duration: 0.85,
+      ease: "power3.inOut",
+      onUpdate: () => window.ScrollTrigger?.update(),
+      onComplete: () => { smoothScrollTween = null; finish(); }
+    });
   });
 
   const form = document.querySelector("#project-form");
