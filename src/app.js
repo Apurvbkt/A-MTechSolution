@@ -359,7 +359,23 @@ function aboutPage() {
 
 function contactPage() {
   return `${pageHero({ label: "Start a project", title: "Tell us what needs to move.", intro: "You can arrive with a detailed specification or a stubborn business problem. Start with what is happening now and what a better outcome would change." })}
-    <section class="section"><div class="shell contact-layout"><aside class="contact-aside"><div><h2>A useful first message.</h2><p>Share the workflow, audience, urgency, and constraints you already know. You do not need to have the technology figured out.</p></div><div class="contact-status"><span class="availability-dot"></span> ${company.availability}<br /><a href="mailto:${contactEmail}">${contactEmail}</a><br /><a href="tel:${contactPhoneHref}">${contactPhone}</a> · <a href="https://wa.me/${whatsappPhone}" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></aside>
+    <section class="section"><div class="shell contact-layout"><aside class="contact-aside"><div><h2>A useful first message.</h2><p>Share the workflow, audience, urgency, and constraints you already know. You do not need to have the technology figured out.</p></div><div class="contact-status">
+        <div class="contact-status-head"><span class="availability-dot" aria-hidden="true"></span><span>${company.availability}</span></div>
+        <div class="contact-methods">
+          <a class="contact-method" href="mailto:${contactEmail}" aria-label="Email A&M Tech Solutions at ${contactEmail}">
+            <span class="contact-method-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></svg></span>
+            <span class="contact-method-copy"><small>Email</small><strong>${contactEmail}</strong></span><span class="contact-method-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="contact-method" href="tel:${contactPhoneHref}" aria-label="Call A&M Tech Solutions at ${contactPhone}">
+            <span class="contact-method-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.1 3.5 10 7.1 8.3 9.3c1.2 2.4 3.1 4.3 5.5 5.5l2.2-1.7 3.6 2.9-.6 3c-.2 1-1.1 1.7-2.1 1.6C9.7 19.8 4.1 14.2 3.3 7c-.1-1 .6-1.9 1.6-2.1l2.2-.4Z" /></svg></span>
+            <span class="contact-method-copy"><small>Call</small><strong>${contactPhone}</strong></span><span class="contact-method-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="contact-method contact-method-whatsapp" href="https://wa.me/${whatsappPhone}" target="_blank" rel="noopener noreferrer" aria-label="Message A&M Tech Solutions on WhatsApp at ${contactPhone}">
+            <span class="contact-method-icon"><svg class="icon-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a9.8 9.8 0 0 0-8.4 14.9L2.2 22l5.2-1.4A9.9 9.9 0 1 0 12 2Zm0 17.8a8 8 0 0 1-4.1-1.1l-.3-.2-3.1.8.8-3-.2-.3A7.9 7.9 0 1 1 12 19.8Zm4.4-5.9c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-1.9-1.2 7.4 7.4 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.5.3-.5c.1-.2 0-.4 0-.5l-.7-1.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2 0 1.3.9 2.5 1.1 2.7.1.2 1.8 2.8 4.5 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.7.1.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.2-.1-.4-.2-.6-.3Z" /></svg></span>
+            <span class="contact-method-copy"><small>WhatsApp</small><strong>${contactPhone}</strong></span><span class="contact-method-arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div></aside>
       <form id="project-form" novalidate>
         <div class="form-grid">
           ${formField("name", "Name", "text", true, "Your name")}
@@ -367,7 +383,7 @@ function contactPage() {
           ${formField("company", "Company name", "text", false, "Optional")}
           <div class="field"><label for="service">Service required <span aria-hidden="true">*</span></label><select id="service" name="service" required><option value="">Select a service</option>${services.map((service) => `<option value="${service.slug}">${service.title}</option>`).join("")}<option value="not-sure">Not sure yet</option></select><p class="field-error" id="service-error"></p></div>
           <div class="field"><label for="budget">Project budget range</label><select id="budget" name="budget"><option value="">Prefer not to say</option><option>Exploring / not set</option><option>Under ₹1 lakh</option><option>₹1–3 lakh</option><option>₹3–8 lakh</option><option>₹8 lakh+</option></select><p class="field-error"></p></div>
-          <div class="field"><label for="contactMethod">Preferred contact method</label><select id="contactMethod" name="contactMethod"><option>Email</option><option>Phone / video call (details arranged by email)</option></select><p class="field-error"></p></div>
+          <div class="field"><label for="contactMethod">Preferred contact method</label><select id="contactMethod" name="contactMethod"><option>Email</option><option>Phone call</option><option>WhatsApp</option><option>Video call (details arranged by email)</option></select><p class="field-error"></p></div>
           <div class="field field-full"><label for="description">Project description <span aria-hidden="true">*</span></label><textarea id="description" name="description" required minlength="30" maxlength="4000" placeholder="What is happening now, who is affected, and what would a useful result look like?"></textarea><small>30–4,000 characters. Do not include passwords, credentials, or sensitive personal information.</small><p class="field-error" id="description-error"></p></div>
           <div class="hp-field" aria-hidden="true"><label for="website">Leave this field empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off" /></div>
         </div>
