@@ -404,7 +404,7 @@ img, svg { display: block; max-width: 100%; }
 .premium-card-labour { top: 7.2rem; left: -1.4rem; color: #f5f3e9; background: #0f2722; transform: rotate(-3deg); }
 .premium-stage-caption { position: absolute; z-index: 4; right: 0; bottom: 0.2rem; margin: 0; padding: 0.55rem 0.7rem; color: var(--ink); background: var(--accent); font: 600 0.52rem/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; }
 
-.manifesto-section { min-height: 112svh; display: grid; align-items: center; overflow: clip; }
+.manifesto-section { min-height: 100svh; display: grid; align-items: center; overflow: clip; }
 .manifesto-line { display: grid; grid-template-columns: 0.27fr 1fr; gap: 2rem; align-items: start; }
 .manifesto-copy { max-width: 23ch; margin: 0; font-size: clamp(2.2rem, 6.5vw, 6.4rem); line-height: 1.02; letter-spacing: -0.065em; font-weight: 500; }
 .manifesto-word { display: inline-block; color: var(--white); white-space: nowrap; }
@@ -737,7 +737,7 @@ img, svg { display: block; max-width: 100%; }
   .premium-card-labour { top: 6rem; left: -0.2rem; }
   .premium-stage-caption { right: 0.2rem; font-size: 0.45rem; }
   .manifesto-line { grid-template-columns: 1fr; }
-  .manifesto-section { min-height: 96svh; }
+  .manifesto-section { min-height: 100svh; }
   .service-row { grid-template-columns: auto 1fr auto; gap: 1rem; }
   .service-row p { grid-column: 2 / -1; }
   .solutions-grid { grid-template-columns: 1fr; }

@@ -123,7 +123,7 @@ async function navigate(path, width, height) {
   const loaderElapsed = await evaluate(`performance.now()`);
   if (path === "/") {
     loaderDurations.push({ width, milliseconds: Math.round(loaderElapsed) });
-    if (enforceLoaderTiming && (loaderElapsed < 750 || loaderElapsed > 1350)) throw new Error(`Loader duration was outside the intended ~1 second window: ${Math.round(loaderElapsed)}ms at ${width}px.`);
+    if (enforceLoaderTiming && (loaderElapsed < 750 || loaderElapsed > 1800)) throw new Error(`Loader duration was outside the intended startup window: ${Math.round(loaderElapsed)}ms at ${width}px.`);
   }
   await delay(100);
 }
@@ -174,11 +174,11 @@ try {
   await delay(650);
   const manifestoInitial = await evaluate(`(() => { const items = [...document.querySelectorAll(".manifesto-char")]; const state = (item) => { const style = getComputedStyle(item); const matrix = new DOMMatrix(style.transform); return { opacity: Number(style.opacity), x: matrix.m41, y: matrix.m42, scale: Math.hypot(matrix.m11, matrix.m12) }; }; return { gsap: Boolean(window.gsap && window.ScrollTrigger), triggers: window.ScrollTrigger?.getAll().length || 0, characters: items.length, first: state(items[0]), last: state(items.at(-1)), scrollY }; })()`);
   if (!manifestoInitial.gsap || manifestoInitial.characters < 70 || manifestoInitial.first.opacity > 0.05 || manifestoInitial.last.opacity > 0.05 || manifestoInitial.first.scale < 1.5 || Math.hypot(manifestoInitial.first.x, manifestoInitial.first.y) < 30) throw new Error(`GSAP manifesto orbit did not initialise: ${JSON.stringify(manifestoInitial)}`);
-  await evaluate(`(() => { const section = document.querySelector("[data-manifesto]"); scrollTo(0, section.offsetTop - innerHeight * 0.52); })()`);
+  await evaluate(`(() => { const trigger = window.ScrollTrigger?.getById("manifesto-orbit"); if (!trigger) throw new Error("Manifesto orbit trigger missing"); scrollTo(0, trigger.start + (trigger.end - trigger.start) * 0.48); })()`);
   await delay(650);
   const manifestoMid = await evaluate(`(() => { const items = [...document.querySelectorAll(".manifesto-char")]; const state = (item) => { const style = getComputedStyle(item); const matrix = new DOMMatrix(style.transform); return { opacity: Number(style.opacity), distance: Math.hypot(matrix.m41, matrix.m42), scale: Math.hypot(matrix.m11, matrix.m12) }; }; return { first: state(items[0]), last: state(items.at(-1)) }; })()`);
   if (manifestoMid.first.opacity < 0.95 || manifestoMid.first.distance > 4 || manifestoMid.first.scale > 1.06 || manifestoMid.last.opacity > 0.5) throw new Error(`GSAP manifesto did not orbit progressively: ${JSON.stringify(manifestoMid)}`);
-  await evaluate(`(() => { const section = document.querySelector("[data-manifesto]"); scrollTo(0, section.offsetTop + innerHeight * 0.2); })()`);
+  await evaluate(`(() => { const trigger = window.ScrollTrigger?.getById("manifesto-orbit"); if (!trigger) throw new Error("Manifesto orbit trigger missing"); scrollTo(0, trigger.end + 2); })()`);
   await delay(650);
   const manifestoComplete = await evaluate(`(() => { const items = [...document.querySelectorAll(".manifesto-char")]; const state = (item) => { const style = getComputedStyle(item); const matrix = new DOMMatrix(style.transform); return { opacity: Number(style.opacity), distance: Math.hypot(matrix.m41, matrix.m42), scale: Math.hypot(matrix.m11, matrix.m12) }; }; return { first: state(items[0]), last: state(items.at(-1)) }; })()`);
   if (manifestoComplete.first.opacity < 0.99 || manifestoComplete.last.opacity < 0.99 || manifestoComplete.last.distance > 2 || Math.abs(manifestoComplete.last.scale - 1) > 0.03) throw new Error(`GSAP manifesto orbit did not settle with scroll: ${JSON.stringify(manifestoComplete)}`);

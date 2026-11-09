@@ -646,10 +646,13 @@ function setupManifestoAnimation() {
     const hold = { value: 0 };
     const timeline = gsap.timeline({
       scrollTrigger: {
+        id: "manifesto-orbit",
         trigger: section,
-        start: "top 86%",
-        end: "top -16%",
+        start: "top top",
+        end: () => `+=${Math.round(window.innerHeight * (window.innerWidth < 700 ? 1.25 : 1.75))}`,
         scrub: 0.55,
+        pin: true,
+        anticipatePin: 1,
         invalidateOnRefresh: true
       }
     });
