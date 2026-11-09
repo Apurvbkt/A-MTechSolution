@@ -53,8 +53,12 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; background: var(--paper); }
+html { scroll-behavior: smooth; background: var(--paper); scrollbar-width: thin; scrollbar-color: var(--ink) var(--paper-2); }
 html.gsap-smooth-scroll { scroll-behavior: auto; }
+html::-webkit-scrollbar { width: 0.72rem; }
+html::-webkit-scrollbar-track { background: var(--paper-2); border-left: 1px solid var(--line); }
+html::-webkit-scrollbar-thumb { background: var(--ink); border: 0.18rem solid var(--paper-2); border-radius: 999px; }
+html::-webkit-scrollbar-thumb:hover { background: var(--accent-dark); }
 
 body {
   margin: 0;
@@ -271,9 +275,11 @@ img, svg { display: block; max-width: 100%; }
   border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
   background: color-mix(in srgb, var(--paper) 94%, transparent);
   backdrop-filter: blur(14px);
-  transition: background 220ms ease, box-shadow 220ms ease;
+  will-change: transform;
+  transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), background 220ms ease, box-shadow 220ms ease;
 }
 .site-header.is-compact { background: color-mix(in srgb, var(--paper) 97%, transparent); box-shadow: 0 0.6rem 2rem color-mix(in srgb, var(--ink) 6%, transparent); }
+.site-header.is-hidden { transform: translateY(calc(-100% - 2px)); }
 .nav-wrap {
   width: min(100%, var(--max));
   height: 4.75rem;

@@ -150,10 +150,10 @@ try {
   await writeFile(resolve(artifacts, "home-mobile.png"), Buffer.from(mobileShot.data, "base64"));
 
   await navigate("/", 1440, 1000);
-  const desktop = await evaluate(`({ width: innerWidth, scrollWidth: document.documentElement.scrollWidth, menuHidden: getComputedStyle(document.querySelector(".menu-toggle")).display === "none", instrumentFont: document.fonts.check('16px "Instrument Sans"'), monoFont: document.fonts.check('12px "IBM Plex Mono"'), premiumStage: Boolean(document.querySelector("[data-hero-art]")), premiumCards: document.querySelectorAll(".premium-card").length, premiumImageLoaded: document.querySelector(".premium-screen img")?.naturalWidth > 0, featuredProject: document.querySelector(".project-grid-home .project-card h3")?.textContent.trim(), socialPlaceholders: document.querySelectorAll(".social-placeholder").length, backToTop: Boolean(document.querySelector("[data-back-to-top]")) })`);
+  const desktop = await evaluate(`({ width: innerWidth, scrollWidth: document.documentElement.scrollWidth, menuHidden: getComputedStyle(document.querySelector(".menu-toggle")).display === "none", instrumentFont: document.fonts.check('16px "Instrument Sans"'), monoFont: document.fonts.check('12px "IBM Plex Mono"'), premiumStage: Boolean(document.querySelector("[data-hero-art]")), premiumCards: document.querySelectorAll(".premium-card").length, premiumImageLoaded: document.querySelector(".premium-screen img")?.naturalWidth > 0, featuredProject: document.querySelector(".project-grid-home .project-card h3")?.textContent.trim(), socialPlaceholders: document.querySelectorAll(".social-placeholder").length, backToTop: Boolean(document.querySelector("[data-back-to-top]")), scrollbarColor: getComputedStyle(document.documentElement).scrollbarColor })`);
   if (desktop.scrollWidth > desktop.width) throw new Error(`Desktop overflow: viewport ${desktop.width}px, document ${desktop.scrollWidth}px.`);
   if (!desktop.menuHidden) throw new Error("Desktop navigation did not replace the mobile control.");
-  if (!desktop.instrumentFont || !desktop.monoFont || !desktop.premiumStage || desktop.premiumCards !== 2 || !desktop.premiumImageLoaded || desktop.featuredProject !== "Onsite Teams Replica" || desktop.socialPlaceholders !== 2 || !desktop.backToTop) throw new Error(`Premium visual system failed QA: ${JSON.stringify(desktop)}`);
+  if (!desktop.instrumentFont || !desktop.monoFont || !desktop.premiumStage || desktop.premiumCards !== 2 || !desktop.premiumImageLoaded || desktop.featuredProject !== "Onsite Teams Replica" || desktop.socialPlaceholders !== 2 || !desktop.backToTop || desktop.scrollbarColor === "auto") throw new Error(`Premium visual system failed QA: ${JSON.stringify(desktop)}`);
   const desktopShot = await cdp("Page.captureScreenshot", { format: "png", fromSurface: true, captureBeyondViewport: false });
   await writeFile(resolve(artifacts, "home-desktop.png"), Buffer.from(desktopShot.data, "base64"));
   const smoothScrollRuntime = await evaluate(`({ plugin: Boolean(window.ScrollToPlugin), enabled: document.documentElement.classList.contains("gsap-smooth-scroll"), y: scrollY })`);
@@ -164,6 +164,12 @@ try {
   await delay(1000);
   const smoothScrollEnd = await evaluate(`scrollY`);
   if (smoothScrollMid < 20 || smoothScrollEnd < smoothScrollMid + 100 || smoothScrollEnd > 900) throw new Error(`GSAP wheel smoothing failed: ${JSON.stringify({ smoothScrollMid, smoothScrollEnd })}`);
+  const headerAfterDown = await evaluate(`document.querySelector(".site-header")?.classList.contains("is-hidden") === true`);
+  if (!headerAfterDown) throw new Error("The navigation did not hide while scrolling down.");
+  await cdp("Input.dispatchMouseEvent", { type: "mouseWheel", x: 720, y: 500, deltaX: 0, deltaY: -360 });
+  await delay(700);
+  const headerAfterUp = await evaluate(`document.querySelector(".site-header")?.classList.contains("is-hidden") === false`);
+  if (!headerAfterUp) throw new Error("The navigation did not return while scrolling up.");
   await evaluate(`(() => { scrollTo(0, 0); window.ScrollTrigger?.refresh(); window.ScrollTrigger?.update(); })()`);
   await delay(650);
   const manifestoInitial = await evaluate(`(() => { const items = [...document.querySelectorAll(".manifesto-word")]; const brightness = (item) => getComputedStyle(item).color.match(/\\d+/g).slice(0, 3).reduce((sum, value) => sum + Number(value), 0) / 3; const trigger = window.ScrollTrigger?.getAll()[0]; return { gsap: Boolean(window.gsap && window.ScrollTrigger), triggers: window.ScrollTrigger?.getAll().length || 0, words: items.length, first: brightness(items[0]), last: brightness(items.at(-1)), firstInline: items[0]?.style.color, lastInline: items.at(-1)?.style.color, scrollY, trigger: trigger ? { start: trigger.start, end: trigger.end, progress: trigger.progress, animation: trigger.animation?.progress() } : null }; })()`);

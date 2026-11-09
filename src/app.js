@@ -660,10 +660,24 @@ function setupPremiumMotion() {
   premiumMotionContext = gsap.context(() => {
     const header = document.querySelector(".site-header");
     if (header) {
+      let previousScroll = window.scrollY;
       ScrollTrigger.create({
         start: 48,
         end: "max",
-        onToggle: (self) => header.classList.toggle("is-compact", self.isActive)
+        onUpdate: (self) => {
+          const currentScroll = self.scroll();
+          const delta = currentScroll - previousScroll;
+          const mustStayVisible = currentScroll < 80 || document.body.classList.contains("menu-open") || header.contains(document.activeElement);
+          header.classList.toggle("is-compact", currentScroll >= 48);
+          if (mustStayVisible) header.classList.remove("is-hidden");
+          else if (Math.abs(delta) > 3) header.classList.toggle("is-hidden", delta > 0);
+          previousScroll = currentScroll;
+        },
+        onRefresh: (self) => {
+          previousScroll = self.scroll();
+          header.classList.toggle("is-compact", previousScroll >= 48);
+          if (previousScroll < 80) header.classList.remove("is-hidden");
+        }
       });
     }
 
