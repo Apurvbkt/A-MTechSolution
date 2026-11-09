@@ -727,7 +727,7 @@ function setupProjectForm(form) {
     submit.disabled = true;
     submit.textContent = "Sending…";
     try {
-      const response = await fetch(config.contactEndpoint, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify({ ...data, formStartedAt: undefined, website: undefined }) });
+      const response = await fetch(config.contactEndpoint, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify({ formType: "Project inquiry", ...data, formStartedAt: undefined, website: undefined }) });
       if (!response.ok) throw new Error(`Submission failed with status ${response.status}`);
       form.reset();
       showStatus("Your inquiry was received. Thank you—we'll follow up using the details you provided.", "success");
@@ -793,7 +793,7 @@ function setupAccessForm(form) {
     submit.disabled = true;
     submit.textContent = "Sending…";
     try {
-      const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify({ ...data, consent: Boolean(data.consent), formStartedAt: undefined, website: undefined }) });
+      const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify({ formType: "Software access request", ...data, consent: Boolean(data.consent), formStartedAt: undefined, website: undefined }) });
       if (!response.ok) throw new Error(`Submission failed with status ${response.status}`);
       form.reset();
       showStatus("Your access request was received. No file was downloaded; the administrator will contact you using the details provided.", "success");

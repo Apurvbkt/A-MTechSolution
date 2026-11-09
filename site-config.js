@@ -3,8 +3,8 @@
 // the inquiry has been durably accepted by your form or email service.
 window.AM_SITE_CONFIG = Object.freeze({
   basePath: "",
-  contactEndpoint: "",
-  accessEndpoint: "",
+  contactEndpoint: "https://formspree.io/f/xaeegraj",
+  accessEndpoint: "https://formspree.io/f/xaeegraj",
   contactEmail: "hello.amtechsolutions@outlook.com",
   companyLegalName: "A&M Tech Solutions",
   jurisdiction: "",

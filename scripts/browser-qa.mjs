@@ -188,16 +188,22 @@ try {
   await navigate("/contact/", 390, 844);
   const contact = await evaluate(`(async () => {
     const form = document.querySelector("#project-form");
+    const endpoint = window.AM_SITE_CONFIG?.contactEndpoint;
+    const originalFetch = window.fetch;
+    window.fetch = async (url, options) => String(url) === endpoint
+      ? new Response(JSON.stringify({ ok: true }), { status: 200, headers: { "Content-Type": "application/json" } })
+      : originalFetch(url, options);
     form.elements.name.value = "Test User";
     form.elements.email.value = "test@example.com";
     form.elements.service.value = "website-development";
     form.elements.description.value = "This is a browser QA inquiry that is long enough for validation.";
     form.elements.formStartedAt.value = String(Date.now() - 5000);
     form.requestSubmit();
-    await new Promise(resolve => setTimeout(resolve, 100));
-    return { status: document.querySelector("#form-status").textContent.trim(), success: document.querySelector("#form-status").classList.contains("success"), overflow: document.documentElement.scrollWidth > innerWidth };
+    await new Promise(resolve => setTimeout(resolve, 150));
+    window.fetch = originalFetch;
+    return { endpoint, status: document.querySelector("#form-status").textContent.trim(), success: document.querySelector("#form-status").classList.contains("success"), overflow: document.documentElement.scrollWidth > innerWidth };
   })()`);
-  if (contact.success || !contact.status.includes("No message was sent")) throw new Error("The unconfigured form did not show the required honest failure state.");
+  if (!contact.endpoint?.startsWith("https://formspree.io/f/") || !contact.success || !contact.status.includes("received")) throw new Error(`The configured contact form failed QA: ${JSON.stringify(contact)}`);
   if (contact.overflow) throw new Error("Contact page overflows at 390px.");
 
   await navigate("/services/crm-development/", 390, 844);
@@ -217,6 +223,11 @@ try {
   await navigate("/downloads/paytrack/", 390, 844);
   const access = await evaluate(`(async () => {
     const form = document.querySelector("#access-request-form");
+    const endpoint = window.AM_SITE_CONFIG?.accessEndpoint || window.AM_SITE_CONFIG?.contactEndpoint;
+    const originalFetch = window.fetch;
+    window.fetch = async (url, options) => String(url) === endpoint
+      ? new Response(JSON.stringify({ ok: true }), { status: 200, headers: { "Content-Type": "application/json" } })
+      : originalFetch(url, options);
     const forbiddenDownloads = [...document.querySelectorAll("a")].filter(anchor => anchor.hasAttribute("download") || /\\.(apk|exe|dmg|zip)(?:$|\\?)/i.test(anchor.href)).length;
     form.elements.name.value = "Demo User";
     form.elements.phone.value = "+91 98765 43210";
@@ -225,10 +236,11 @@ try {
     form.elements.consent.checked = true;
     form.elements.formStartedAt.value = String(Date.now() - 5000);
     form.requestSubmit();
-    await new Promise(resolve => setTimeout(resolve, 100));
-    return { heading: document.querySelector("h1")?.textContent.trim(), forbiddenDownloads, status: document.querySelector("#access-form-status")?.textContent.trim(), success: document.querySelector("#access-form-status")?.classList.contains("success"), overflow: document.documentElement.scrollWidth > innerWidth };
+    await new Promise(resolve => setTimeout(resolve, 150));
+    window.fetch = originalFetch;
+    return { endpoint, heading: document.querySelector("h1")?.textContent.trim(), forbiddenDownloads, status: document.querySelector("#access-form-status")?.textContent.trim(), success: document.querySelector("#access-form-status")?.classList.contains("success"), overflow: document.documentElement.scrollWidth > innerWidth };
   })()`);
-  if (access.heading !== "PayTrack" || access.forbiddenDownloads || access.success || !access.status?.includes("no request was sent") || access.overflow) throw new Error(`PayTrack access gate failed QA: ${JSON.stringify(access)}`);
+  if (!access.endpoint?.startsWith("https://formspree.io/f/") || access.heading !== "PayTrack" || access.forbiddenDownloads || !access.success || !access.status?.includes("received") || access.overflow) throw new Error(`PayTrack access gate failed QA: ${JSON.stringify(access)}`);
   if (browserErrors.length) throw new Error(`Browser errors detected: ${browserErrors.join(", ")}`);
   if (networkFailures.length) throw new Error(`Network failures detected: ${networkFailures.join(", ")}`);
 
