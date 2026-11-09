@@ -623,7 +623,7 @@ img, svg { display: block; max-width: 100%; }
 .vision-line blockquote { margin: 0; font-size: clamp(2.3rem, 5vw, 5rem); line-height: 1; letter-spacing: -0.06em; }
 
 .contact-layout { display: grid; grid-template-columns: 0.42fr 0.58fr; gap: clamp(3rem, 8vw, 9rem); }
-.contact-aside { display: flex; flex-direction: column; justify-content: space-between; gap: 3rem; }
+.contact-aside { display: flex; flex-direction: column; justify-content: flex-start; gap: 2rem; }
 .contact-aside h2 { margin: 0 0 1rem; font-size: clamp(2rem, 4vw, 4rem); line-height: 1; letter-spacing: -0.055em; }
 .contact-aside p { color: var(--muted); }
 .contact-status { border: 1px solid var(--line); background: var(--white); }
