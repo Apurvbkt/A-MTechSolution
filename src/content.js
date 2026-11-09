@@ -4,7 +4,7 @@ export const company = {
   positioning: "We build digital products that move businesses forward.",
   description: "From your first website to the systems that run your business, we turn complex ideas into practical digital products.",
   availability: "Project enquiries open",
-  contactEmail: ""
+  contactEmail: "hello.amtechsolutions@outlook.com"
 };
 
 export const services = [

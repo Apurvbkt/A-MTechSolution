@@ -5,7 +5,7 @@ window.AM_SITE_CONFIG = Object.freeze({
   basePath: "",
   contactEndpoint: "",
   accessEndpoint: "",
-  contactEmail: "",
+  contactEmail: "hello.amtechsolutions@outlook.com",
   companyLegalName: "A&M Tech Solutions",
   jurisdiction: "",
   effectiveDate: ""

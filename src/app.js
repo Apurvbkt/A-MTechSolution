@@ -8,6 +8,7 @@ const routeCurtain = document.querySelector("#route-curtain");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const config = window.AM_SITE_CONFIG || {};
 const basePath = config.basePath && config.basePath !== "/" ? `/${String(config.basePath).replace(/^\/+|\/+$/g, "")}` : "";
+const contactEmail = config.contactEmail || company.contactEmail;
 let manifestoAnimationContext = null;
 let premiumMotionContext = null;
 let smoothScrollTween = null;
@@ -76,7 +77,7 @@ function footer() {
           <div class="footer-brand">
             ${link("/", `<span class="brand-mark" aria-hidden="true">A&M</span><span class="brand-text">A&M Tech Solutions</span>`, "brand")}
             <p>${company.description}</p>
-            <p class="verified-note">Contact details will appear here once verified and added to the central site configuration.</p>
+            <p class="verified-note">Email: <a href="mailto:${contactEmail}">${contactEmail}</a></p>
           </div>
           <nav class="footer-nav" aria-label="Footer navigation">
             <div class="footer-col"><h3>Build</h3>${link("/services/", "Services")}${link("/solutions/", "Solutions")}${link("/work/", "Work")}${link("/products/", "Products")}${link("/downloads/", "Software access")}</div>
@@ -338,7 +339,7 @@ function aboutPage() {
 
 function contactPage() {
   return `${pageHero({ label: "Start a project", title: "Tell us what needs to move.", intro: "You can arrive with a detailed specification or a stubborn business problem. Start with what is happening now and what a better outcome would change." })}
-    <section class="section"><div class="shell contact-layout"><aside class="contact-aside"><div><h2>A useful first message.</h2><p>Share the workflow, audience, urgency, and constraints you already know. You do not need to have the technology figured out.</p></div><div class="contact-status"><span class="availability-dot"></span> ${company.availability}<br />Verified direct contact details: pending configuration</div></aside>
+    <section class="section"><div class="shell contact-layout"><aside class="contact-aside"><div><h2>A useful first message.</h2><p>Share the workflow, audience, urgency, and constraints you already know. You do not need to have the technology figured out.</p></div><div class="contact-status"><span class="availability-dot"></span> ${company.availability}<br /><a href="mailto:${contactEmail}">${contactEmail}</a></div></aside>
       <form id="project-form" novalidate>
         <div class="form-grid">
           ${formField("name", "Name", "text", true, "Your name")}
