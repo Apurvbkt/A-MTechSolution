@@ -228,7 +228,7 @@ export const projects = [
   },
   {
     slug: "onsite-teams-replica",
-    name: "Onsite Teams Replica",
+    name: "Custom Inventory System",
     category: "Construction operations / ERP",
     status: "Full-stack prototype",
     short: "An independent full-stack product study covering company and project operations for construction teams.",
@@ -242,7 +242,7 @@ export const projects = [
     visualCode: "ON",
     visualLine: "Projects / Finance / Field",
     media: "/projects/onsite-replica-login.png",
-    note: "Independent replica built for product study and implementation practice. A&M Tech Solutions is not affiliated with or endorsed by Onsite Teams."
+    note: "Independent full-stack prototype built for product study and implementation practice. Public demo and source access require administrator approval."
   },
   {
     slug: "inventory-management-system",

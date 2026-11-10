@@ -125,8 +125,8 @@ function interfaceVisual() {
       <div class="premium-stage-grid" aria-hidden="true"></div>
       <div class="premium-stage-index" data-hero-layer data-depth="1"><span>Selected systems</span><span>01—03 / 2026</span></div>
       <div class="premium-screen" data-hero-layer data-depth="2">
-        <div class="premium-browser-bar"><span><i></i><i></i><i></i></span><b>Onsite / independent product study</b></div>
-        <img src="${sitePath("/projects/onsite-replica-login.png")}" alt="Onsite Teams Replica login interface preview" loading="eager" fetchpriority="high" />
+        <div class="premium-browser-bar"><span><i></i><i></i><i></i></span><b>Custom inventory / independent product study</b></div>
+        <img src="${sitePath("/projects/onsite-replica-login.png")}" alt="Custom Inventory System login interface preview" loading="eager" fetchpriority="high" />
       </div>
       <div class="premium-card premium-card-paytrack" data-hero-layer data-depth="3" aria-label="PayTrack project summary">
         <div><span>PAY / 02</span><i>Production PWA</i></div>
