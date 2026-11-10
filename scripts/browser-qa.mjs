@@ -150,10 +150,10 @@ try {
   await writeFile(resolve(artifacts, "home-mobile.png"), Buffer.from(mobileShot.data, "base64"));
 
   await navigate("/", 1440, 1000);
-  const desktop = await evaluate(`({ width: innerWidth, scrollWidth: document.documentElement.scrollWidth, menuHidden: getComputedStyle(document.querySelector(".menu-toggle")).display === "none", instrumentFont: document.fonts.check('16px "Instrument Sans"'), monoFont: document.fonts.check('12px "IBM Plex Mono"'), premiumStage: Boolean(document.querySelector("[data-hero-art]")), premiumCards: document.querySelectorAll(".premium-card").length, premiumImageLoaded: document.querySelector(".premium-screen img")?.naturalWidth > 0, featuredProject: document.querySelector(".project-grid-home .project-card h3")?.textContent.trim(), socialPlaceholders: document.querySelectorAll(".social-placeholder").length, backToTop: Boolean(document.querySelector("[data-back-to-top]")), scrollbarColor: getComputedStyle(document.documentElement).scrollbarColor })`);
+  const desktop = await evaluate(`({ width: innerWidth, scrollWidth: document.documentElement.scrollWidth, menuHidden: getComputedStyle(document.querySelector(".menu-toggle")).display === "none", instrumentFont: document.fonts.check('16px "Instrument Sans"'), monoFont: document.fonts.check('12px "IBM Plex Mono"'), premiumStage: Boolean(document.querySelector("[data-hero-art]")), premiumCards: document.querySelectorAll(".premium-card").length, premiumImageLoaded: document.querySelector(".premium-screen img")?.naturalWidth > 0, featuredProject: document.querySelector(".project-grid-home .project-card h3")?.textContent.trim(), socialPlaceholders: document.querySelectorAll(".social-placeholder").length, backToTop: Boolean(document.querySelector("[data-back-to-top]")), nativeScrollbarWidth: innerWidth - document.documentElement.clientWidth, customScroller: Boolean(document.querySelector("#scroll-indicator")) })`);
   if (desktop.scrollWidth > desktop.width) throw new Error(`Desktop overflow: viewport ${desktop.width}px, document ${desktop.scrollWidth}px.`);
   if (!desktop.menuHidden) throw new Error("Desktop navigation did not replace the mobile control.");
-  if (!desktop.instrumentFont || !desktop.monoFont || !desktop.premiumStage || desktop.premiumCards !== 2 || !desktop.premiumImageLoaded || desktop.featuredProject !== "Onsite Teams Replica" || desktop.socialPlaceholders !== 2 || !desktop.backToTop || desktop.scrollbarColor === "auto") throw new Error(`Premium visual system failed QA: ${JSON.stringify(desktop)}`);
+  if (!desktop.instrumentFont || !desktop.monoFont || !desktop.premiumStage || desktop.premiumCards !== 2 || !desktop.premiumImageLoaded || desktop.featuredProject !== "Onsite Teams Replica" || desktop.socialPlaceholders !== 2 || !desktop.backToTop || desktop.nativeScrollbarWidth !== 0 || !desktop.customScroller) throw new Error(`Premium visual system failed QA: ${JSON.stringify(desktop)}`);
   const desktopShot = await cdp("Page.captureScreenshot", { format: "png", fromSurface: true, captureBeyondViewport: false });
   await writeFile(resolve(artifacts, "home-desktop.png"), Buffer.from(desktopShot.data, "base64"));
   const smoothScrollRuntime = await evaluate(`({ plugin: Boolean(window.ScrollToPlugin), enabled: document.documentElement.classList.contains("gsap-smooth-scroll"), y: scrollY })`);
@@ -161,9 +161,14 @@ try {
   await cdp("Input.dispatchMouseEvent", { type: "mouseWheel", x: 720, y: 500, deltaX: 0, deltaY: 700 });
   await delay(90);
   const smoothScrollMid = await evaluate(`scrollY`);
+  const customScrollerActive = await evaluate(`document.querySelector("#scroll-indicator")?.classList.contains("is-active") === true`);
+  if (!customScrollerActive) throw new Error("The custom scroll indicator did not appear while scrolling.");
   await delay(1000);
   const smoothScrollEnd = await evaluate(`scrollY`);
   if (smoothScrollMid < 20 || smoothScrollEnd < smoothScrollMid + 100 || smoothScrollEnd > 900) throw new Error(`GSAP wheel smoothing failed: ${JSON.stringify({ smoothScrollMid, smoothScrollEnd })}`);
+  await delay(800);
+  const customScrollerIdle = await evaluate(`document.querySelector("#scroll-indicator")?.classList.contains("is-active") === false`);
+  if (!customScrollerIdle) throw new Error("The custom scroll indicator did not hide after scrolling stopped.");
   const headerAfterDown = await evaluate(`document.querySelector(".site-header")?.classList.contains("is-hidden") === true`);
   if (!headerAfterDown) throw new Error("The navigation did not hide while scrolling down.");
   await cdp("Input.dispatchMouseEvent", { type: "mouseWheel", x: 720, y: 500, deltaX: 0, deltaY: -360 });

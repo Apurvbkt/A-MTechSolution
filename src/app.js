@@ -5,6 +5,9 @@ const siteLoader = document.querySelector("#site-loader");
 const loaderPercent = document.querySelector("[data-loader-percent]");
 const loaderStatus = document.querySelector("[data-loader-status]");
 const routeCurtain = document.querySelector("#route-curtain");
+const scrollIndicator = document.querySelector("#scroll-indicator");
+const scrollIndicatorTrack = scrollIndicator?.querySelector(".scroll-indicator-track");
+const scrollIndicatorThumb = scrollIndicator?.querySelector(".scroll-indicator-thumb");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const config = window.AM_SITE_CONFIG || {};
 const basePath = config.basePath && config.basePath !== "/" ? `/${String(config.basePath).replace(/^\/+|\/+$/g, "")}` : "";
@@ -16,6 +19,7 @@ let manifestoAnimationContext = null;
 let premiumMotionContext = null;
 let smoothScrollTween = null;
 let smoothScrollTarget = window.scrollY;
+let scrollIndicatorHideTimer = null;
 
 const serviceBySlug = Object.fromEntries(services.map((service) => [service.slug, service]));
 const projectBySlug = Object.fromEntries(projects.map((project) => [project.slug, project]));
@@ -478,6 +482,27 @@ function render(path = normalizePath(location.pathname), route = resolveRoute(pa
   observeReveals();
   setupManifestoAnimation();
   setupPremiumMotion();
+  requestAnimationFrame(() => updateScrollIndicator(false));
+}
+
+function updateScrollIndicator(show = true) {
+  if (!scrollIndicator || !scrollIndicatorTrack || !scrollIndicatorThumb) return;
+  const maximumScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  const travel = Math.max(0, scrollIndicatorTrack.clientHeight - scrollIndicatorThumb.offsetHeight);
+  const progress = maximumScroll ? Math.min(1, Math.max(0, window.scrollY / maximumScroll)) : 0;
+  scrollIndicator.style.setProperty("--scroll-thumb-y", `${progress * travel}px`);
+  scrollIndicator.hidden = maximumScroll === 0;
+  if (!show || maximumScroll === 0 || document.body.classList.contains("loader-active")) return;
+  scrollIndicator.classList.add("is-active");
+  window.clearTimeout(scrollIndicatorHideTimer);
+  scrollIndicatorHideTimer = window.setTimeout(() => scrollIndicator.classList.remove("is-active"), 720);
+}
+
+function setupScrollIndicator() {
+  if (!scrollIndicator) return;
+  updateScrollIndicator(false);
+  window.addEventListener("scroll", () => updateScrollIndicator(true), { passive: true });
+  window.addEventListener("resize", () => updateScrollIndicator(false), { passive: true });
 }
 
 function bindInteractions() {
@@ -916,5 +941,6 @@ document.body.addEventListener("keydown", (event) => {
 });
 
 setupSmoothScroll();
+setupScrollIndicator();
 render();
 playInitialLoader();

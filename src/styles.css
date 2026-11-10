@@ -53,12 +53,9 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; background: var(--paper); scrollbar-width: thin; scrollbar-color: var(--ink) var(--paper-2); }
+html { scroll-behavior: smooth; background: var(--paper); scrollbar-width: none; }
 html.gsap-smooth-scroll { scroll-behavior: auto; }
-html::-webkit-scrollbar { width: 0.72rem; }
-html::-webkit-scrollbar-track { background: var(--paper-2); border-left: 1px solid var(--line); }
-html::-webkit-scrollbar-thumb { background: var(--ink); border: 0.18rem solid var(--paper-2); border-radius: 999px; }
-html::-webkit-scrollbar-thumb:hover { background: var(--accent-dark); }
+html::-webkit-scrollbar { width: 0; height: 0; }
 
 body {
   margin: 0;
@@ -87,6 +84,22 @@ img, svg { display: block; max-width: 100%; }
 
 .site-loader,
 .route-curtain { display: none; }
+
+.scroll-indicator {
+  position: fixed;
+  z-index: 2400;
+  top: 50%;
+  right: clamp(0.45rem, 1.1vw, 0.9rem);
+  width: 0.4rem;
+  height: clamp(6.5rem, 17vh, 10.5rem);
+  opacity: 0;
+  transform: translate(0.35rem, -50%);
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.scroll-indicator.is-active { opacity: 1; transform: translate(0, -50%); }
+.scroll-indicator-track { position: absolute; inset: 0; overflow: hidden; border-radius: 999px; background: rgba(200, 200, 189, 0.58); box-shadow: 0 0 0 1px rgba(16, 17, 15, 0.08); }
+.scroll-indicator-thumb { position: absolute; inset: 0 0 auto; height: 2rem; border-radius: inherit; background: var(--ink); transform: translateY(var(--scroll-thumb-y, 0)); will-change: transform; }
 
 .js .site-loader {
   --loader-progress: 0%;
