@@ -183,6 +183,8 @@ try {
   await delay(650);
   const manifestoMid = await evaluate(`(() => { const items = [...document.querySelectorAll(".manifesto-char")]; const state = (item) => { const style = getComputedStyle(item); const matrix = new DOMMatrix(style.transform); return { opacity: Number(style.opacity), distance: Math.hypot(matrix.m41, matrix.m42), scale: Math.hypot(matrix.m11, matrix.m12) }; }; return { first: state(items[0]), last: state(items.at(-1)) }; })()`);
   if (manifestoMid.first.opacity < 0.95 || manifestoMid.first.distance > 4 || manifestoMid.first.scale > 1.06 || manifestoMid.last.opacity > 0.5) throw new Error(`GSAP manifesto did not orbit progressively: ${JSON.stringify(manifestoMid)}`);
+  const darkScroller = await evaluate(`({ onDark: document.querySelector("#scroll-indicator")?.classList.contains("on-dark"), thumbColor: getComputedStyle(document.querySelector(".scroll-indicator-thumb")).backgroundColor })`);
+  if (!darkScroller.onDark || darkScroller.thumbColor !== "rgb(250, 250, 246)") throw new Error(`The custom scroller did not switch for the dark section: ${JSON.stringify(darkScroller)}`);
   await evaluate(`(() => { const trigger = window.ScrollTrigger?.getById("manifesto-orbit"); if (!trigger) throw new Error("Manifesto orbit trigger missing"); scrollTo(0, trigger.end + 2); })()`);
   await delay(650);
   const manifestoComplete = await evaluate(`(() => { const items = [...document.querySelectorAll(".manifesto-char")]; const state = (item) => { const style = getComputedStyle(item); const matrix = new DOMMatrix(style.transform); return { opacity: Number(style.opacity), distance: Math.hypot(matrix.m41, matrix.m42), scale: Math.hypot(matrix.m11, matrix.m12) }; }; return { first: state(items[0]), last: state(items.at(-1)) }; })()`);

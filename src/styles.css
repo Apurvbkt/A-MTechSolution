@@ -98,8 +98,10 @@ img, svg { display: block; max-width: 100%; }
   transition: opacity 220ms ease, transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .scroll-indicator.is-active { opacity: 1; transform: translate(0, -50%); }
-.scroll-indicator-track { position: absolute; inset: 0; overflow: hidden; border-radius: 999px; background: rgba(200, 200, 189, 0.58); box-shadow: 0 0 0 1px rgba(16, 17, 15, 0.08); }
-.scroll-indicator-thumb { position: absolute; inset: 0 0 auto; height: 2rem; border-radius: inherit; background: var(--ink); transform: translateY(var(--scroll-thumb-y, 0)); will-change: transform; }
+.scroll-indicator-track { position: absolute; inset: 0; overflow: hidden; border-radius: 999px; background: rgba(200, 200, 189, 0.58); box-shadow: 0 0 0 1px rgba(16, 17, 15, 0.08); transition: background 180ms ease, box-shadow 180ms ease; }
+.scroll-indicator-thumb { position: absolute; inset: 0 0 auto; height: 2rem; border-radius: inherit; background: var(--ink); transform: translateY(var(--scroll-thumb-y, 0)); will-change: transform; transition: background 180ms ease; }
+.scroll-indicator.on-dark .scroll-indicator-track { background: rgba(250, 250, 246, 0.24); box-shadow: 0 0 0 1px rgba(250, 250, 246, 0.12); }
+.scroll-indicator.on-dark .scroll-indicator-thumb { background: var(--white); }
 
 .js .site-loader {
   --loader-progress: 0%;

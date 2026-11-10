@@ -490,7 +490,10 @@ function updateScrollIndicator(show = true) {
   const maximumScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
   const travel = Math.max(0, scrollIndicatorTrack.clientHeight - scrollIndicatorThumb.offsetHeight);
   const progress = maximumScroll ? Math.min(1, Math.max(0, window.scrollY / maximumScroll)) : 0;
+  const surfaceAtIndicator = document.elementFromPoint(Math.max(0, window.innerWidth - 24), window.innerHeight / 2);
+  const isDarkSurface = Boolean(surfaceAtIndicator?.closest(".section-dark, .site-footer"));
   scrollIndicator.style.setProperty("--scroll-thumb-y", `${progress * travel}px`);
+  scrollIndicator.classList.toggle("on-dark", isDarkSurface);
   scrollIndicator.hidden = maximumScroll === 0;
   if (!show || maximumScroll === 0 || document.body.classList.contains("loader-active")) return;
   scrollIndicator.classList.add("is-active");
