@@ -380,7 +380,7 @@ img, svg { display: block; max-width: 100%; }
 .text-link:hover::after { transform: translate(2px, -2px); }
 .button-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem; }
 
-.hero { padding-block: clamp(4.5rem, 8vw, 7.5rem) clamp(6rem, 11vw, 10rem); overflow: clip; }
+.hero { padding-block: clamp(3.75rem, 5vw, 5rem) clamp(6rem, 11vw, 10rem); overflow: clip; }
 .hero-grid { display: grid; grid-template-columns: minmax(0, 0.94fr) minmax(26rem, 1.06fr); gap: clamp(3.5rem, 6vw, 7rem); align-items: center; }
 .hero-grid > *, .page-hero-grid > *, .section-heading-row > *, .two-col > *, .contact-layout > * { min-width: 0; }
 .hero h1, .page-hero h1 {
