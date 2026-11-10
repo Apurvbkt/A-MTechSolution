@@ -180,15 +180,19 @@ function homePage() {
   return `
     <section class="hero">
       <div class="shell hero-grid">
-        <div class="reveal">
-          ${eyebrow("Digital products / Business systems")}
-          <h1>Software that works as hard as <em>your business.</em></h1>
-          <p class="hero-copy">Websites, business systems, and custom software built around the way you work. From a new digital presence to the tools that power your operations, we help you move forward.</p>
-          <div class="button-row">${button("/contact/", "Start a Project")}${button("/services/", "Explore Our Services", "button-ghost")}</div>
-          <p class="availability"><span class="availability-dot"></span>${company.availability}</p>
-          <div class="hero-disciplines" aria-label="A&M delivery disciplines"><span>Discover</span><span>Design</span><span>Build</span><span>Support</span></div>
+        <div class="hero-intro" data-hero-intro>
+          <div data-hero-eyebrow>${eyebrow("Digital products / Business systems")}</div>
+          <h1 class="hero-title" aria-label="Software that works as hard as your business.">
+            <span class="hero-title-line" aria-hidden="true"><span class="hero-title-line-inner">Software that works</span></span>
+            <span class="hero-title-line" aria-hidden="true"><span class="hero-title-line-inner">as hard as</span></span>
+            <span class="hero-title-line" aria-hidden="true"><span class="hero-title-line-inner"><em>your business.</em></span></span>
+          </h1>
+          <p class="hero-copy" data-hero-support>Websites, business systems, and custom software built around the way you work. From a new digital presence to the tools that power your operations, we help you move forward.</p>
+          <div class="button-row" data-hero-support>${button("/contact/", "Start a Project")}${button("/services/", "Explore Our Services", "button-ghost")}</div>
+          <p class="availability" data-hero-support><span class="availability-dot"></span>${company.availability}</p>
+          <div class="hero-disciplines" data-hero-support aria-label="A&M delivery disciplines"><span>Discover</span><span>Design</span><span>Build</span><span>Support</span></div>
         </div>
-        <div class="reveal">${interfaceVisual()}</div>
+        <div>${interfaceVisual()}</div>
       </div>
     </section>
     <section class="section section-dark manifesto-section" data-manifesto>
@@ -733,20 +737,30 @@ function setupPremiumMotion() {
 
     const stage = document.querySelector("[data-hero-art]");
     const layers = stage ? [...stage.querySelectorAll("[data-hero-layer]")] : [];
-    if (!stage || !layers.length) return;
+    const heroIntro = document.querySelector("[data-hero-intro]");
+    const titleLines = heroIntro ? [...heroIntro.querySelectorAll(".hero-title-line-inner")] : [];
+    const heroEyebrow = heroIntro?.querySelector("[data-hero-eyebrow]");
+    const heroSupport = heroIntro ? [...heroIntro.querySelectorAll("[data-hero-support]")] : [];
 
-    gsap.fromTo(layers, {
-      y: 30,
-      opacity: 0
-    }, {
-      y: 0,
-      opacity: 1,
-      duration: 1.05,
-      delay: 0.58,
-      stagger: 0.08,
-      ease: "power3.out",
-      clearProps: "opacity"
-    });
+    if (heroIntro && titleLines.length) {
+      gsap.set(titleLines, { yPercent: 112, rotation: 1.5, transformOrigin: "0 100%" });
+      gsap.set(heroEyebrow, { y: 10, opacity: 0 });
+      gsap.set(heroSupport, { y: 18, opacity: 0 });
+      gsap.set(layers, { y: 30, opacity: 0 });
+
+      const introTimeline = gsap.timeline({ paused: true });
+      introTimeline
+        .to(heroEyebrow, { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" })
+        .to(titleLines, { yPercent: 0, rotation: 0, duration: 0.86, stagger: 0.1, ease: "power4.out" }, "-=0.12")
+        .to(heroSupport, { y: 0, opacity: 1, duration: 0.58, stagger: 0.07, ease: "power3.out" }, "-=0.48")
+        .to(layers, { y: 0, opacity: 1, duration: 0.92, stagger: 0.07, ease: "power3.out" }, "-=0.72");
+
+      const playHeroIntro = () => introTimeline.play(0);
+      if (siteLoader?.classList.contains("is-hidden")) playHeroIntro();
+      else window.addEventListener("am:loader-complete", playHeroIntro, { once: true });
+    }
+
+    if (!stage || !layers.length) return;
 
     layers.forEach((layer) => {
       const depth = Number(layer.dataset.depth || 1);
@@ -802,6 +816,7 @@ async function playInitialLoader() {
   window.setTimeout(() => {
     siteLoader.classList.add("is-hidden");
     siteLoader.setAttribute("aria-hidden", "true");
+    window.dispatchEvent(new CustomEvent("am:loader-complete"));
   }, prefersReducedMotion ? 20 : 220);
 }
 
