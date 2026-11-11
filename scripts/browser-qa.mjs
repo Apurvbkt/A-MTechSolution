@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 
@@ -22,6 +22,18 @@ if (!edgePath) throw new Error("No supported Edge or Chrome executable was found
 const routes = [
   "/", "/services/", "/services/website-development/", "/services/web-application-development/", "/services/crm-development/", "/services/erp-business-systems/", "/services/saas-product-development/", "/services/custom-software-automation/", "/services/ui-ux-product-design/", "/services/maintenance-support/", "/solutions/", "/work/", "/work/costarica-labourtrack/", "/work/paytrack/", "/work/buildestimate-ai/", "/work/onsite-teams-replica/", "/work/inventory-management-system/", "/work/project-template/", "/downloads/", "/downloads/costarica-labourtrack/", "/downloads/paytrack/", "/downloads/buildestimate-ai/", "/downloads/onsite-teams-replica/", "/downloads/inventory-management-system/", "/products/", "/products/operations-hub/", "/about/", "/contact/", "/legal/terms-and-conditions/", "/legal/privacy-policy/", "/legal/free-trial-terms/", "/legal/refund-cancellation-policy/", "/legal/saas-subscription-terms/", "/legal/cookie-policy/"
 ];
+
+const builtHomeHtml = await readFile(resolve(root, "dist", "index.html"), "utf8");
+const builtWebsiteServiceHtml = await readFile(resolve(root, "dist", "services", "website-development", "index.html"), "utf8");
+const staticSeo = {
+  homeTitle: builtHomeHtml.includes("Website &amp; Software Development Company in Jamshedpur | A&amp;M Tech Solutions"),
+  canonical: builtHomeHtml.includes('<link rel="canonical" href="https://apurvbkt.github.io/A-MTechSolution/" />'),
+  twitterCard: builtHomeHtml.includes('<meta name="twitter:card" content="summary_large_image" />'),
+  organizationSchema: builtHomeHtml.includes('"@type":"Organization"') && builtHomeHtml.includes('"name":"Jamshedpur"'),
+  websiteSchema: builtHomeHtml.includes('"@type":"WebSite"'),
+  serviceSchema: builtWebsiteServiceHtml.includes('"@type":"Service"')
+};
+if (Object.values(staticSeo).some(value => value !== true)) throw new Error(`Generated SEO metadata failed QA: ${JSON.stringify(staticSeo)}`);
 
 function urlForRoute(route) {
   return `${baseUrl}${route}`;
@@ -157,10 +169,42 @@ try {
 
   await navigate("/", 1440, 1000);
   await delay(1500);
-  const desktop = await evaluate(`(() => { const heroLines = [...document.querySelectorAll(".hero-title-line-inner")]; const lineSettled = heroLines.every(line => { const matrix = new DOMMatrix(getComputedStyle(line).transform); return Math.abs(matrix.m42) < 1; }); return { width: innerWidth, scrollWidth: document.documentElement.scrollWidth, menuHidden: getComputedStyle(document.querySelector(".menu-toggle")).display === "none", instrumentFont: document.fonts.check('16px "Instrument Sans"'), monoFont: document.fonts.check('12px "IBM Plex Mono"'), premiumStage: Boolean(document.querySelector("[data-hero-art]")), premiumCards: document.querySelectorAll(".premium-card").length, premiumImageLoaded: document.querySelector(".premium-screen img")?.naturalWidth > 0, featuredProject: document.querySelector(".project-grid-home .project-card h3")?.textContent.trim(), socialPlaceholders: document.querySelectorAll(".social-placeholder").length, backToTop: Boolean(document.querySelector("[data-back-to-top]")), nativeScrollbarWidth: innerWidth - document.documentElement.clientWidth, customScroller: Boolean(document.querySelector("#scroll-indicator")), heroLines: heroLines.length, heroSettled: lineSettled, heroSupportOpacity: Number(getComputedStyle(document.querySelector("[data-hero-support]")).opacity) }; })()`);
+  const desktop = await evaluate(`(() => {
+    const heroLines = [...document.querySelectorAll(".hero-title-line-inner")];
+    const lineSettled = heroLines.every(line => { const matrix = new DOMMatrix(getComputedStyle(line).transform); return Math.abs(matrix.m42) < 1; });
+    const schemas = [...document.querySelectorAll('script[type="application/ld+json"]')].flatMap(script => { try { const value = JSON.parse(script.textContent); return value["@graph"] || [value]; } catch { return []; } });
+    const expectedBase = ${JSON.stringify(deploymentBasePath)};
+    return {
+      width: innerWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      title: document.title,
+      menuHidden: getComputedStyle(document.querySelector(".menu-toggle")).display === "none",
+      instrumentFont: document.fonts.check('16px "Instrument Sans"'),
+      monoFont: document.fonts.check('12px "IBM Plex Mono"'),
+      premiumStage: Boolean(document.querySelector("[data-hero-art]")),
+      premiumCards: document.querySelectorAll(".premium-card").length,
+      premiumImageLoaded: document.querySelector(".premium-screen img")?.naturalWidth > 0,
+      featuredProject: document.querySelector(".project-grid-home .project-card h3")?.textContent.trim(),
+      socialPlaceholders: document.querySelectorAll(".social-placeholder").length,
+      backToTop: Boolean(document.querySelector("[data-back-to-top]")),
+      nativeScrollbarWidth: innerWidth - document.documentElement.clientWidth,
+      customScroller: Boolean(document.querySelector("#scroll-indicator")),
+      heroLines: heroLines.length,
+      heroSettled: lineSettled,
+      heroSupportOpacity: Number(getComputedStyle(document.querySelector("[data-hero-support]")).opacity),
+      localPresence: document.querySelector(".local-presence")?.textContent.includes("Jamshedpur") === true,
+      footerLocation: document.querySelector(".footer-location")?.textContent.includes("Jharkhand") === true,
+      twitterCard: document.querySelector('meta[name="twitter:card"]')?.content,
+      canonical: document.querySelector('link[rel="canonical"]')?.href,
+      organizationSchema: schemas.some(item => item["@type"] === "Organization" && item.areaServed?.some(place => place.name === "Jamshedpur")),
+      websiteSchema: schemas.some(item => item["@type"] === "WebSite"),
+      basePathLinksValid: [...document.querySelectorAll("a[data-link]")].every(anchor => { const url = new URL(anchor.href); return url.origin !== location.origin || !expectedBase || url.pathname === expectedBase || url.pathname.startsWith(expectedBase + "/"); })
+    };
+  })()`);
   if (desktop.scrollWidth > desktop.width) throw new Error(`Desktop overflow: viewport ${desktop.width}px, document ${desktop.scrollWidth}px.`);
   if (!desktop.menuHidden) throw new Error("Desktop navigation did not replace the mobile control.");
   if (!desktop.instrumentFont || !desktop.monoFont || !desktop.premiumStage || desktop.premiumCards !== 2 || !desktop.premiumImageLoaded || desktop.featuredProject !== "Custom Inventory System" || desktop.socialPlaceholders !== 2 || !desktop.backToTop || desktop.nativeScrollbarWidth !== 0 || !desktop.customScroller || desktop.heroLines !== 3 || !desktop.heroSettled || desktop.heroSupportOpacity < 0.99) throw new Error(`Premium visual system failed QA: ${JSON.stringify(desktop)}`);
+  if (desktop.title !== "Website & Software Development Company in Jamshedpur | A&M Tech Solutions" || !desktop.localPresence || !desktop.footerLocation || desktop.twitterCard !== "summary_large_image" || !desktop.basePathLinksValid) throw new Error(`Local SEO system failed QA: ${JSON.stringify(desktop)}`);
   const desktopShot = await cdp("Page.captureScreenshot", { format: "png", fromSurface: true, captureBeyondViewport: false });
   await writeFile(resolve(artifacts, "home-desktop.png"), Buffer.from(desktopShot.data, "base64"));
   const smoothScrollRuntime = await evaluate(`({ plugin: Boolean(window.ScrollToPlugin), enabled: document.documentElement.classList.contains("gsap-smooth-scroll"), y: scrollY })`);
@@ -268,7 +312,7 @@ try {
   if (browserErrors.length) throw new Error(`Browser errors detected: ${browserErrors.join(", ")}`);
   if (networkFailures.length) throw new Error(`Network failures detected: ${networkFailures.join(", ")}`);
 
-  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, analyticsConsentVerified: true, premiumVisualVerified: true, smoothScrollVerified: true, manifestoScrollVerified: true, routeTransitionVerified: true, contactStatusVerified: true, accessGateVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
+  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, staticSeo, loaderVerified: true, loaderDurations, analyticsConsentVerified: true, premiumVisualVerified: true, localSeoVerified: true, smoothScrollVerified: true, manifestoScrollVerified: true, routeTransitionVerified: true, contactStatusVerified: true, accessGateVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
 } finally {
   socket.close();
   browser.kill();

@@ -28,6 +28,20 @@ let analyticsEventsBound = false;
 const serviceBySlug = Object.fromEntries(services.map((service) => [service.slug, service]));
 const projectBySlug = Object.fromEntries(projects.map((project) => [project.slug, project]));
 const legalBySlug = legalPages;
+const localServiceSeo = {
+  "website-development": {
+    title: "Website Development Company in Jamshedpur — A&M Tech Solutions",
+    description: "Custom business websites, landing pages, portfolios, and digital experiences from a website development company in Jamshedpur, Jharkhand."
+  },
+  "custom-software-automation": {
+    title: "Custom Software Company in Jamshedpur — A&M Tech Solutions",
+    description: "Custom software, workflow automation, reporting tools, and integrations for businesses in Jamshedpur, Jharkhand and across India."
+  },
+  "web-application-development": {
+    title: "Web Application Development in Jamshedpur — A&M Tech Solutions",
+    description: "Purpose-built web applications, client portals, and internal business tools from A&M Tech Solutions in Jamshedpur, Jharkhand."
+  }
+};
 
 const icons = {
   arrow: "↗",
@@ -88,6 +102,7 @@ function footer() {
           <div class="footer-brand">
             ${link("/", `<span class="brand-mark" aria-hidden="true">A&M</span><span class="brand-text">A&M Tech Solutions</span>`, "brand")}
             <p>${company.description}</p>
+            <p class="footer-location">Creative technology studio in ${company.city}, ${company.region}, serving businesses across India.</p>
             <p class="verified-note">Email: <a href="mailto:${contactEmail}">${contactEmail}</a><br />Phone: <a href="tel:${contactPhoneHref}">${contactPhone}</a> · <a href="https://wa.me/${whatsappPhone}" target="_blank" rel="noopener noreferrer">WhatsApp</a></p>
             <div class="footer-socials" aria-label="Social profiles coming soon">
               <span class="social-placeholder" role="img" aria-label="LinkedIn profile link coming soon" title="LinkedIn — link coming soon">
@@ -310,13 +325,13 @@ function homePage() {
     <section class="hero">
       <div class="shell hero-grid">
         <div class="hero-intro" data-hero-intro>
-          <div data-hero-eyebrow>${eyebrow("Digital products / Business systems")}</div>
+          <div data-hero-eyebrow>${eyebrow(`Creative technology studio / ${company.city}, ${company.region}`)}</div>
           <h1 class="hero-title" aria-label="Software that works as hard as your business.">
             <span class="hero-title-line" aria-hidden="true"><span class="hero-title-line-inner">Software that works</span></span>
             <span class="hero-title-line" aria-hidden="true"><span class="hero-title-line-inner">as hard as</span></span>
             <span class="hero-title-line" aria-hidden="true"><span class="hero-title-line-inner"><em>your business.</em></span></span>
           </h1>
-          <p class="hero-copy" data-hero-support>Websites, business systems, and custom software built around the way you work. From a new digital presence to the tools that power your operations, we help you move forward.</p>
+          <p class="hero-copy" data-hero-support>A Jamshedpur-based website and software development company building distinctive digital experiences, business systems, and custom software around the way you work.</p>
           <div class="button-row" data-hero-support>${button("/contact/", "Start a Project")}${button("/services/", "Explore Our Services", "button-ghost")}</div>
           <p class="availability" data-hero-support><span class="availability-dot"></span>${company.availability}</p>
           <div class="hero-disciplines" data-hero-support aria-label="A&M delivery disciplines"><span>Discover</span><span>Design</span><span>Build</span><span>Support</span></div>
@@ -333,7 +348,19 @@ function homePage() {
     <section class="section" id="services">
       <div class="shell">
         <div class="section-heading-row reveal"><div>${eyebrow("What we build")}<h2 class="section-title">From first presence to operational core.</h2></div><div><p class="section-lede">Focused digital work for businesses at different stages—designed around the job the technology needs to do.</p>${link("/services/", "View all services", "text-link")}</div></div>
-        <div class="service-list">${services.map((service) => `<a class="service-row reveal" href="/services/${service.slug}/" data-link><span class="service-number">${service.number}</span><h3>${service.title}</h3><p>${service.short}</p><span class="service-arrow" aria-hidden="true">↗</span></a>`).join("")}</div>
+        <div class="service-list">${services.map((service) => `<a class="service-row reveal" href="${sitePath(`/services/${service.slug}/`)}" data-link><span class="service-number">${service.number}</span><h3>${service.title}</h3><p>${service.short}</p><span class="service-arrow" aria-hidden="true">↗</span></a>`).join("")}</div>
+      </div>
+    </section>
+    <section class="section section-soft local-presence">
+      <div class="shell two-col">
+        <div class="sticky-label reveal">${eyebrow(`${company.city} / ${company.region}`)}<h2 class="section-title small">A creative technology studio for businesses ready to move forward.</h2></div>
+        <div class="prose reveal">
+          <p>A&M Tech Solutions is a website development and custom software company based in Jamshedpur, Jharkhand. We help startups, local businesses, construction teams, retailers, service companies, and growing organisations turn operational problems into useful digital products.</p>
+          <p>Whether the need is a credible business website, a web application, CRM, inventory system, ERP workflow, or process automation, the work begins with the business context—not a generic template or fashionable technology stack.</p>
+          <h3>Choosing an IT company in Jamshedpur</h3>
+          <p>The best technology partner is the one that can understand the workflow, explain the scope clearly, build maintainable software, and support the agreed outcome after launch. Our process is designed around those practical responsibilities.</p>
+          <div class="local-service-links">${link("/services/website-development/", "Website development")}${link("/services/custom-software-automation/", "Custom software")}${link("/services/erp-business-systems/", "ERP & business systems")}${link("/contact/", "Discuss a project")}</div>
+        </div>
       </div>
     </section>
     <section class="section section-dark">
@@ -379,8 +406,8 @@ function pageHero({ label, title, intro, code = "A&M / 2026", crumbs = [] }) {
 }
 
 function servicesPage() {
-  return `${pageHero({ label: "Services", title: "Technology shaped around the work.", intro: "From a public-facing website to the systems behind daily operations, each engagement begins with the business problem—not a preselected stack." })}
-    <section class="section"><div class="shell"><div class="service-list">${services.map((service) => `<a class="service-row reveal" href="/services/${service.slug}/" data-link><span class="service-number">${service.number}</span><h2>${service.title}</h2><p>${service.short}</p><span class="service-arrow">↗</span></a>`).join("")}</div></div></section>
+  return `${pageHero({ label: `Services / ${company.city}, ${company.region}`, title: "Technology shaped around the work.", intro: "Website development, web applications, business systems, and custom software from Jamshedpur—each engagement begins with the business problem, not a preselected stack." })}
+    <section class="section"><div class="shell"><div class="service-list">${services.map((service) => `<a class="service-row reveal" href="${sitePath(`/services/${service.slug}/`)}" data-link><span class="service-number">${service.number}</span><h2>${service.title}</h2><p>${service.short}</p><span class="service-arrow">↗</span></a>`).join("")}</div></div></section>
     <section class="section section-dark"><div class="shell two-col"><div>${eyebrow("Choosing the right path")}<h2 class="section-title small">Build, connect, or improve?</h2></div><div class="prose"><p>A custom build is not automatically the answer. Existing platforms may solve a standard need well. Integration may create more value than replacement. A focused redesign may be enough.</p><p>Discovery is how we establish the sensible path, surface constraints, and avoid paying for complexity the business does not need.</p>${button("/contact/", "Discuss the problem", "button-light")}</div></div></section>${finalCta()}`;
 }
 
@@ -393,7 +420,7 @@ function serviceDetailPage(service) {
     <section class="section section-dark"><div class="shell"><div class="section-heading-row"><div>${eyebrow("Recommended use cases")}<h2 class="section-title small">A good fit when…</h2></div><p class="section-lede">The exact solution may be a build, an integration, or a staged improvement plan.</p></div><div class="use-case-grid">${service.useCases.map((item) => `<div class="use-case reveal">${item}</div>`).join("")}</div></div></section>
     <section class="section"><div class="shell two-col"><div>${eyebrow("Approach")}<h2 class="section-title small">Decisions before decoration.</h2></div><div class="prose"><p>${service.approach}</p><h3>Technology, where it matters</h3><p>${service.technology}</p></div></div></section>
     <section class="section section-soft"><div class="shell">${eyebrow("Frequently asked questions")}<h2 class="section-title small">Useful answers before we talk.</h2><div class="faq-list">${service.faqs.map(([question, answer], index) => `<div class="faq-item"><h3><button class="faq-question" type="button" aria-expanded="${index === 0}" aria-controls="faq-${index}">${question}</button></h3><div class="faq-answer" id="faq-${index}"><div><p>${answer}</p></div></div></div>`).join("")}</div></div></section>
-    <section class="section"><div class="shell">${eyebrow("Related services")}<h2 class="section-title small">The connected work.</h2><div class="related-links">${related.map((item) => `<a class="related-link reveal" href="/services/${item.slug}/" data-link><span>${item.number} / Service</span><strong>${item.title} ↗</strong></a>`).join("")}</div></div></section>${finalCta()}`;
+    <section class="section"><div class="shell">${eyebrow("Related services")}<h2 class="section-title small">The connected work.</h2><div class="related-links">${related.map((item) => `<a class="related-link reveal" href="${sitePath(`/services/${item.slug}/`)}" data-link><span>${item.number} / Service</span><strong>${item.title} ↗</strong></a>`).join("")}</div></div></section>${finalCta()}`;
 }
 
 function solutionsPage() {
@@ -487,7 +514,7 @@ function aboutPage() {
     ["05", "Respect operational reality", "A technically elegant answer still fails if it ignores the people and conditions around the workflow."],
     ["06", "Build toward ownership", "Documentation, structure, and sensible technology choices reduce unnecessary dependence."]
   ];
-  return `${pageHero({ label: "About A&M", title: "Business thinking, expressed through software.", intro: "A&M Tech Solutions builds websites, applications, and operational systems for teams that need technology to do a real job." })}
+  return `${pageHero({ label: `About A&M / ${company.city}`, title: "Business thinking, expressed through software.", intro: "A&M Tech Solutions is a creative technology studio in Jamshedpur, Jharkhand, building websites, applications, and operational systems for teams that need technology to do a real job." })}
     <section class="section"><div class="shell about-statement"><div>${eyebrow("What we do")}</div><p>We turn complex business needs into digital products that are clear enough to use, strong enough to rely on, and sensible enough to maintain.</p></div></section>
     <section class="section section-dark"><div class="shell two-col"><div>${eyebrow("Who we serve")}<h2 class="section-title small">From a first serious presence to connected operations.</h2></div><div class="prose"><p>We work toward solutions for startups, small businesses, growing companies, and established organisations. Some need a website that explains the business properly. Others need a customer portal, a CRM shaped around their sales process, or an operational system that replaces fragmented records.</p><p>The common thread is not company size. It is a meaningful business problem and a willingness to make the workflow clearer.</p></div></div></section>
     <section class="section"><div class="shell"><div class="section-heading-row"><div>${eyebrow("Principles")}<h2 class="section-title small">How we think about reliable work.</h2></div><p class="section-lede">A practical foundation for design, engineering, communication, and long-term product decisions.</p></div><div class="principles">${values.map(([number, title, copy]) => `<article class="principle reveal"><span class="principle-index">${number}</span><h3>${title}</h3><p>${copy}</p></article>`).join("")}</div></div></section>
@@ -495,7 +522,7 @@ function aboutPage() {
 }
 
 function contactPage() {
-  return `${pageHero({ label: "Start a project", title: "Tell us what needs to move.", intro: "You can arrive with a detailed specification or a stubborn business problem. Start with what is happening now and what a better outcome would change." })}
+  return `${pageHero({ label: `Start a project / ${company.city}, ${company.region}`, title: "Tell us what needs to move.", intro: "Looking for a website or software development company in Jamshedpur? Start with what is happening now and what a better outcome would change." })}
     <section class="section"><div class="shell contact-layout"><aside class="contact-aside"><div><h2>A useful first message.</h2><p>Share the workflow, audience, urgency, and constraints you already know. You do not need to have the technology figured out.</p></div><div class="contact-status">
         <div class="contact-status-head"><span class="availability-dot" aria-hidden="true"></span><span>${company.availability}</span></div>
         <div class="contact-methods">
@@ -551,10 +578,10 @@ function notFoundPage() {
 }
 
 function resolveRoute(path) {
-  if (path === "/") return { page: homePage(), title: "A&M Tech Solutions — Digital products that move business forward", description: company.description };
-  if (path === "/services/") return { page: servicesPage(), title: "Services — A&M Tech Solutions", description: "Website, web application, CRM, ERP, SaaS, automation, product design, and support services." };
+  if (path === "/") return { page: homePage(), title: "Website & Software Development Company in Jamshedpur | A&M Tech Solutions", description: "A&M Tech Solutions is a creative technology studio in Jamshedpur, Jharkhand building business websites, web applications, and custom software." };
+  if (path === "/services/") return { page: servicesPage(), title: "Website & Software Development Services in Jamshedpur — A&M Tech Solutions", description: "Website development, web applications, CRM, ERP, SaaS, automation, product design, and technical support in Jamshedpur, Jharkhand." };
   const serviceMatch = path.match(/^\/services\/([^/]+)\/$/);
-  if (serviceMatch && serviceBySlug[serviceMatch[1]]) { const service = serviceBySlug[serviceMatch[1]]; return { page: serviceDetailPage(service), title: `${service.title} — A&M Tech Solutions`, description: service.short }; }
+  if (serviceMatch && serviceBySlug[serviceMatch[1]]) { const service = serviceBySlug[serviceMatch[1]]; const localMeta = localServiceSeo[service.slug]; return { page: serviceDetailPage(service), title: localMeta?.title || `${service.title} — A&M Tech Solutions`, description: localMeta?.description || service.short }; }
   if (path === "/solutions/") return { page: solutionsPage(), title: "Business Solutions — A&M Tech Solutions", description: "Practical software directions for startups, small businesses, operations, retail, services, and growing companies." };
   if (path === "/work/") return { page: workPage(), title: "Work — A&M Tech Solutions", description: "A&M Tech Solutions projects across payments, attendance, construction, inventory, and business operations." };
   const projectMatch = path.match(/^\/work\/([^/]+)\/$/);
@@ -567,8 +594,8 @@ function resolveRoute(path) {
   const productMatch = path.match(/^\/products\/([^/]+)\/$/);
   const product = productMatch ? productCategories.find((item) => item.slug === productMatch[1]) : undefined;
   if (product) return { page: productDetailPage(product), title: `${product.name} — A&M Tech Solutions`, description: product.description };
-  if (path === "/about/") return { page: aboutPage(), title: "About — A&M Tech Solutions", description: "A&M Tech Solutions turns complex business needs into clear, maintainable digital products." };
-  if (path === "/contact/") return { page: contactPage(), title: "Start a Project — A&M Tech Solutions", description: "Tell A&M Tech Solutions about the business problem, website, application, or system you need to build." };
+  if (path === "/about/") return { page: aboutPage(), title: "Creative Technology Studio in Jamshedpur — A&M Tech Solutions", description: "Meet A&M Tech Solutions, a Jamshedpur-based creative technology studio building practical websites, applications, and business software." };
+  if (path === "/contact/") return { page: contactPage(), title: "Start a Website or Software Project in Jamshedpur — A&M Tech Solutions", description: "Discuss a website, web application, business system, or custom software project with A&M Tech Solutions in Jamshedpur, Jharkhand." };
   const legalMatch = path.match(/^\/legal\/([^/]+)\/$/);
   if (legalMatch && legalBySlug[legalMatch[1]]) { const page = legalBySlug[legalMatch[1]]; return { page: legalPage(legalMatch[1], page), title: `${page.title} — A&M Tech Solutions`, description: `Draft ${page.title.toLowerCase()} for A&M Tech Solutions, requiring review before publication.` }; }
   return { page: notFoundPage(), title: "Page Not Found — A&M Tech Solutions", description: "The requested page could not be found.", notFound: true };
@@ -579,9 +606,18 @@ function updateMeta(route) {
   const description = document.querySelector('meta[name="description"]');
   const ogTitle = document.querySelector('meta[property="og:title"]');
   const ogDescription = document.querySelector('meta[property="og:description"]');
+  const ogUrl = document.querySelector('meta[property="og:url"]');
+  const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+  const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+  const canonical = document.querySelector('link[rel="canonical"]');
+  const canonicalUrl = `${location.origin}${location.pathname}`;
   if (description) description.content = route.description;
   if (ogTitle) ogTitle.content = route.title;
   if (ogDescription) ogDescription.content = route.description;
+  if (ogUrl) ogUrl.content = canonicalUrl;
+  if (twitterTitle) twitterTitle.content = route.title;
+  if (twitterDescription) twitterDescription.content = route.description;
+  if (canonical) canonical.href = canonicalUrl;
 }
 
 function navigate(path, { replace = false } = {}) {

@@ -9,14 +9,14 @@ const assetVersion = String(process.env.ASSET_VERSION || "").trim().slice(0, 12)
 const assetSuffix = assetVersion ? `?v=${encodeURIComponent(assetVersion)}` : "";
 
 const routes = [
-  ["/", "A&M Tech Solutions — Digital products that move business forward", "Websites, business systems, and custom software built around the way you work."],
-  ["/services/", "Services — A&M Tech Solutions", "Website, web application, CRM, ERP, SaaS, automation, product design, and support services."],
-  ["/services/website-development/", "Website Development — A&M Tech Solutions", "Fast, distinctive websites that make the business clear and the next step obvious."],
-  ["/services/web-application-development/", "Web Application Development — A&M Tech Solutions", "Purpose-built portals, internal tools, and workflow applications for real operational needs."],
+  ["/", "Website & Software Development Company in Jamshedpur | A&M Tech Solutions", "A&M Tech Solutions is a creative technology studio in Jamshedpur, Jharkhand building business websites, web applications, and custom software."],
+  ["/services/", "Website & Software Development Services in Jamshedpur — A&M Tech Solutions", "Website development, web applications, CRM, ERP, SaaS, automation, product design, and technical support in Jamshedpur, Jharkhand."],
+  ["/services/website-development/", "Website Development Company in Jamshedpur — A&M Tech Solutions", "Custom business websites, landing pages, portfolios, and digital experiences from a website development company in Jamshedpur, Jharkhand."],
+  ["/services/web-application-development/", "Web Application Development in Jamshedpur — A&M Tech Solutions", "Purpose-built web applications, client portals, and internal business tools from A&M Tech Solutions in Jamshedpur, Jharkhand."],
   ["/services/crm-development/", "CRM Development — A&M Tech Solutions", "Customer and sales systems shaped around the way your team actually follows up."],
   ["/services/erp-business-systems/", "ERP & Business Systems — A&M Tech Solutions", "Connected inventory, procurement, operations, and reporting built around real workflows."],
   ["/services/saas-product-development/", "SaaS Product Development — A&M Tech Solutions", "A structured path from product idea to a secure, usable subscription software foundation."],
-  ["/services/custom-software-automation/", "Custom Software & Automation — A&M Tech Solutions", "Practical systems and integrations that remove repetitive work and connect useful tools."],
+  ["/services/custom-software-automation/", "Custom Software Company in Jamshedpur — A&M Tech Solutions", "Custom software, workflow automation, reporting tools, and integrations for businesses in Jamshedpur, Jharkhand and across India."],
   ["/services/ui-ux-product-design/", "UI/UX & Product Design — A&M Tech Solutions", "Clear interfaces and resilient design systems for products people use every day."],
   ["/services/maintenance-support/", "Maintenance & Technical Support — A&M Tech Solutions", "Agreed support for the fixes, improvements, and operational care a live product needs."],
   ["/solutions/", "Business Solutions — A&M Tech Solutions", "Practical software directions for startups, small businesses, operations, retail, services, and growing companies."],
@@ -35,8 +35,8 @@ const routes = [
   ["/downloads/inventory-management-system/", "Inventory Management System Access — A&M Tech Solutions", "Register interest in the Inventory Management System while public release details are verified."],
   ["/products/", "Products — A&M Tech Solutions", "Current product concepts and future software categories from A&M Tech Solutions."],
   ["/products/operations-hub/", "Operations Hub — A&M Tech Solutions", "A coming-soon operations workspace concept. No public release or trial is currently available."],
-  ["/about/", "About — A&M Tech Solutions", "A&M Tech Solutions turns complex business needs into clear, maintainable digital products."],
-  ["/contact/", "Start a Project — A&M Tech Solutions", "Tell A&M Tech Solutions about the business problem, website, application, or system you need to build."],
+  ["/about/", "Creative Technology Studio in Jamshedpur — A&M Tech Solutions", "Meet A&M Tech Solutions, a Jamshedpur-based creative technology studio building practical websites, applications, and business software."],
+  ["/contact/", "Start a Website or Software Project in Jamshedpur — A&M Tech Solutions", "Discuss a website, web application, business system, or custom software project with A&M Tech Solutions in Jamshedpur, Jharkhand."],
   ["/legal/terms-and-conditions/", "Terms & Conditions — A&M Tech Solutions", "Draft terms requiring legal review before publication."],
   ["/legal/privacy-policy/", "Privacy Policy — A&M Tech Solutions", "How A&M Tech Solutions handles enquiries, hosting data, and consent-based website analytics."],
   ["/legal/free-trial-terms/", "Free Trial Terms — A&M Tech Solutions", "Draft future product trial terms. No public product trial is currently active."],
@@ -72,6 +72,55 @@ function escapeAttribute(value) {
   return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+function structuredDataForRoute(route, title, description) {
+  const organizationId = `${siteUrl}/#organization`;
+  const graph = [{
+    "@type": "Organization",
+    "@id": organizationId,
+    name: "A&M Tech Solutions",
+    url: `${siteUrl}/`,
+    logo: `${siteUrl}/brand-card.svg${assetSuffix}`,
+    email: "hello.amtechsolutions@outlook.com",
+    telephone: "+91 70043 75813",
+    description: "A creative technology studio in Jamshedpur, Jharkhand building websites, web applications, business systems, and custom software.",
+    areaServed: [
+      { "@type": "City", name: "Jamshedpur" },
+      { "@type": "AdministrativeArea", name: "Jharkhand" },
+      { "@type": "Country", name: "India" }
+    ],
+    knowsAbout: ["Website development", "Web application development", "Custom software development", "Business management systems", "UI and UX design"]
+  }];
+
+  if (route === "/") {
+    graph.push({
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: `${siteUrl}/`,
+      name: "A&M Tech Solutions",
+      publisher: { "@id": organizationId },
+      inLanguage: "en-IN"
+    });
+  }
+
+  if (/^\/services\/[^/]+\/$/.test(route)) {
+    graph.push({
+      "@type": "Service",
+      "@id": `${siteUrl}${route}#service`,
+      name: title.split(" — ")[0],
+      description,
+      url: `${siteUrl}${route}`,
+      provider: { "@id": organizationId },
+      areaServed: [
+        { "@type": "City", name: "Jamshedpur" },
+        { "@type": "AdministrativeArea", name: "Jharkhand" },
+        { "@type": "Country", name: "India" }
+      ]
+    });
+  }
+
+  return `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c")}</script>`;
+}
+
 function htmlForRoute(route, title, description) {
   const url = `${siteUrl}${route}`;
   return sourceHtml
@@ -79,7 +128,10 @@ function htmlForRoute(route, title, description) {
     .replace(/<meta name="description" content=".*?" \/>/, `<meta name="description" content="${escapeAttribute(description)}" />`)
     .replace(/<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="${escapeAttribute(title)}" />`)
     .replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${escapeAttribute(description)}" />`)
-    .replace('content="/brand-card.svg"', `content="${siteUrl}/brand-card.svg${assetSuffix}"`)
+    .replace(/<meta name="twitter:title" content=".*?" \/>/, `<meta name="twitter:title" content="${escapeAttribute(title)}" />`)
+    .replace(/<meta name="twitter:description" content=".*?" \/>/, `<meta name="twitter:description" content="${escapeAttribute(description)}" />`)
+    .replace('<meta property="og:image" content="/brand-card.svg" />', `<meta property="og:image" content="${siteUrl}/brand-card.svg${assetSuffix}" />`)
+    .replace('<meta name="twitter:image" content="/brand-card.svg" />', `<meta name="twitter:image" content="${siteUrl}/brand-card.svg${assetSuffix}" />`)
     .replace('href="/favicon.svg"', `href="${basePath}/favicon.svg${assetSuffix}"`)
     .replace('href="/src/styles.css?v=dev-6"', `href="${basePath}/src/styles.css${assetSuffix}"`)
     .replace('src="/vendor/gsap.min.js"', `src="${basePath}/vendor/gsap.min.js${assetSuffix}"`)
@@ -87,7 +139,8 @@ function htmlForRoute(route, title, description) {
     .replace('src="/vendor/ScrollTrigger.min.js"', `src="${basePath}/vendor/ScrollTrigger.min.js${assetSuffix}"`)
     .replace('src="/site-config.js?v=dev-6"', `src="${basePath}/site-config.js${assetSuffix}"`)
     .replace('src="/src/app.js?v=dev-6"', `src="${basePath}/src/app.js${assetSuffix}"`)
-    .replace("<link rel=\"icon\"", `<link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />\n    <link rel="icon"`);
+    .replace("<link rel=\"icon\"", `<link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />\n    <link rel="icon"`)
+    .replace("</head>", `    ${structuredDataForRoute(route, title, description)}\n  </head>`);
 }
 
 for (const [route, title, description] of routes) {

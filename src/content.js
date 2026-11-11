@@ -4,6 +4,9 @@ export const company = {
   positioning: "We build digital products that move businesses forward.",
   description: "From your first website to the systems that run your business, we turn complex ideas into practical digital products.",
   availability: "Project enquiries open",
+  city: "Jamshedpur",
+  region: "Jharkhand",
+  country: "India",
   contactEmail: "hello.amtechsolutions@outlook.com",
   contactPhone: "+91 70043 75813"
 };

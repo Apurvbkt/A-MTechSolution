@@ -577,7 +577,45 @@ img, svg { display: block; max-width: 100%; }
 .site-footer { padding-block: 4.5rem 2rem; color: var(--white); background: var(--ink); border-top: 1px solid #373a34; }
 .footer-top { display: grid; grid-template-columns: 1.1fr 1.9fr; gap: 5rem; padding-bottom: 5rem; }
 .footer-brand p { max-width: 25rem; color: #aeb0a8; }
+.footer-brand .footer-location {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: .66rem;
+  font-weight: 500;
+  letter-spacing: .07em;
+  line-height: 1.55;
+  text-transform: uppercase;
+}
 .footer-brand .brand { font-size: 1rem; }
+
+.local-presence .prose h3 {
+  margin: 2.4rem 0 .75rem;
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+}
+
+.local-service-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+  margin-top: 2rem;
+}
+
+.local-service-links a {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: .74rem;
+  font-weight: 650;
+  padding: .72rem .95rem;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.local-service-links a:hover,
+.local-service-links a:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0d0e0b;
+}
 .site-footer .verified-note, .site-footer .verified-note a { color: var(--ink); }
 .footer-socials { display: flex; gap: 0.65rem; margin-top: 1.25rem; }
 .social-placeholder { width: 2.5rem; height: 2.5rem; display: grid; place-items: center; color: #aeb0a8; border: 1px solid #41443d; border-radius: 50%; background: #171914; cursor: default; }
