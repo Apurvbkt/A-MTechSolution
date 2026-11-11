@@ -49,6 +49,10 @@ Set `accessEndpoint` for demo/download requests. If it is empty, the access form
 
 For a stricter production configuration, inject `site-config.js` during deployment rather than editing it manually. Content Security Policy and HSTS should be added by the production host after the verified form, font, and hosting origins are known.
 
+## Analytics and consent
+
+`analyticsId` in `site-config.js` configures Google Analytics 4. The Google tag is not requested until a visitor selects **Accept analytics**. Declining keeps analytics disabled, and the footer's **Cookie settings** control lets visitors revisit the choice. The integration records consented page views, CTA/contact clicks, and successful form events without intentionally sending form field values.
+
 ## Content and routes
 
 - Company configuration: `src/content.js` and `site-config.js`

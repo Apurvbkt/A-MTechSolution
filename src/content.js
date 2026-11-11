@@ -292,13 +292,13 @@ export const legalPages = {
   },
   "privacy-policy": {
     title: "Privacy Policy",
-    intro: "This draft reflects the current marketing website: it does not intentionally use advertising trackers, create user accounts, or accept payments. It must be updated when real hosting, analytics, forms, or products are configured.",
+    intro: "This draft reflects the current marketing website, including consent-based Google Analytics and Formspree enquiry delivery. It does not create user accounts, accept payments, or use advertising cookies. Legal entity, jurisdiction, retention, and effective-date details still require confirmation before final publication.",
     sections: [
       ["1. Controller details", "Insert the verified legal entity, business address, jurisdiction, and privacy contact before publication."],
-      ["2. Information submitted by you", "The project enquiry form may collect name, business email, company, service interest, budget range, project description, and contact preference. Software access requests may additionally collect a phone number, requested product, access type, and optional message. In this source version, no submission endpoint is configured; entries remain in the browser unless a verified delivery endpoint is connected."],
-      ["3. Technical information", "The production host may process IP address, device, browser, request, and security log information to deliver and protect the site. Confirm the actual provider and retention period before publication."],
+      ["2. Information submitted by you", "The project enquiry form may collect name, business email, company, service interest, budget range, project description, and contact preference. Software access requests may additionally collect a phone number, requested product, access type, consent, and an optional message. Submitted forms are delivered through the configured Formspree endpoint to the verified administrator email."],
+      ["3. Technical and analytics information", "GitHub Pages may process IP address, browser, request, and security log information to deliver the site. If you accept analytics, Google Analytics may receive page views, referral source, approximate location, device and browser information, and interactions such as CTA, contact, and successful form events. Form field values are not intentionally sent to analytics."],
       ["4. Purposes and legal basis", "Enquiry information should be used to respond to requested business communications, assess potential work, prevent abuse, and maintain necessary records. The applicable legal bases depend on the confirmed jurisdiction and operations."],
-      ["5. Sharing and processors", "Information should only be shared with necessary service providers and authorised personnel. List actual hosting, form, email, analytics, CRM, and other processors once selected."],
+      ["5. Sharing and processors", "Current providers include GitHub Pages for hosting, Formspree for form delivery, and Google Analytics for optional measurement after consent. Information should otherwise only be shared with necessary service providers and authorised personnel."],
       ["6. International transfers", "Document any cross-border processing safeguards used by actual providers. Do not publish a generic transfer claim without confirming the data path."],
       ["7. Retention", "Define enquiry, client, security log, and account retention periods according to operational and legal needs. Keep personal information only as long as necessary."],
       ["8. Your rights", "Depending on location, individuals may have rights to access, correct, delete, restrict, object, or request portability of personal information and to complain to an authority."],
@@ -351,14 +351,14 @@ export const legalPages = {
   },
   "cookie-policy": {
     title: "Cookie Policy",
-    intro: "The current source does not intentionally set advertising or analytics cookies. Production hosting or future integrations may introduce essential or optional storage and must be audited before this policy is published.",
+    intro: "This website uses local storage to remember your analytics choice. Google Analytics is loaded only after you accept optional analytics. The site does not intentionally use advertising cookies.",
     sections: [
       ["1. What cookies are", "Cookies and similar storage allow a website to remember information or support functions across requests or visits."],
-      ["2. Current use", "This source version does not include analytics, advertising pixels, user accounts, or a consent platform. The deployed host may use strictly necessary security or routing technologies; confirm this with the selected provider."],
-      ["3. Future categories", "If introduced, describe essential, preference, analytics, and marketing technologies separately, naming providers, purposes, duration, and access."],
-      ["4. Consent", "Do not load non-essential technologies until any consent required by the visitor's jurisdiction has been obtained. Rejecting optional cookies should be as straightforward as accepting them."],
-      ["5. Managing storage", "Visitors can use browser controls to inspect or remove stored data. Blocking essential storage may affect functions that genuinely depend on it."],
-      ["6. Audit before launch", "Review the production host, embedded media, forms, analytics, chat, payment, and account tools. Replace this draft with an accurate inventory, verified contact, and effective date."]
+      ["2. Essential preference storage", "The key am-analytics-consent-v1 is stored in your browser to remember whether you accepted or declined analytics. It contains only that choice and is not used for advertising."],
+      ["3. Optional analytics", "After acceptance, Google Analytics uses measurement ID G-XR1LG3SVB8 to measure visits, pages, referral sources, device categories, approximate geography, CTA and contact clicks, and successful enquiry events. Form field values are not intentionally included in analytics events."],
+      ["4. Consent", "Google Analytics is not loaded before acceptance. Rejecting optional analytics is available alongside acceptance, and the choice can be reopened through Cookie settings in the footer."],
+      ["5. Managing or withdrawing consent", "Use Cookie settings in the footer to change your choice. Withdrawing consent disables further analytics collection for the browser and attempts to remove accessible Google Analytics cookies. Browser controls can also inspect or remove stored data."],
+      ["6. Providers and future changes", "GitHub Pages may use technologies required to deliver and secure the site. Any future advertising, embedded media, chat, payment, or account technology must be assessed and documented before activation. Verified legal contact and effective-date details still require confirmation."]
     ]
   }
 };

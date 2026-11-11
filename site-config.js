@@ -5,6 +5,7 @@ window.AM_SITE_CONFIG = Object.freeze({
   basePath: "",
   contactEndpoint: "https://formspree.io/f/xaeegraj",
   accessEndpoint: "https://formspree.io/f/xaeegraj",
+  analyticsId: "G-XR1LG3SVB8",
   contactEmail: "hello.amtechsolutions@outlook.com",
   contactPhone: "+91 70043 75813",
   companyLegalName: "A&M Tech Solutions",

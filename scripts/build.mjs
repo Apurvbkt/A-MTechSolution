@@ -38,11 +38,11 @@ const routes = [
   ["/about/", "About — A&M Tech Solutions", "A&M Tech Solutions turns complex business needs into clear, maintainable digital products."],
   ["/contact/", "Start a Project — A&M Tech Solutions", "Tell A&M Tech Solutions about the business problem, website, application, or system you need to build."],
   ["/legal/terms-and-conditions/", "Terms & Conditions — A&M Tech Solutions", "Draft terms requiring legal review before publication."],
-  ["/legal/privacy-policy/", "Privacy Policy — A&M Tech Solutions", "Draft privacy policy reflecting the current marketing website."],
+  ["/legal/privacy-policy/", "Privacy Policy — A&M Tech Solutions", "How A&M Tech Solutions handles enquiries, hosting data, and consent-based website analytics."],
   ["/legal/free-trial-terms/", "Free Trial Terms — A&M Tech Solutions", "Draft future product trial terms. No public product trial is currently active."],
   ["/legal/refund-cancellation-policy/", "Refund & Cancellation Policy — A&M Tech Solutions", "Draft refund and cancellation structure requiring legal review."],
   ["/legal/saas-subscription-terms/", "SaaS Subscription Terms — A&M Tech Solutions", "Draft future software subscription terms. No subscription product is currently represented."],
-  ["/legal/cookie-policy/", "Cookie Policy — A&M Tech Solutions", "Draft cookie policy reflecting a website without intentional advertising or analytics cookies."]
+  ["/legal/cookie-policy/", "Cookie Policy — A&M Tech Solutions", "How analytics consent, preference storage, and optional Google Analytics measurement work on this website."]
 ];
 
 await rm(output, { recursive: true, force: true });
@@ -81,12 +81,12 @@ function htmlForRoute(route, title, description) {
     .replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${escapeAttribute(description)}" />`)
     .replace('content="/brand-card.svg"', `content="${siteUrl}/brand-card.svg${assetSuffix}"`)
     .replace('href="/favicon.svg"', `href="${basePath}/favicon.svg${assetSuffix}"`)
-    .replace('href="/src/styles.css?v=dev-5"', `href="${basePath}/src/styles.css${assetSuffix}"`)
+    .replace('href="/src/styles.css?v=dev-6"', `href="${basePath}/src/styles.css${assetSuffix}"`)
     .replace('src="/vendor/gsap.min.js"', `src="${basePath}/vendor/gsap.min.js${assetSuffix}"`)
     .replace('src="/vendor/ScrollToPlugin.min.js"', `src="${basePath}/vendor/ScrollToPlugin.min.js${assetSuffix}"`)
     .replace('src="/vendor/ScrollTrigger.min.js"', `src="${basePath}/vendor/ScrollTrigger.min.js${assetSuffix}"`)
-    .replace('src="/site-config.js"', `src="${basePath}/site-config.js${assetSuffix}"`)
-    .replace('src="/src/app.js?v=dev-5"', `src="${basePath}/src/app.js${assetSuffix}"`)
+    .replace('src="/site-config.js?v=dev-6"', `src="${basePath}/site-config.js${assetSuffix}"`)
+    .replace('src="/src/app.js?v=dev-6"', `src="${basePath}/src/app.js${assetSuffix}"`)
     .replace("<link rel=\"icon\"", `<link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />\n    <link rel="icon"`);
 }
 

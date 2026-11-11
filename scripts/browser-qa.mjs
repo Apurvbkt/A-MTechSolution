@@ -133,6 +133,12 @@ try {
   await cdp("Runtime.enable");
   await cdp("Network.enable");
   await navigate("/", 390, 844);
+  const consentInitial = await evaluate(`({ analyticsId: window.AM_SITE_CONFIG?.analyticsId, panelVisible: document.querySelector("[data-cookie-consent]")?.hidden === false, analyticsScript: Boolean(document.querySelector("#am-google-analytics")) })`);
+  if (consentInitial.analyticsId !== "G-XR1LG3SVB8" || !consentInitial.panelVisible || consentInitial.analyticsScript) throw new Error(`Analytics consent did not initialise privately: ${JSON.stringify(consentInitial)}`);
+  await evaluate(`document.querySelector("[data-consent-reject]")?.click()`);
+  await delay(300);
+  const consentRejected = await evaluate(`({ choice: localStorage.getItem("am-analytics-consent-v1"), panelHidden: document.querySelector("[data-cookie-consent]")?.hidden === true, analyticsScript: Boolean(document.querySelector("#am-google-analytics")), settingsControl: Boolean(document.querySelector("[data-cookie-settings]")) })`);
+  if (consentRejected.choice !== "declined" || !consentRejected.panelHidden || consentRejected.analyticsScript || !consentRejected.settingsControl) throw new Error(`Analytics rejection did not remain private: ${JSON.stringify(consentRejected)}`);
   const mobile = await evaluate(`(() => ({
     width: innerWidth,
     scrollWidth: document.documentElement.scrollWidth,
@@ -262,7 +268,7 @@ try {
   if (browserErrors.length) throw new Error(`Browser errors detected: ${browserErrors.join(", ")}`);
   if (networkFailures.length) throw new Error(`Network failures detected: ${networkFailures.join(", ")}`);
 
-  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, premiumVisualVerified: true, smoothScrollVerified: true, manifestoScrollVerified: true, routeTransitionVerified: true, contactStatusVerified: true, accessGateVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
+  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, loaderVerified: true, loaderDurations, analyticsConsentVerified: true, premiumVisualVerified: true, smoothScrollVerified: true, manifestoScrollVerified: true, routeTransitionVerified: true, contactStatusVerified: true, accessGateVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
 } finally {
   socket.close();
   browser.kill();

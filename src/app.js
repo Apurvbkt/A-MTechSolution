@@ -15,11 +15,15 @@ const contactEmail = config.contactEmail || company.contactEmail;
 const contactPhone = config.contactPhone || company.contactPhone;
 const contactPhoneHref = String(contactPhone).replace(/[^+\d]/g, "");
 const whatsappPhone = String(contactPhone).replace(/\D/g, "");
+const analyticsId = /^G-[A-Z0-9]+$/.test(String(config.analyticsId || "")) ? String(config.analyticsId) : "";
+const analyticsConsentKey = "am-analytics-consent-v1";
 let manifestoAnimationContext = null;
 let premiumMotionContext = null;
 let smoothScrollTween = null;
 let smoothScrollTarget = window.scrollY;
 let scrollIndicatorHideTimer = null;
+let analyticsLoaded = false;
+let analyticsEventsBound = false;
 
 const serviceBySlug = Object.fromEntries(services.map((service) => [service.slug, service]));
 const projectBySlug = Object.fromEntries(projects.map((project) => [project.slug, project]));
@@ -97,7 +101,7 @@ function footer() {
           <nav class="footer-nav" aria-label="Footer navigation">
             <div class="footer-col"><h3>Build</h3>${link("/services/", "Services")}${link("/solutions/", "Solutions")}${link("/work/", "Work")}${link("/products/", "Products")}${link("/downloads/", "Software access")}</div>
             <div class="footer-col"><h3>Company</h3>${link("/about/", "About")}${link("/contact/", "Contact")}${link("/contact/", "Start a project")}</div>
-            <div class="footer-col"><h3>Policies</h3>${link("/legal/terms-and-conditions/", "Terms")}${link("/legal/privacy-policy/", "Privacy")}${link("/legal/refund-cancellation-policy/", "Refunds & cancellations")}${link("/legal/cookie-policy/", "Cookies")}</div>
+            <div class="footer-col"><h3>Policies</h3>${link("/legal/terms-and-conditions/", "Terms")}${link("/legal/privacy-policy/", "Privacy")}${link("/legal/refund-cancellation-policy/", "Refunds & cancellations")}${link("/legal/cookie-policy/", "Cookies")}<button class="footer-cookie-settings" type="button" data-cookie-settings>Cookie settings</button></div>
             <div class="footer-col"><h3>Product terms</h3>${link("/legal/free-trial-terms/", "Free trial terms")}${link("/legal/saas-subscription-terms/", "SaaS terms")}<span>No public trials are active</span></div>
           </nav>
         </div>
@@ -115,8 +119,133 @@ function footer() {
     </footer>`;
 }
 
+function cookieConsentPanel() {
+  return `
+    <aside class="cookie-consent" data-cookie-consent role="dialog" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-copy" hidden>
+      <div class="cookie-consent-copy">
+        <span class="page-code">Privacy / Analytics</span>
+        <h2 id="cookie-consent-title">Help us understand what works.</h2>
+        <p id="cookie-consent-copy">With your permission, Google Analytics measures visits and useful interactions. We do not use advertising cookies. You can change this choice anytime.</p>
+        ${link("/legal/cookie-policy/", "Read cookie policy", "cookie-policy-link")}
+      </div>
+      <div class="cookie-consent-actions">
+        <button class="button button-light" type="button" data-consent-accept>Accept analytics</button>
+        <button class="button cookie-reject" type="button" data-consent-reject>Reject optional</button>
+      </div>
+    </aside>`;
+}
+
 function layout(content, path) {
-  return `${header(path)}<main id="main-content" tabindex="-1">${content}</main>${footer()}`;
+  return `${header(path)}<main id="main-content" tabindex="-1">${content}</main>${footer()}${cookieConsentPanel()}`;
+}
+
+function readAnalyticsConsent() {
+  try { return localStorage.getItem(analyticsConsentKey); }
+  catch { return null; }
+}
+
+function writeAnalyticsConsent(value) {
+  try { localStorage.setItem(analyticsConsentKey, value); }
+  catch { /* Analytics remains controlled for the current page. */ }
+}
+
+function analyticsConsentGranted() {
+  return readAnalyticsConsent() === "accepted";
+}
+
+function loadAnalytics() {
+  if (!analyticsId || analyticsLoaded || !analyticsConsentGranted()) return;
+  window[`ga-disable-${analyticsId}`] = false;
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function gtag() { window.dataLayer.push(arguments); };
+  window.gtag("consent", "default", {
+    analytics_storage: "granted",
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied"
+  });
+  window.gtag("js", new Date());
+  window.gtag("config", analyticsId, {
+    send_page_view: false,
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+    anonymize_ip: true
+  });
+  const script = document.createElement("script");
+  script.id = "am-google-analytics";
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(analyticsId)}`;
+  document.head.append(script);
+  analyticsLoaded = true;
+}
+
+function disableAnalytics() {
+  if (!analyticsId) return;
+  window[`ga-disable-${analyticsId}`] = true;
+  window.gtag?.("consent", "update", { analytics_storage: "denied" });
+  document.cookie.split(";").map((item) => item.split("=")[0].trim()).filter((name) => name === "_ga" || name.startsWith("_ga_")).forEach((name) => {
+    document.cookie = `${name}=; Max-Age=0; path=/; SameSite=Lax`;
+  });
+}
+
+function trackAnalyticsEvent(name, parameters = {}) {
+  if (!analyticsConsentGranted() || typeof window.gtag !== "function") return;
+  window.gtag("event", name, parameters);
+}
+
+function trackPageView() {
+  trackAnalyticsEvent("page_view", {
+    page_title: document.title,
+    page_location: location.href,
+    page_path: `${location.pathname}${location.search}`
+  });
+}
+
+function setupAnalyticsConsent() {
+  const panel = document.querySelector("[data-cookie-consent]");
+  const settingsButton = document.querySelector("[data-cookie-settings]");
+  if (!panel || !analyticsId) return;
+
+  const showPanel = () => {
+    panel.hidden = false;
+    requestAnimationFrame(() => panel.classList.add("is-visible"));
+  };
+  const hidePanel = () => {
+    panel.classList.remove("is-visible");
+    window.setTimeout(() => { panel.hidden = true; }, prefersReducedMotion ? 0 : 220);
+  };
+
+  if (analyticsConsentGranted()) loadAnalytics();
+  if (!readAnalyticsConsent()) showPanel();
+
+  panel.querySelector("[data-consent-accept]")?.addEventListener("click", () => {
+    writeAnalyticsConsent("accepted");
+    loadAnalytics();
+    trackPageView();
+    hidePanel();
+  });
+  panel.querySelector("[data-consent-reject]")?.addEventListener("click", () => {
+    writeAnalyticsConsent("declined");
+    disableAnalytics();
+    hidePanel();
+  });
+  settingsButton?.addEventListener("click", () => {
+    showPanel();
+    panel.querySelector("[data-consent-accept]")?.focus({ preventScroll: true });
+  });
+
+  if (!analyticsEventsBound) {
+    analyticsEventsBound = true;
+    document.addEventListener("click", (event) => {
+      const target = event.target.closest("a.button, .contact-method");
+      if (!target) return;
+      const href = target instanceof HTMLAnchorElement ? target.href : "";
+      trackAnalyticsEvent(target.classList.contains("contact-method") ? "contact_click" : "cta_click", {
+        link_text: target.textContent.trim().replace(/\s+/g, " ").slice(0, 100),
+        link_url: href
+      });
+    });
+  }
 }
 
 function interfaceVisual() {
@@ -486,6 +615,7 @@ function render(path = normalizePath(location.pathname), route = resolveRoute(pa
   observeReveals();
   setupManifestoAnimation();
   setupPremiumMotion();
+  trackPageView();
   requestAnimationFrame(() => updateScrollIndicator(false));
 }
 
@@ -560,6 +690,7 @@ function bindInteractions() {
   if (form) setupProjectForm(form);
   const accessForm = document.querySelector("#access-request-form");
   if (accessForm) setupAccessForm(accessForm);
+  setupAnalyticsConsent();
 }
 
 function observeReveals() {
@@ -865,6 +996,7 @@ function setupProjectForm(form) {
       if (!response.ok) throw new Error(`Submission failed with status ${response.status}`);
       form.reset();
       showStatus("Your inquiry was received. Thank you—we'll follow up using the details you provided.", "success");
+      trackAnalyticsEvent("generate_lead", { form_type: "project_inquiry" });
     } catch (error) {
       console.error("Inquiry delivery failed", error);
       showStatus("We couldn't deliver your inquiry. Your message is still in the form; please try again or use “Copy inquiry.”", "error");
@@ -931,6 +1063,7 @@ function setupAccessForm(form) {
       if (!response.ok) throw new Error(`Submission failed with status ${response.status}`);
       form.reset();
       showStatus("Your access request was received. No file was downloaded; the administrator will contact you using the details provided.", "success");
+      trackAnalyticsEvent("generate_lead", { form_type: "software_access_request" });
     } catch (error) {
       console.error("Software access request delivery failed", error);
       showStatus("We couldn't deliver your request. Your details remain in the form; please try again or use “Copy Request.”", "error");
