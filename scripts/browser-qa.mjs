@@ -7,6 +7,7 @@ const root = resolve(import.meta.dirname, "..");
 const qaUrl = new URL(process.env.QA_URL || "http://127.0.0.1:4173");
 const baseUrl = qaUrl.href.replace(/\/$/, "");
 const deploymentBasePath = qaUrl.pathname.replace(/\/$/, "");
+const expectedSiteUrl = (process.env.SITE_URL || "https://apurvbkt.github.io/A-MTechSolution").replace(/\/$/, "");
 const enforceLoaderTiming = qaUrl.hostname === "127.0.0.1" || qaUrl.hostname === "localhost";
 const edgeCandidates = [
   process.env.EDGE_PATH,
@@ -26,14 +27,16 @@ const routes = [
 const builtHomeHtml = await readFile(resolve(root, "dist", "index.html"), "utf8");
 const builtWebsiteServiceHtml = await readFile(resolve(root, "dist", "services", "website-development", "index.html"), "utf8");
 const builtAppJs = await readFile(resolve(root, "dist", "src", "app.js"), "utf8");
+const builtSitemapText = await readFile(resolve(root, "dist", "sitemap.txt"), "utf8");
 const staticSeo = {
   homeTitle: builtHomeHtml.includes("Website &amp; Software Development Company in Jamshedpur | A&amp;M Tech Solutions"),
-  canonical: builtHomeHtml.includes('<link rel="canonical" href="https://apurvbkt.github.io/A-MTechSolution/" />'),
+  canonical: builtHomeHtml.includes(`<link rel="canonical" href="${expectedSiteUrl}/" />`),
   twitterCard: builtHomeHtml.includes('<meta name="twitter:card" content="summary_large_image" />'),
   organizationSchema: builtHomeHtml.includes('"@type":"Organization"') && builtHomeHtml.includes('"alternateName":"A&M Tech Solutions India"') && builtHomeHtml.includes('"name":"Jamshedpur"'),
   websiteSchema: builtHomeHtml.includes('"@type":"WebSite"'),
   serviceSchema: builtWebsiteServiceHtml.includes('"@type":"Service"'),
-  aboutIdentity: builtAppJs.includes("independent India-based studio") && builtAppJs.includes("not affiliated with similarly named businesses")
+  aboutIdentity: builtAppJs.includes("independent India-based studio") && builtAppJs.includes("not affiliated with similarly named businesses"),
+  textSitemap: builtSitemapText.split(/\r?\n/).filter(Boolean).length === routes.length && builtSitemapText.startsWith(`${expectedSiteUrl}/`)
 };
 if (Object.values(staticSeo).some(value => value !== true)) throw new Error(`Generated SEO metadata failed QA: ${JSON.stringify(staticSeo)}`);
 

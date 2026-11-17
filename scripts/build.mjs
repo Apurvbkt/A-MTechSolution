@@ -5,7 +5,7 @@ const root = resolve(import.meta.dirname, "..");
 const output = resolve(root, "dist");
 const siteUrl = (process.env.SITE_URL || "http://127.0.0.1:4173").replace(/\/$/, "");
 const basePath = process.env.BASE_PATH && process.env.BASE_PATH !== "/" ? `/${process.env.BASE_PATH.replace(/^\/+|\/+$/g, "")}` : "";
-const assetVersion = String(process.env.ASSET_VERSION || "").trim().slice(0, 12);
+const assetVersion = String(process.env.ASSET_VERSION || process.env.COMMIT_REF || process.env.GITHUB_SHA || "").trim().slice(0, 12);
 const assetSuffix = assetVersion ? `?v=${encodeURIComponent(assetVersion)}` : "";
 
 const routes = [
@@ -153,7 +153,8 @@ for (const [route, title, description] of routes) {
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes.map(([route]) => `  <url><loc>${siteUrl}${route}</loc></url>`).join("\n")}\n</urlset>\n`;
 await writeFile(resolve(output, "sitemap.xml"), sitemap);
-await writeFile(resolve(output, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${siteUrl}/sitemap.xml\n`);
+await writeFile(resolve(output, "sitemap.txt"), `${routes.map(([route]) => `${siteUrl}${route}`).join("\n")}\n`);
+await writeFile(resolve(output, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${siteUrl}/sitemap.xml\nSitemap: ${siteUrl}/sitemap.txt\n`);
 await writeFile(resolve(output, "404.html"), htmlForRoute("/404/", "Page Not Found — A&M Tech Solutions", "The requested page could not be found."));
 
 console.log(`Built ${routes.length} routes in ${output}`);
