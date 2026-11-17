@@ -102,7 +102,7 @@ function footer() {
           <div class="footer-brand">
             ${link("/", `<span class="brand-mark" aria-hidden="true">A&M</span><span class="brand-text">A&M Tech Solutions</span>`, "brand")}
             <p>${company.description}</p>
-            <p class="footer-location">Creative technology studio in ${company.city}, ${company.region}, serving businesses across India.</p>
+            <p class="footer-location">Independent creative technology studio based in ${company.city}, ${company.region}, India, serving businesses across the country.</p>
             <p class="verified-note">Email: <a href="mailto:${contactEmail}">${contactEmail}</a><br />Phone: <a href="tel:${contactPhoneHref}">${contactPhone}</a> · <a href="https://wa.me/${whatsappPhone}" target="_blank" rel="noopener noreferrer">WhatsApp</a></p>
             <div class="footer-socials" aria-label="Social profiles coming soon">
               <span class="social-placeholder" role="img" aria-label="LinkedIn profile link coming soon" title="LinkedIn — link coming soon">
@@ -331,7 +331,7 @@ function homePage() {
             <span class="hero-title-line" aria-hidden="true"><span class="hero-title-line-inner">as hard as</span></span>
             <span class="hero-title-line" aria-hidden="true"><span class="hero-title-line-inner"><em>your business.</em></span></span>
           </h1>
-          <p class="hero-copy" data-hero-support>A Jamshedpur-based website and software development company building distinctive digital experiences, business systems, and custom software around the way you work.</p>
+          <p class="hero-copy" data-hero-support>An independent website and software development company based in Jamshedpur, Jharkhand, India—building distinctive digital experiences, business systems, and custom software around the way you work.</p>
           <div class="button-row" data-hero-support>${button("/contact/", "Start a Project")}${button("/services/", "Explore Our Services", "button-ghost")}</div>
           <p class="availability" data-hero-support><span class="availability-dot"></span>${company.availability}</p>
           <div class="hero-disciplines" data-hero-support aria-label="A&M delivery disciplines"><span>Discover</span><span>Design</span><span>Build</span><span>Support</span></div>
@@ -355,7 +355,7 @@ function homePage() {
       <div class="shell two-col">
         <div class="sticky-label reveal">${eyebrow(`${company.city} / ${company.region}`)}<h2 class="section-title small">A creative technology studio for businesses ready to move forward.</h2></div>
         <div class="prose reveal">
-          <p>A&M Tech Solutions is a website development and custom software company based in Jamshedpur, Jharkhand. We help startups, local businesses, construction teams, retailers, service companies, and growing organisations turn operational problems into useful digital products.</p>
+          <p>A&M Tech Solutions is an independent website development and custom software company based in Jamshedpur, Jharkhand, India. We help startups, local businesses, construction teams, retailers, service companies, and growing organisations turn operational problems into useful digital products.</p>
           <p>Whether the need is a credible business website, a web application, CRM, inventory system, ERP workflow, or process automation, the work begins with the business context—not a generic template or fashionable technology stack.</p>
           <h3>Choosing an IT company in Jamshedpur</h3>
           <p>The best technology partner is the one that can understand the workflow, explain the scope clearly, build maintainable software, and support the agreed outcome after launch. Our process is designed around those practical responsibilities.</p>
@@ -514,9 +514,9 @@ function aboutPage() {
     ["05", "Respect operational reality", "A technically elegant answer still fails if it ignores the people and conditions around the workflow."],
     ["06", "Build toward ownership", "Documentation, structure, and sensible technology choices reduce unnecessary dependence."]
   ];
-  return `${pageHero({ label: `About A&M / ${company.city}`, title: "Business thinking, expressed through software.", intro: "A&M Tech Solutions is a creative technology studio in Jamshedpur, Jharkhand, building websites, applications, and operational systems for teams that need technology to do a real job." })}
+  return `${pageHero({ label: `About A&M / ${company.city}`, title: "Business thinking, expressed through software.", intro: "A&M Tech Solutions is an independent creative technology studio based in Jamshedpur, Jharkhand, India, building websites, applications, and operational systems for teams that need technology to do a real job." })}
     <section class="section"><div class="shell about-statement"><div>${eyebrow("What we do")}</div><p>We turn complex business needs into digital products that are clear enough to use, strong enough to rely on, and sensible enough to maintain.</p></div></section>
-    <section class="section section-dark"><div class="shell two-col"><div>${eyebrow("Who we serve")}<h2 class="section-title small">From a first serious presence to connected operations.</h2></div><div class="prose"><p>We work toward solutions for startups, small businesses, growing companies, and established organisations. Some need a website that explains the business properly. Others need a customer portal, a CRM shaped around their sales process, or an operational system that replaces fragmented records.</p><p>The common thread is not company size. It is a meaningful business problem and a willingness to make the workflow clearer.</p></div></div></section>
+    <section class="section section-dark"><div class="shell two-col"><div>${eyebrow("Who we serve")}<h2 class="section-title small">From a first serious presence to connected operations.</h2></div><div class="prose"><p>We work toward solutions for startups, small businesses, growing companies, and established organisations. Some need a website that explains the business properly. Others need a customer portal, a CRM shaped around their sales process, or an operational system that replaces fragmented records.</p><p>The common thread is not company size. It is a meaningful business problem and a willingness to make the workflow clearer.</p><p><strong>Identity note:</strong> A&M Tech Solutions is an independent India-based studio operating from Jamshedpur, Jharkhand. It is not affiliated with similarly named businesses in Bangladesh or other countries.</p></div></div></section>
     <section class="section"><div class="shell"><div class="section-heading-row"><div>${eyebrow("Principles")}<h2 class="section-title small">How we think about reliable work.</h2></div><p class="section-lede">A practical foundation for design, engineering, communication, and long-term product decisions.</p></div><div class="principles">${values.map(([number, title, copy]) => `<article class="principle reveal"><span class="principle-index">${number}</span><h3>${title}</h3><p>${copy}</p></article>`).join("")}</div></div></section>
     <section class="section section-accent"><div class="shell vision-line"><div>${eyebrow("Long-term direction")}<p>Founder and team profiles can be added here when verified details are ready for publication.</p></div><blockquote>Build a company known for useful software and straightforward partnerships.</blockquote></div></section>${finalCta()}`;
 }

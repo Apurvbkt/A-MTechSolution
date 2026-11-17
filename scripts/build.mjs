@@ -78,6 +78,7 @@ function structuredDataForRoute(route, title, description) {
     "@type": "Organization",
     "@id": organizationId,
     name: "A&M Tech Solutions",
+    alternateName: "A&M Tech Solutions India",
     url: `${siteUrl}/`,
     logo: `${siteUrl}/brand-card.svg${assetSuffix}`,
     email: "hello.amtechsolutions@outlook.com",
@@ -97,6 +98,7 @@ function structuredDataForRoute(route, title, description) {
       "@id": `${siteUrl}/#website`,
       url: `${siteUrl}/`,
       name: "A&M Tech Solutions",
+      alternateName: "A&M Tech Solutions India",
       publisher: { "@id": organizationId },
       inLanguage: "en-IN"
     });
