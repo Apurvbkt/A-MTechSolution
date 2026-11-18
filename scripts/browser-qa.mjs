@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
+import { routes as routeMetadata } from "./routes.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const qaUrl = new URL(process.env.QA_URL || "http://127.0.0.1:4173");
@@ -20,9 +21,7 @@ const { existsSync } = await import("node:fs");
 const edgePath = edgeCandidates.find(existsSync);
 if (!edgePath) throw new Error("No supported Edge or Chrome executable was found. Set EDGE_PATH to run rendered QA.");
 
-const routes = [
-  "/", "/services/", "/services/website-development/", "/services/web-application-development/", "/services/crm-development/", "/services/erp-business-systems/", "/services/saas-product-development/", "/services/custom-software-automation/", "/services/ui-ux-product-design/", "/services/maintenance-support/", "/solutions/", "/work/", "/work/costarica-labourtrack/", "/work/paytrack/", "/work/buildestimate-ai/", "/work/onsite-teams-replica/", "/work/inventory-management-system/", "/work/project-template/", "/downloads/", "/downloads/costarica-labourtrack/", "/downloads/paytrack/", "/downloads/buildestimate-ai/", "/downloads/onsite-teams-replica/", "/downloads/inventory-management-system/", "/products/", "/products/operations-hub/", "/about/", "/contact/", "/legal/terms-and-conditions/", "/legal/privacy-policy/", "/legal/free-trial-terms/", "/legal/refund-cancellation-policy/", "/legal/saas-subscription-terms/", "/legal/cookie-policy/"
-];
+const routes = routeMetadata.map(([route]) => route);
 
 const builtHomeHtml = await readFile(resolve(root, "dist", "index.html"), "utf8");
 const builtWebsiteServiceHtml = await readFile(resolve(root, "dist", "services", "website-development", "index.html"), "utf8");

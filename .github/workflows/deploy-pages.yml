@@ -1,4 +1,4 @@
-name: Deploy website to GitHub Pages
+name: Redirect GitHub Pages to amteches.in
 
 on:
   push:
@@ -36,17 +36,16 @@ jobs:
       - name: Verify source
         run: npm run check
 
-      - name: Build website
-        run: npm run build
+      - name: Build redirect pages
+        run: npm run build:github-redirect
         env:
-          SITE_URL: ${{ steps.pages.outputs.base_url }}
+          TARGET_URL: https://amteches.in
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
-          ASSET_VERSION: ${{ github.sha }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./dist
+          path: ./dist-github
 
   deploy:
     environment:

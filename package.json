@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node scripts/dev-server.mjs",
     "build": "node scripts/build.mjs",
-    "check": "node --check src/app.js && node --check src/content.js && node --check scripts/build.mjs && node --check scripts/dev-server.mjs && node --check scripts/browser-qa.mjs",
+    "build:github-redirect": "node scripts/build-github-redirect.mjs",
+    "check": "node --check src/app.js && node --check src/content.js && node --check scripts/build.mjs && node --check scripts/build-github-redirect.mjs && node --check scripts/routes.mjs && node --check scripts/dev-server.mjs && node --check scripts/browser-qa.mjs",
     "qa:browser": "node scripts/browser-qa.mjs"
   },
   "dependencies": {

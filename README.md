@@ -19,18 +19,13 @@ npm run check
 npm run build
 ```
 
-The deployable output is written to `dist/`. Local builds use the preview URL for canonical metadata. The GitHub Pages workflow supplies the real Pages URL and repository base path automatically.
+The Netlify deployable output is written to `dist/`. Production builds use `https://amteches.in` for canonical metadata through `netlify.toml`.
 
-## Deploy with GitHub Pages
+## Production hosting and GitHub redirect
 
-The included `.github/workflows/deploy-pages.yml` workflow verifies, builds, and deploys the site whenever `main` is pushed. It reads the Pages URL and repository base path from GitHub automatically, so both `username.github.io` repositories and ordinary project repositories are supported.
+Netlify is the production host for `https://amteches.in`. The included `.github/workflows/deploy-pages.yml` workflow intentionally publishes redirect-only pages at the former GitHub Pages URL so visitors and search engines move to the matching route on the production domain.
 
-1. Create or connect the GitHub repository and push this project to its `main` branch.
-2. In the repository, open **Settings → Pages**.
-3. Set **Source** to **GitHub Actions** if it is not selected automatically.
-4. Open the workflow run and wait for the `deploy` job to complete.
-
-For a custom domain, configure the domain in GitHub Pages first, then set a repository variable or adjust the build environment so `SITE_URL` matches that verified domain. Do not add a `CNAME` file until the domain is confirmed.
+Do not configure `amteches.in` as a GitHub Pages custom domain; its DNS belongs to Netlify. Keep GitHub Pages set to **GitHub Actions** only for the legacy redirect deployment.
 
 ## Contact delivery
 
