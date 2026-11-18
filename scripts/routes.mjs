@@ -1,5 +1,5 @@
 export const routes = [
-  ["/", "Websites, Apps & Custom Software in Jamshedpur | A&M Tech Solutions", "A&M Tech Solutions builds business websites, web apps, CRM, ERP, inventory systems, and custom software for companies in Jamshedpur and across India."],
+  ["/", "Websites, Apps & Custom Software in Jamshedpur | A&M Tech Solutions", "A&M Tech Solutions builds business websites, web apps, CRM, ERP, inventory systems, and custom software for businesses in Jamshedpur, Jharkhand, across India and worldwide."],
   ["/services/", "Website & Software Development Services in Jamshedpur — A&M Tech Solutions", "Website development, web applications, CRM, ERP, SaaS, automation, product design, and technical support in Jamshedpur, Jharkhand."],
   ["/services/website-development/", "Website Development Company in Jamshedpur — A&M Tech Solutions", "Custom business websites, landing pages, portfolios, and digital experiences from a website development company in Jamshedpur, Jharkhand."],
   ["/services/web-application-development/", "Web Application Development in Jamshedpur — A&M Tech Solutions", "Purpose-built web applications, client portals, and internal business tools from A&M Tech Solutions in Jamshedpur, Jharkhand."],
