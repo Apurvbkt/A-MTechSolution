@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">A&amp;M Tech Solutions</title>
+  <desc id="desc">Websites, apps, and custom software from Jamshedpur, Jharkhand.</desc>
+  <image href="social-card-background.png" x="0" y="0" width="1200" height="630" preserveAspectRatio="xMidYMid slice" />
+  <rect width="790" height="630" fill="#10110f" opacity="0.84" />
+  <rect x="64" y="57" width="88" height="8" fill="#c8f135" />
+  <text x="64" y="105" fill="#f2f1ea" font-family="Segoe UI, Arial, sans-serif" font-size="29" font-weight="700" letter-spacing="-0.6">A&amp;M Tech Solutions</text>
+  <text x="64" y="205" fill="#c8f135" font-family="Consolas, monospace" font-size="17" font-weight="600" letter-spacing="2.6">CREATIVE TECHNOLOGY STUDIO</text>
+  <text x="64" y="302" fill="#f2f1ea" font-family="Segoe UI, Arial, sans-serif" font-size="69" font-weight="700" letter-spacing="-3.2">Websites, Apps &amp;</text>
+  <text x="64" y="377" fill="#f2f1ea" font-family="Segoe UI, Arial, sans-serif" font-size="69" font-weight="700" letter-spacing="-3.2">Custom Software</text>
+  <text x="64" y="441" fill="#b9bbb3" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="400">Built around how your business actually works.</text>
+  <rect x="64" y="512" width="393" height="54" rx="2" fill="#c8f135" />
+  <text x="88" y="546" fill="#10110f" font-family="Consolas, monospace" font-size="17" font-weight="700" letter-spacing="1.6">JAMSHEDPUR / JHARKHAND / INDIA</text>
+  <text x="1136" y="577" fill="#f2f1ea" font-family="Consolas, monospace" font-size="17" font-weight="600" letter-spacing="1.2" text-anchor="end">AMTECHES.IN</text>
+</svg>

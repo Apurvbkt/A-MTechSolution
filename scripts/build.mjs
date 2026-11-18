@@ -31,6 +31,9 @@ const siteConfig = (await readFile(resolve(root, "site-config.js"), "utf8")).rep
 await writeFile(resolve(output, "site-config.js"), siteConfig);
 
 const sourceHtml = await readFile(resolve(root, "index.html"), "utf8");
+globalThis.AM_SITE_CONFIG = { basePath };
+const { renderStaticApp } = await import("../src/app.js");
+delete globalThis.AM_SITE_CONFIG;
 
 function escapeAttribute(value) {
   return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -41,8 +44,8 @@ function structuredDataForRoute(route, title, description) {
   const graph = [{
     "@type": "Organization",
     "@id": organizationId,
-    name: "A&M Tech Solutions IND",
-    alternateName: ["A&M Tech Solutions India", "A&M Tech Solutions", "amteches.in"],
+    name: "A&M Tech Solutions",
+    alternateName: ["A&M Tech Solutions India", "amteches.in"],
     url: `${siteUrl}/`,
     logo: `${siteUrl}/brand-card.svg${assetSuffix}`,
     email: "hello.amtechsolutions@outlook.com",
@@ -61,8 +64,8 @@ function structuredDataForRoute(route, title, description) {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
       url: `${siteUrl}/`,
-      name: "A&M Tech Solutions IND",
-      alternateName: ["A&M Tech Solutions India", "A&M Tech Solutions", "amteches.in"],
+      name: "A&M Tech Solutions",
+      alternateName: ["A&M Tech Solutions India", "amteches.in"],
       publisher: { "@id": organizationId },
       inLanguage: "en-IN"
     });
@@ -89,6 +92,7 @@ function structuredDataForRoute(route, title, description) {
 
 function htmlForRoute(route, title, description) {
   const url = `${siteUrl}${route}`;
+  const staticApp = renderStaticApp(route);
   return sourceHtml
     .replace(/<title>.*?<\/title>/, `<title>${escapeAttribute(title)}</title>`)
     .replace(/<meta name="description" content=".*?" \/>/, `<meta name="description" content="${escapeAttribute(description)}" />`)
@@ -96,8 +100,8 @@ function htmlForRoute(route, title, description) {
     .replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${escapeAttribute(description)}" />`)
     .replace(/<meta name="twitter:title" content=".*?" \/>/, `<meta name="twitter:title" content="${escapeAttribute(title)}" />`)
     .replace(/<meta name="twitter:description" content=".*?" \/>/, `<meta name="twitter:description" content="${escapeAttribute(description)}" />`)
-    .replace('<meta property="og:image" content="/brand-card.svg" />', `<meta property="og:image" content="${siteUrl}/brand-card.svg${assetSuffix}" />`)
-    .replace('<meta name="twitter:image" content="/brand-card.svg" />', `<meta name="twitter:image" content="${siteUrl}/brand-card.svg${assetSuffix}" />`)
+    .replace('<meta property="og:image" content="/social-card.png" />', `<meta property="og:image" content="${siteUrl}/social-card.png${assetSuffix}" />`)
+    .replace('<meta name="twitter:image" content="/social-card.png" />', `<meta name="twitter:image" content="${siteUrl}/social-card.png${assetSuffix}" />`)
     .replace('href="/favicon.svg"', `href="${basePath}/favicon.svg${assetSuffix}"`)
     .replace('href="/src/styles.css?v=dev-6"', `href="${basePath}/src/styles.css${assetSuffix}"`)
     .replace('src="/vendor/gsap.min.js"', `src="${basePath}/vendor/gsap.min.js${assetSuffix}"`)
@@ -105,6 +109,7 @@ function htmlForRoute(route, title, description) {
     .replace('src="/vendor/ScrollTrigger.min.js"', `src="${basePath}/vendor/ScrollTrigger.min.js${assetSuffix}"`)
     .replace('src="/site-config.js?v=dev-6"', `src="${basePath}/site-config.js${assetSuffix}"`)
     .replace('src="/src/app.js?v=dev-6"', `src="${basePath}/src/app.js${assetSuffix}"`)
+    .replace('<div id="app"></div>', `<div id="app">${staticApp}</div>`)
     .replace("<link rel=\"icon\"", `<link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />\n    <link rel="icon"`)
     .replace("</head>", `    ${structuredDataForRoute(route, title, description)}\n  </head>`);
 }

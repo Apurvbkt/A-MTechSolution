@@ -1,15 +1,16 @@
 import { company, services, solutions, process, projects, productCategories, legalPages, navItems } from "./content.js";
 
-const app = document.querySelector("#app");
-const siteLoader = document.querySelector("#site-loader");
-const loaderPercent = document.querySelector("[data-loader-percent]");
-const loaderStatus = document.querySelector("[data-loader-status]");
-const routeCurtain = document.querySelector("#route-curtain");
-const scrollIndicator = document.querySelector("#scroll-indicator");
+const isBrowserRuntime = typeof window !== "undefined" && typeof document !== "undefined";
+const app = isBrowserRuntime ? document.querySelector("#app") : null;
+const siteLoader = isBrowserRuntime ? document.querySelector("#site-loader") : null;
+const loaderPercent = isBrowserRuntime ? document.querySelector("[data-loader-percent]") : null;
+const loaderStatus = isBrowserRuntime ? document.querySelector("[data-loader-status]") : null;
+const routeCurtain = isBrowserRuntime ? document.querySelector("#route-curtain") : null;
+const scrollIndicator = isBrowserRuntime ? document.querySelector("#scroll-indicator") : null;
 const scrollIndicatorTrack = scrollIndicator?.querySelector(".scroll-indicator-track");
 const scrollIndicatorThumb = scrollIndicator?.querySelector(".scroll-indicator-thumb");
-const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const config = window.AM_SITE_CONFIG || {};
+const prefersReducedMotion = isBrowserRuntime ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : true;
+const config = isBrowserRuntime ? (window.AM_SITE_CONFIG || {}) : (globalThis.AM_SITE_CONFIG || {});
 const basePath = config.basePath && config.basePath !== "/" ? `/${String(config.basePath).replace(/^\/+|\/+$/g, "")}` : "";
 const contactEmail = config.contactEmail || company.contactEmail;
 const contactPhone = config.contactPhone || company.contactPhone;
@@ -20,7 +21,7 @@ const analyticsConsentKey = "am-analytics-consent-v1";
 let manifestoAnimationContext = null;
 let premiumMotionContext = null;
 let smoothScrollTween = null;
-let smoothScrollTarget = window.scrollY;
+let smoothScrollTarget = isBrowserRuntime ? window.scrollY : 0;
 let scrollIndicatorHideTimer = null;
 let analyticsLoaded = false;
 let analyticsEventsBound = false;
@@ -601,6 +602,12 @@ function resolveRoute(path) {
   return { page: notFoundPage(), title: "Page Not Found — A&M Tech Solutions", description: "The requested page could not be found.", notFound: true };
 }
 
+export function renderStaticApp(pathname) {
+  const path = normalizePath(pathname);
+  const route = resolveRoute(path);
+  return layout(route.page, path);
+}
+
 function updateMeta(route) {
   document.title = route.title;
   const description = document.querySelector('meta[name="description"]');
@@ -1118,16 +1125,18 @@ function setupAccessForm(form) {
   });
 }
 
-window.addEventListener("popstate", () => render());
-document.body.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    const toggle = document.querySelector(".menu-toggle");
-    const nav = document.querySelector("#primary-navigation");
-    if (toggle?.getAttribute("aria-expanded") === "true") { toggle.setAttribute("aria-expanded", "false"); toggle.setAttribute("aria-label", "Open menu"); nav?.classList.remove("open"); document.body.classList.remove("menu-open"); toggle.focus(); }
-  }
-});
+if (isBrowserRuntime) {
+  window.addEventListener("popstate", () => render());
+  document.body.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      const toggle = document.querySelector(".menu-toggle");
+      const nav = document.querySelector("#primary-navigation");
+      if (toggle?.getAttribute("aria-expanded") === "true") { toggle.setAttribute("aria-expanded", "false"); toggle.setAttribute("aria-label", "Open menu"); nav?.classList.remove("open"); document.body.classList.remove("menu-open"); toggle.focus(); }
+    }
+  });
 
-setupSmoothScroll();
-setupScrollIndicator();
-render();
-playInitialLoader();
+  setupSmoothScroll();
+  setupScrollIndicator();
+  render();
+  playInitialLoader();
+}
