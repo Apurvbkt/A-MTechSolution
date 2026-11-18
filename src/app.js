@@ -578,7 +578,7 @@ function notFoundPage() {
 }
 
 function resolveRoute(path) {
-  if (path === "/") return { page: homePage(), title: "Website & Software Development Company in Jamshedpur | A&M Tech Solutions", description: "A&M Tech Solutions is a creative technology studio in Jamshedpur, Jharkhand building business websites, web applications, and custom software." };
+  if (path === "/") return { page: homePage(), title: "Websites, Apps & Custom Software in Jamshedpur | A&M Tech Solutions", description: "A&M Tech Solutions builds business websites, web apps, CRM, ERP, inventory systems, and custom software for companies in Jamshedpur and across India." };
   if (path === "/services/") return { page: servicesPage(), title: "Website & Software Development Services in Jamshedpur — A&M Tech Solutions", description: "Website development, web applications, CRM, ERP, SaaS, automation, product design, and technical support in Jamshedpur, Jharkhand." };
   const serviceMatch = path.match(/^\/services\/([^/]+)\/$/);
   if (serviceMatch && serviceBySlug[serviceMatch[1]]) { const service = serviceBySlug[serviceMatch[1]]; const localMeta = localServiceSeo[service.slug]; return { page: serviceDetailPage(service), title: localMeta?.title || `${service.title} — A&M Tech Solutions`, description: localMeta?.description || service.short }; }

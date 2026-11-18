@@ -28,7 +28,7 @@ const builtWebsiteServiceHtml = await readFile(resolve(root, "dist", "services",
 const builtAppJs = await readFile(resolve(root, "dist", "src", "app.js"), "utf8");
 const builtSitemapText = await readFile(resolve(root, "dist", "sitemap.txt"), "utf8");
 const staticSeo = {
-  homeTitle: builtHomeHtml.includes("Website &amp; Software Development Company in Jamshedpur | A&amp;M Tech Solutions"),
+  homeTitle: builtHomeHtml.includes("Websites, Apps &amp; Custom Software in Jamshedpur | A&amp;M Tech Solutions"),
   canonical: builtHomeHtml.includes(`<link rel="canonical" href="${expectedSiteUrl}/" />`),
   twitterCard: builtHomeHtml.includes('<meta name="twitter:card" content="summary_large_image" />'),
   organizationSchema: builtHomeHtml.includes('"@type":"Organization"') && builtHomeHtml.includes('"name":"A&M Tech Solutions IND"') && builtHomeHtml.includes('"alternateName":["A&M Tech Solutions India","A&M Tech Solutions","amteches.in"]') && builtHomeHtml.includes('"name":"Jamshedpur"'),
@@ -209,7 +209,7 @@ try {
   if (desktop.scrollWidth > desktop.width) throw new Error(`Desktop overflow: viewport ${desktop.width}px, document ${desktop.scrollWidth}px.`);
   if (!desktop.menuHidden) throw new Error("Desktop navigation did not replace the mobile control.");
   if (!desktop.instrumentFont || !desktop.monoFont || !desktop.premiumStage || desktop.premiumCards !== 2 || !desktop.premiumImageLoaded || desktop.featuredProject !== "Custom Inventory System" || desktop.socialPlaceholders !== 2 || !desktop.backToTop || desktop.nativeScrollbarWidth !== 0 || !desktop.customScroller || desktop.heroLines !== 3 || !desktop.heroSettled || desktop.heroSupportOpacity < 0.99) throw new Error(`Premium visual system failed QA: ${JSON.stringify(desktop)}`);
-  if (desktop.title !== "Website & Software Development Company in Jamshedpur | A&M Tech Solutions" || !desktop.localPresence || !desktop.footerLocation || !desktop.indiaIdentity || desktop.twitterCard !== "summary_large_image" || !desktop.basePathLinksValid) throw new Error(`Local SEO system failed QA: ${JSON.stringify(desktop)}`);
+  if (desktop.title !== "Websites, Apps & Custom Software in Jamshedpur | A&M Tech Solutions" || !desktop.localPresence || !desktop.footerLocation || !desktop.indiaIdentity || desktop.twitterCard !== "summary_large_image" || !desktop.basePathLinksValid) throw new Error(`Local SEO system failed QA: ${JSON.stringify(desktop)}`);
   const desktopShot = await cdp("Page.captureScreenshot", { format: "png", fromSurface: true, captureBeyondViewport: false });
   await writeFile(resolve(artifacts, "home-desktop.png"), Buffer.from(desktopShot.data, "base64"));
   const smoothScrollRuntime = await evaluate(`({ plugin: Boolean(window.ScrollToPlugin), enabled: document.documentElement.classList.contains("gsap-smooth-scroll"), y: scrollY })`);
