@@ -20,8 +20,8 @@ function redirectHtml(target) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="refresh" content="0; url=${safeTarget}" />
-    <meta name="application-name" content="A&amp;M Tech Solutions" />
-    <meta property="og:site_name" content="A&amp;M Tech Solutions" />
+    <meta name="application-name" content="A&amp;M Tech Solutions IND" />
+    <meta property="og:site_name" content="A&amp;M Tech Solutions IND" />
     <link rel="canonical" href="${safeTarget}" />
     <title>A&amp;M Tech Solutions — Moved to amteches.in</title>
     <script>location.replace(${serializedTarget});</script>

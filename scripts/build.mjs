@@ -41,8 +41,8 @@ function structuredDataForRoute(route, title, description) {
   const graph = [{
     "@type": "Organization",
     "@id": organizationId,
-    name: "A&M Tech Solutions",
-    alternateName: "A&M Tech Solutions India",
+    name: "A&M Tech Solutions IND",
+    alternateName: ["A&M Tech Solutions India", "A&M Tech Solutions", "amteches.in"],
     url: `${siteUrl}/`,
     logo: `${siteUrl}/brand-card.svg${assetSuffix}`,
     email: "hello.amtechsolutions@outlook.com",
@@ -61,8 +61,8 @@ function structuredDataForRoute(route, title, description) {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
       url: `${siteUrl}/`,
-      name: "A&M Tech Solutions",
-      alternateName: "A&M Tech Solutions India",
+      name: "A&M Tech Solutions IND",
+      alternateName: ["A&M Tech Solutions India", "A&M Tech Solutions", "amteches.in"],
       publisher: { "@id": organizationId },
       inLanguage: "en-IN"
     });
