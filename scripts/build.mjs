@@ -135,6 +135,8 @@ function htmlForRoute(route, title, description) {
     .replace('<meta name="twitter:image" content="/social-card.png" />', `<meta name="twitter:image" content="${siteUrl}/social-card.png${assetSuffix}" />`)
     .replace('href="/amtech-favicon-dark-192.png"', `href="${basePath}/amtech-favicon-dark-192.png"`)
     .replace('href="/amtech-logo-dark-512.png"', `href="${basePath}/amtech-logo-dark-512.png"`)
+    .replace('href="/fonts/instrument-sans-latin-wght-normal.woff2"', `href="${basePath}/fonts/instrument-sans-latin-wght-normal.woff2${assetSuffix}"`)
+    .replace('href="/src/content.js?v=dev-6"', `href="${basePath}/src/content.js${assetSuffix}"`)
     .replace('href="/src/styles.css?v=dev-6"', `href="${basePath}/src/styles.css${assetSuffix}"`)
     .replace('src="/vendor/gsap.min.js"', `src="${basePath}/vendor/gsap.min.js${assetSuffix}"`)
     .replace('src="/vendor/ScrollToPlugin.min.js"', `src="${basePath}/vendor/ScrollToPlugin.min.js${assetSuffix}"`)
