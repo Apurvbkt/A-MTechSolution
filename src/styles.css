@@ -328,13 +328,6 @@ img, svg { display: block; max-width: 100%; }
   letter-spacing: -0.07em;
   clip-path: polygon(0 0, 100% 0, 100% 72%, 82% 100%, 0 100%);
 }
-.brand-logo {
-  width: 3.25rem;
-  height: 2.15rem;
-  flex: 0 0 auto;
-  object-fit: cover;
-  object-position: center;
-}
 .brand-text { max-width: 6.2rem; }
 .nav-links { display: flex; align-items: center; gap: clamp(1.1rem, 2.2vw, 2.25rem); }
 .nav-link { position: relative; font-size: 0.82rem; font-weight: 600; }
