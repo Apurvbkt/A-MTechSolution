@@ -47,16 +47,25 @@ function structuredDataForRoute(route, title, description) {
     name: "A&M Tech Solutions",
     alternateName: ["A&M Tech", "A&M Tech Solutions India"],
     url: `${siteUrl}/`,
-    logo: `${siteUrl}/brand-card.svg${assetSuffix}`,
+    logo: `${siteUrl}/favicon.png${assetSuffix}`,
+    image: `${siteUrl}/social-card.png${assetSuffix}`,
     email: "hello.amtechsolutions@outlook.com",
     telephone: "+91 70043 75813",
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "project enquiries",
+      email: "hello.amtechsolutions@outlook.com",
+      telephone: "+91 70043 75813",
+      availableLanguage: ["English", "Hindi"],
+      areaServed: "India"
+    },
     description: "A creative technology studio in Jamshedpur, Jharkhand building websites, web applications, business systems, and custom software.",
     areaServed: [
       { "@type": "City", name: "Jamshedpur" },
       { "@type": "AdministrativeArea", name: "Jharkhand" },
       { "@type": "Country", name: "India" }
     ],
-    knowsAbout: ["Website development", "Web application development", "Custom software development", "Business management systems", "UI and UX design"]
+    knowsAbout: ["Website development", "Web application development", "Custom software development", "CRM development", "ERP and inventory systems", "Business automation", "AI automation and agents", "UI and UX design"]
   }];
 
   if (route === "/") {
@@ -76,6 +85,7 @@ function structuredDataForRoute(route, title, description) {
       "@type": "Service",
       "@id": `${siteUrl}${route}#service`,
       name: title.split(" — ")[0],
+      serviceType: title.split(" — ")[0],
       description,
       url: `${siteUrl}${route}`,
       provider: { "@id": organizationId },

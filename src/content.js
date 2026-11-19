@@ -23,6 +23,7 @@ export const services = [
     useCases: ["Launching a new business", "Repositioning an established company", "Replacing a template that no longer fits", "Turning a complex offer into a clear visitor journey"],
     approach: "We start with the decisions your visitors need to make, then shape the content, interface, and technology around that journey. The result is deliberate—not a theme with your logo added.",
     technology: "The stack is selected for the content model, editing needs, integrations, and hosting constraints. We prefer standards-based, maintainable solutions over unnecessary complexity.",
+    localContext: ["For businesses in Jamshedpur and across Jharkhand, the website often becomes the first place a potential customer checks credibility, services, and contact details. We build that experience to work clearly on the mobile connections and devices people actually use.", "Projects can begin with a face-to-face discovery session in the Jamshedpur area when useful, or run remotely for teams elsewhere in India and worldwide. Location changes how we collaborate—not the care given to strategy, accessibility, performance, and maintainable delivery."],
     faqs: [
       ["Can you work with our existing website?", "Yes. We first review its structure, technology, content, and performance, then recommend whether focused improvements or a rebuild is the more sensible investment."],
       ["Will we be able to update content?", "That can be part of the scope. We can connect an appropriate content system or structure the site so routine updates remain straightforward."],
@@ -41,6 +42,7 @@ export const services = [
     useCases: ["Digitising a manual service", "Giving customers secure access to information", "Coordinating multi-step internal work", "Connecting fragmented systems"],
     approach: "We model the workflow before the interface. Key roles, states, permissions, exceptions, and reporting needs are made explicit, then delivered in useful, testable increments.",
     technology: "Architecture depends on data sensitivity, scale, integrations, and ownership. Authentication, authorization, validation, and audit needs are treated as system concerns—not visual add-ons.",
+    localContext: ["Jamshedpur businesses in services, construction, distribution, and operations often coordinate work through spreadsheets, calls, and messaging apps. A focused web application can bring the records, approvals, and next actions into one browser-based workflow without forcing a generic enterprise platform.", "We can study the process on-site in the Jamshedpur area when the workflow is easier to understand in person, then continue design and development remotely. The same delivery model supports teams elsewhere in Jharkhand, across India, and internationally."],
     faqs: [
       ["Can you replace a spreadsheet process?", "Often, yes—but the right first step is mapping what the spreadsheet actually controls, including exceptions and informal workarounds."],
       ["Can the application connect to our existing tools?", "Where stable APIs or supported integration paths exist, they can be assessed and scoped as part of the solution."],
@@ -59,6 +61,7 @@ export const services = [
     useCases: ["Service businesses managing enquiries", "Teams moving beyond spreadsheets", "Businesses with a non-standard sales cycle", "Operations that need sales and delivery context connected"],
     approach: "We document how a lead enters, moves, stalls, converts, and hands over. The initial release focuses on the smallest workflow that gives the whole team a trustworthy source of truth.",
     technology: "A CRM may be a custom application, an extension of an existing platform, or an integration layer. We recommend the practical option after understanding the process and ownership requirements.",
+    localContext: ["For service businesses in Jamshedpur, a missed call, delayed WhatsApp reply, or forgotten follow-up can mean a lost enquiry. A practical CRM should make ownership and the next action visible while preserving the communication channels the team already uses.", "We first compare a custom build with established CRM options instead of assuming custom software is always better. Discovery is available locally in Jamshedpur and remotely for sales teams throughout India and beyond."],
     faqs: [
       ["Should we build or configure an existing CRM?", "That decision depends on how distinctive your workflow is, which integrations matter, and the total cost of ownership. We assess both options honestly."],
       ["Can follow-up be automated?", "Supported reminders and communications can be automated where useful, with clear rules and appropriate consent."],
@@ -77,6 +80,7 @@ export const services = [
     useCases: ["Construction and project operations", "Retail and distribution workflows", "Multi-location stock control", "Growing businesses formalising operations"],
     approach: "ERP work begins with process boundaries and data ownership. We prioritise the operational core, define controls and exceptions, and avoid turning every wish into an oversized first release.",
     technology: "Data integrity, permissions, auditability, backups, and integration reliability shape the architecture. Infrastructure and deployment choices follow the agreed operational risk.",
+    localContext: ["Jamshedpur and Jharkhand have businesses where stock, purchasing, site activity, dispatch, and management reporting must stay connected. We translate those real hand-offs into a staged system instead of applying a one-size-fits-all ERP structure.", "Local process discovery can include in-person workflow sessions where appropriate. Delivery can then continue with documented reviews and remote collaboration for organisations operating across multiple locations in India."],
     faqs: [
       ["Is a custom ERP always the right choice?", "No. Established platforms can be better when the business fits them. Custom work is most useful where the workflow creates real advantage or cannot be supported sensibly elsewhere."],
       ["Can modules be delivered in stages?", "Yes. A staged rollout often reduces risk and lets the team validate one operational area before expanding."],
@@ -95,6 +99,7 @@ export const services = [
     useCases: ["Validating a B2B software concept", "Turning an internal tool into a product", "Rebuilding an early prototype", "Launching a focused paid workflow"],
     approach: "We define who the product is for, what job it performs, and which evidence the first release should produce. Product, design, engineering, and operational requirements move together.",
     technology: "Trials, subscriptions, and entitlements require server-side enforcement. Billing and authentication use established providers where appropriate; provider choice and compliance scope are confirmed before implementation.",
+    localContext: ["A&M Tech Solutions is based in Jamshedpur and works with product ideas that may serve customers anywhere. We help founders turn an early concept into a focused release plan without presenting unfinished billing, trial, or account features as if they already exist.", "Product discovery and reviews can happen in person in the Jamshedpur area or remotely across India and worldwide. The delivery plan accounts for ownership, support, hosting, and the operational work required after launch—not only the interface."],
     faqs: [
       ["Can you build a minimum viable product?", "Yes, when 'minimum' still means coherent, secure, and useful. We define the smallest release that can test the product's key assumption."],
       ["Can a free trial be added?", "Yes, once a real product backend and billing model exist. Trial dates and access must be enforced server-side, with clear renewal disclosures."],
@@ -113,6 +118,7 @@ export const services = [
     useCases: ["Generating recurring operational reports", "Synchronising supported systems", "Replacing repetitive administrative steps", "Building a focused specialist tool"],
     approach: "We quantify the friction, map failure cases, and identify which decisions need human oversight. Automation is designed to be observable and recoverable—not an invisible chain nobody can support.",
     technology: "Integration feasibility depends on supported APIs, rate limits, authentication, and data responsibilities. We verify these constraints before promising an automated path.",
+    localContext: ["For teams in Jamshedpur and Jharkhand, useful automation may be as focused as turning recurring spreadsheet work into a reliable report, connecting supported business tools, or giving a specialist workflow its own small application. The goal is measurable operational relief, not automation for display.", "We can observe the current process locally when context matters, while implementation and support can continue remotely for businesses across India and worldwide. AI automation or agent features are proposed only when the data, review, and failure-handling model makes them responsible and useful."],
     faqs: [
       ["Can any manual process be automated?", "No. Some processes are too variable, too risky, or depend on unavailable systems. We identify where automation is reliable and where human review remains important."],
       ["Will the automation be monitored?", "Monitoring, alerts, logs, and maintenance expectations can be included according to the operational importance of the workflow."],
@@ -131,6 +137,7 @@ export const services = [
     useCases: ["Designing a new application before build", "Improving a complex workflow", "Unifying an inconsistent product", "Preparing a product team to scale delivery"],
     approach: "We work from real tasks and information, not isolated screens. Prototypes make assumptions visible early; the design system captures the decisions that should stay consistent.",
     technology: "Design outputs are created with implementation in mind. Component states, responsive behavior, accessibility, and data edge cases are specified at the level the engagement requires.",
+    localContext: ["Product teams in Jamshedpur do not need to choose between local context and contemporary digital design. We can work closely with stakeholders to understand the language, tasks, and device conditions behind the interface, then translate them into clear flows and a maintainable visual system.", "Workshops can be held locally when useful, with prototypes and design reviews shared remotely for teams elsewhere in India or abroad. The outcome stays grounded in real user tasks rather than visual trends alone."],
     faqs: [
       ["Can you design without developing the product?", "Yes. A design-only scope can be defined with appropriate handoff, though close collaboration with the implementation team is recommended."],
       ["Do you create design systems?", "Yes, at a scale appropriate to the product. A small, useful system is often more valuable than a large catalogue that does not match real screens."],
@@ -149,6 +156,7 @@ export const services = [
     useCases: ["Supporting a newly launched product", "Stabilising an existing application", "Managing an improvement backlog", "Providing technical continuity for a small team"],
     approach: "Support starts with a defined system boundary, response expectations, access model, and priority framework. Work is tracked transparently; emergency coverage is only included when explicitly agreed.",
     technology: "Effective support requires appropriate repository, hosting, monitoring, and provider access. We review the system before confirming service levels or responsibility.",
+    localContext: ["Businesses in Jamshedpur can use A&M Tech Solutions as a local technical contact for agreed website and software maintenance without assuming every issue is covered by an unlimited support promise. We begin with a review of the system, access, hosting, and current risks.", "Planned fixes and improvements are handled through a visible backlog and agreed priorities. Remote support is also available for suitable systems across India and worldwide, subject to the same access and scope review."],
     faqs: [
       ["Do you offer 24/7 support?", "Not by default. Coverage and response times must be agreed in writing for each support arrangement."],
       ["Can you maintain software built by another team?", "Potentially. We first conduct a technical review to understand its condition, dependencies, deployment process, and risks."],
