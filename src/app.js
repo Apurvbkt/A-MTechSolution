@@ -699,6 +699,13 @@ function navigate(path, { replace = false } = {}) {
 
 function render(path = normalizePath(location.pathname), route = resolveRoute(path)) {
   app.innerHTML = layout(route.page, path);
+  activatePage(route);
+}
+
+function activatePage(route) {
+  app.dataset.runtimeReady = "true";
+  delete app.dataset.prerendered;
+  document.querySelectorAll('input[name="formStartedAt"]').forEach((field) => { field.value = String(Date.now()); });
   updateMeta(route);
   bindInteractions();
   observeReveals();
@@ -897,14 +904,14 @@ function setupManifestoAnimation() {
         rotation: 0,
         clearProps: "transform"
       });
-      gsap.set(lines, { opacity: 0, y: 52, force3D: true });
+      gsap.set(lines, { opacity: 0, y: 40, force3D: true });
       const mobileTimeline = gsap.timeline({
         scrollTrigger: {
           id: "manifesto-mobile-lines",
           trigger: section,
           start: "top top",
-          end: () => `+=${Math.round(window.innerHeight * 1.65)}`,
-          scrub: 0.4,
+          end: () => `+=${Math.round(window.innerHeight * 1.8)}`,
+          scrub: 0.8,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true
@@ -913,9 +920,9 @@ function setupManifestoAnimation() {
       mobileTimeline.to(lines, {
         opacity: 1,
         y: 0,
-        duration: 0.66,
-        stagger: 0.42,
-        ease: "power2.out"
+        duration: 0.78,
+        stagger: 0.36,
+        ease: "power1.out"
       });
       mobileTimeline.to(hold, { value: 1, duration: 0.28, ease: "none" });
       return;
@@ -1222,6 +1229,9 @@ if (isBrowserRuntime) {
 
   setupSmoothScroll();
   setupScrollIndicator();
-  render();
+  const initialPath = normalizePath(location.pathname);
+  const initialRoute = resolveRoute(initialPath);
+  if (app?.dataset.prerendered === "true" && app.childElementCount > 0) activatePage(initialRoute);
+  else render(initialPath, initialRoute);
   playInitialLoader();
 }

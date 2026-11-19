@@ -143,7 +143,7 @@ function htmlForRoute(route, title, description) {
     .replace('src="/vendor/ScrollTrigger.min.js"', `src="${basePath}/vendor/ScrollTrigger.min.js${assetSuffix}"`)
     .replace('src="/site-config.js?v=dev-6"', `src="${basePath}/site-config.js${assetSuffix}"`)
     .replace('src="/src/app.js?v=dev-6"', `src="${basePath}/src/app.js${assetSuffix}"`)
-    .replace('<div id="app"></div>', `<div id="app">${staticApp}</div>`)
+    .replace('<div id="app"></div>', `<div id="app" data-prerendered="true">${staticApp}</div>`)
     .replace("<link rel=\"icon\"", `<link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />\n    <link rel="icon"`)
     .replace("</head>", `    ${structuredDataForRoute(route, title, description)}\n  </head>`);
 }
