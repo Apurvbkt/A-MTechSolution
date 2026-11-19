@@ -363,7 +363,7 @@ function homePage() {
             <span class="hero-title-line" aria-hidden="true"><span class="hero-title-line-inner">as hard as</span></span>
             <span class="hero-title-line" aria-hidden="true"><span class="hero-title-line-inner"><em>your business.</em></span></span>
           </h1>
-          <p class="hero-copy" data-hero-support>An independent website and software development company based in Jamshedpur, Jharkhand, India—building distinctive digital experiences, business systems, and custom software around the way you work.</p>
+          <p class="hero-copy" data-hero-support>A Jamshedpur-based creative technology studio building business websites, web applications, and custom software around the way your team actually works.</p>
           <div class="button-row" data-hero-support>${button("/contact/", "Start a Project")}${button("/services/", "Explore Our Services", "button-ghost")}</div>
           <p class="availability" data-hero-support><span class="availability-dot"></span>${company.availability}</p>
           <div class="hero-disciplines" data-hero-support aria-label="A&M delivery disciplines"><span>Discover</span><span>Design</span><span>Build</span><span>Support</span></div>
@@ -379,18 +379,18 @@ function homePage() {
     </section>
     <section class="section" id="services">
       <div class="shell">
-        <div class="section-heading-row reveal"><div>${eyebrow("What we build")}<h2 class="section-title">From first presence to operational core.</h2></div><div><p class="section-lede">Focused digital work for businesses at different stages—designed around the job the technology needs to do.</p>${link("/services/", "View all services", "text-link")}</div></div>
+        <div class="section-heading-row reveal"><div>${eyebrow("What we build")}<h2 class="section-title">From your first serious website to the systems behind the business.</h2></div><div><p class="section-lede">Focused digital work for businesses at different stages—designed around the people, decisions, and workflows the technology needs to support.</p>${link("/services/", "View all services", "text-link")}</div></div>
         <div class="service-list">${services.map((service) => `<a class="service-row reveal" href="${sitePath(`/services/${service.slug}/`)}" data-link><span class="service-number">${service.number}</span><h3>${service.title}</h3><p>${service.short}</p><span class="service-arrow" aria-hidden="true">↗</span></a>`).join("")}</div>
       </div>
     </section>
     <section class="section section-soft local-presence">
       <div class="shell two-col">
-        <div class="sticky-label reveal">${eyebrow(`${company.city} / ${company.region}`)}<h2 class="section-title small">A creative technology studio for businesses ready to move forward.</h2></div>
+        <div class="sticky-label reveal">${eyebrow(`${company.city} / ${company.region}`)}<h2 class="section-title small">Local context. Practical technology. Room to grow.</h2></div>
         <div class="prose reveal">
-          <p>A&M Tech Solutions is an independent website development and custom software company based in Jamshedpur, Jharkhand, India. We help startups, local businesses, construction teams, retailers, service companies, and growing organisations turn operational problems into useful digital products.</p>
-          <p>Whether the need is a credible business website, a web application, CRM, inventory system, ERP workflow, or process automation, the work begins with the business context—not a generic template or fashionable technology stack.</p>
-          <h3>Choosing an IT company in Jamshedpur</h3>
-          <p>The best technology partner is the one that can understand the workflow, explain the scope clearly, build maintainable software, and support the agreed outcome after launch. Our process is designed around those practical responsibilities.</p>
+          <p>A&M Tech Solutions is an independent website development and custom software company based in Jamshedpur, Jharkhand. We work with startups, local businesses, construction teams, retailers, service companies, and growing organisations in India and beyond.</p>
+          <p>The need may be a credible website, a web application, CRM, inventory system, ERP workflow, or process automation. In every case, we begin with the business context: what is slowing the team down, what needs to become clearer, and what a useful result should change.</p>
+          <h3>A technology partner that starts with the work</h3>
+          <p>We make the workflow, scope, priorities, and constraints visible before recommending a solution. That leads to clearer decisions, maintainable software, and a practical plan for what happens after launch.</p>
           <div class="local-service-links">${link("/services/website-development/", "Website development")}${link("/services/custom-software-automation/", "Custom software")}${link("/services/erp-business-systems/", "ERP & business systems")}${link("/contact/", "Discuss a project")}</div>
         </div>
       </div>
@@ -410,23 +410,23 @@ function homePage() {
     </section>
     <section class="section section-soft">
       <div class="shell">
-        <div class="section-heading-row reveal"><div>${eyebrow("Selected work")}<h2 class="section-title small">Products shaped around real workflows.</h2></div><div><p class="section-lede">A growing archive of operational systems, mobile products, and construction software—documented without invented outcomes or client claims.</p>${link("/work/", "View all projects", "text-link")}</div></div>
+        <div class="section-heading-row reveal"><div>${eyebrow("Selected work")}<h2 class="section-title small">Products shaped around real workflows.</h2></div><div><p class="section-lede">Explore operational systems, mobile products, and construction software through the problem, product direction, confirmed scope, and available demo.</p>${link("/work/", "View all projects", "text-link")}</div></div>
         <div class="project-grid project-grid-home">${homeProjects.map((project, index) => projectCard(project, index, index === 0)).join("")}</div>
       </div>
     </section>
     <section class="section section-dark">
       <div class="shell">
-        <div class="section-heading-row reveal"><div>${eyebrow("Products & software")}<h2 class="section-title">Useful tools, only when they're ready.</h2></div><p class="section-lede">The architecture is ready for product pages and future trials. The website does not pretend that unreleased software is available today.</p></div>
+        <div class="section-heading-row reveal"><div>${eyebrow("Products & software")}<h2 class="section-title">Useful tools, released with purpose.</h2></div><p class="section-lede">We are exploring reusable software for common business workflows. Every product page clearly separates what is available now from what is still being developed.</p></div>
         <div class="product-preview-grid">
-          <article class="product-feature reveal"><div><span class="status-chip">Concept / coming soon</span><h3>Operations Hub</h3><p>A product direction for growing teams that need stock, work, approvals, and reporting to live in a more connected workspace.</p>${link("/products/operations-hub/", "View concept details", "text-link")}</div><div class="product-categories"><span>Operations</span><span>Inventory</span><span>Approvals</span><span>Reporting</span></div></article>
-          <article class="product-feature reveal"><div><span class="status-chip">Product directory</span><h3>Future software</h3><p>CRM, inventory, workforce, project, and automation categories—clearly labelled until a verified release exists.</p></div>${link("/products/", "Browse product direction", "text-link")}</article>
-          <article class="product-feature reveal"><div><span class="status-chip">Trials</span><h3>No pretend signup.</h3><p>Trial and subscription flows will only be enabled with real server-side identity, entitlement, billing, and disclosure.</p></div>${link("/legal/free-trial-terms/", "Read the trial draft", "text-link")}</article>
+          <article class="product-feature reveal"><div><span class="status-chip">Concept / coming soon</span><h3>Operations Hub</h3><p>A connected workspace concept for growing teams that need clearer control of stock, work, approvals, and reporting.</p>${link("/products/operations-hub/", "View concept details", "text-link")}</div><div class="product-categories"><span>Operations</span><span>Inventory</span><span>Approvals</span><span>Reporting</span></div></article>
+          <article class="product-feature reveal"><div><span class="status-chip">Product roadmap</span><h3>Focused business tools</h3><p>CRM, inventory, workforce, project, and automation tools will be listed here as each offer becomes ready for real use.</p></div>${link("/products/", "Explore the roadmap", "text-link")}</article>
+          <article class="product-feature reveal"><div><span class="status-chip">Access & trials</span><h3>Real access, when it is ready.</h3><p>Trials and subscriptions will open only when the complete account, support, billing, and cancellation experience is in place.</p></div>${link("/legal/free-trial-terms/", "Read the trial draft", "text-link")}</article>
         </div>
       </div>
     </section>
     <section class="section">
       <div class="shell">
-        <div class="section-heading-row reveal"><div>${eyebrow("Why A&M")}<h2 class="section-title">Serious about what software must do.</h2></div><p class="section-lede">Not vague transformation. Not technology for its own sake. Practical decisions that respect the business behind the brief.</p></div>
+        <div class="section-heading-row reveal"><div>${eyebrow("Why A&M")}<h2 class="section-title">Serious about what the software must improve.</h2></div><p class="section-lede">Clear thinking, practical technology, and honest communication—with every decision connected to the business behind the brief.</p></div>
         <div class="principles">${principles.map(([number, title, copy]) => `<article class="principle reveal"><span class="principle-index">${number}</span><h3>${title}</h3><p>${copy}</p></article>`).join("")}</div>
       </div>
     </section>
@@ -596,7 +596,7 @@ function contactPage() {
         </div>
         <input type="hidden" name="formStartedAt" value="${Date.now()}" />
         <div class="form-actions"><button class="button" type="submit">Send project inquiry</button><button class="button button-ghost" type="button" id="copy-inquiry">Copy inquiry</button></div>
-        <p class="form-note">The form validates locally. Production delivery remains disabled until a secure server endpoint is configured; the interface will never report a false success.</p>
+        <p class="form-note">Your inquiry is sent securely through our form delivery provider. If delivery fails, the form will keep your message and show an error instead of reporting a false success.</p>
         <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
       </form>
     </div></section>`;
@@ -613,7 +613,7 @@ function legalPage(slug, page) {
 }
 
 function finalCta() {
-  return `<section class="section section-accent"><div class="shell cta-panel reveal"><div><h2>Have a business problem worth solving?</h2><p>Tell us what you're trying to build. We'll help you work out the right next step.</p></div><div class="button-row">${button("/contact/", "Let's Talk")}${button("/services/", "Explore Services", "button-ghost")}</div></div></section>`;
+  return `<section class="section section-accent"><div class="shell cta-panel reveal"><div><h2>Have a business problem worth solving?</h2><p>Share what is happening now, who it affects, and what you want to improve. We will help you identify a practical next step.</p></div><div class="button-row">${button("/contact/", "Start the Conversation")}${button("/services/", "Explore Services", "button-ghost")}</div></div></section>`;
 }
 
 function notFoundPage() {
@@ -883,6 +883,37 @@ function setupManifestoAnimation() {
   gsap.registerPlugin(ScrollTrigger);
   manifestoAnimationContext = gsap.context(() => {
     const activeColor = getComputedStyle(section).getPropertyValue("--white").trim() || "#fafaf6";
+
+    if (window.matchMedia("(max-width: 680px)").matches) {
+      gsap.set(characters, {
+        opacity: 0.16,
+        color: activeColor,
+        x: 0,
+        y: 18,
+        scale: 1,
+        rotation: 0,
+        transformOrigin: "50% 100%",
+        force3D: true
+      });
+      gsap.timeline({
+        scrollTrigger: {
+          id: "manifesto-mobile-reveal",
+          trigger: section,
+          start: "top 76%",
+          end: "top 20%",
+          scrub: 0.28,
+          invalidateOnRefresh: true
+        }
+      }).to(characters, {
+        opacity: 1,
+        y: 0,
+        duration: 0.42,
+        stagger: 0.006,
+        ease: "power2.out"
+      });
+      return;
+    }
+
     const orbitRadius = Math.min(210, Math.max(76, window.innerWidth * 0.14));
     gsap.set(characters, {
       opacity: 0,
