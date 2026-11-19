@@ -811,7 +811,7 @@ img, svg { display: block; max-width: 100%; }
   .premium-card-labour { top: 6rem; left: -0.2rem; }
   .premium-stage-caption { right: 0.2rem; font-size: 0.45rem; }
   .manifesto-line { grid-template-columns: 1fr; }
-  .manifesto-section { min-height: 78svh; }
+  .manifesto-section { min-height: 100svh; }
   .manifesto-copy { font-size: clamp(2.15rem, 10.5vw, 3.4rem); line-height: 1.04; letter-spacing: -0.055em; }
   .manifesto-text-line { display: block; will-change: transform, opacity; }
   .service-row { grid-template-columns: auto 1fr auto; gap: 1rem; }

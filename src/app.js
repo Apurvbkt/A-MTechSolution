@@ -887,6 +887,7 @@ function setupManifestoAnimation() {
 
     if (window.matchMedia("(max-width: 960px)").matches) {
       const lines = [...section.querySelectorAll(".manifesto-text-line")];
+      const hold = { value: 0 };
       gsap.set(characters, {
         opacity: 1,
         color: activeColor,
@@ -896,23 +897,27 @@ function setupManifestoAnimation() {
         rotation: 0,
         clearProps: "transform"
       });
-      gsap.set(lines, { opacity: 0.14, y: 34, force3D: true });
-      gsap.timeline({
+      gsap.set(lines, { opacity: 0.1, y: 52, force3D: true });
+      const mobileTimeline = gsap.timeline({
         scrollTrigger: {
           id: "manifesto-mobile-lines",
-          trigger: section.querySelector(".manifesto-copy"),
-          start: "top 84%",
-          end: "bottom 42%",
-          scrub: 0.32,
+          trigger: section,
+          start: "top top",
+          end: () => `+=${Math.round(window.innerHeight * 1.65)}`,
+          scrub: 0.4,
+          pin: true,
+          anticipatePin: 1,
           invalidateOnRefresh: true
         }
-      }).to(lines, {
+      });
+      mobileTimeline.to(lines, {
         opacity: 1,
         y: 0,
-        duration: 0.72,
-        stagger: 0.38,
+        duration: 0.66,
+        stagger: 0.42,
         ease: "power2.out"
       });
+      mobileTimeline.to(hold, { value: 1, duration: 0.28, ease: "none" });
       return;
     }
 
