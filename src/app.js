@@ -105,7 +105,7 @@ function header(path) {
   return `
     <header class="site-header">
       <div class="nav-wrap">
-        ${link("/", `<span class="brand-mark" aria-hidden="true">A&M</span><span class="brand-text">A&M Tech Solutions</span>`, "brand")}
+        ${link("/", `<img class="brand-logo" src="${sitePath("/amtech-favicon-dark-192.png")}" alt="" width="192" height="192" aria-hidden="true" /><span class="brand-text">A&M Tech Solutions</span>`, "brand")}
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu"><span></span></button>
         <nav id="primary-navigation" class="nav-links" aria-label="Primary navigation">
           ${navItems.map(([label, href]) => `<a class="nav-link" href="${sitePath(href)}" data-link ${path.startsWith(href) ? 'aria-current="page"' : ""}>${label}</a>`).join("")}

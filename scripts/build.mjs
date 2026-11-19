@@ -49,7 +49,7 @@ function structuredDataForRoute(route, title, description) {
     url: `${siteUrl}/`,
     logo: {
       "@type": "ImageObject",
-      url: `${siteUrl}/amtech-logo-512.png${assetSuffix}`,
+      url: `${siteUrl}/amtech-logo-dark-512.png${assetSuffix}`,
       width: 512,
       height: 512
     },
@@ -133,8 +133,8 @@ function htmlForRoute(route, title, description) {
     .replace(/<meta name="twitter:description" content=".*?" \/>/, `<meta name="twitter:description" content="${escapeAttribute(description)}" />`)
     .replace('<meta property="og:image" content="/social-card.png" />', `<meta property="og:image" content="${siteUrl}/social-card.png${assetSuffix}" />`)
     .replace('<meta name="twitter:image" content="/social-card.png" />', `<meta name="twitter:image" content="${siteUrl}/social-card.png${assetSuffix}" />`)
-    .replace('href="/amtech-favicon-192.png"', `href="${basePath}/amtech-favicon-192.png"`)
-    .replace('href="/amtech-logo-512.png"', `href="${basePath}/amtech-logo-512.png"`)
+    .replace('href="/amtech-favicon-dark-192.png"', `href="${basePath}/amtech-favicon-dark-192.png"`)
+    .replace('href="/amtech-logo-dark-512.png"', `href="${basePath}/amtech-logo-dark-512.png"`)
     .replace('href="/src/styles.css?v=dev-6"', `href="${basePath}/src/styles.css${assetSuffix}"`)
     .replace('src="/vendor/gsap.min.js"', `src="${basePath}/vendor/gsap.min.js${assetSuffix}"`)
     .replace('src="/vendor/ScrollToPlugin.min.js"', `src="${basePath}/vendor/ScrollToPlugin.min.js${assetSuffix}"`)
