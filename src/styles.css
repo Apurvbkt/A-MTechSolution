@@ -421,12 +421,13 @@ img, svg { display: block; max-width: 100%; }
 .premium-card-labour { top: 7.2rem; left: -1.4rem; color: #f5f3e9; background: #0f2722; transform: rotate(-3deg); }
 .premium-stage-caption { position: absolute; z-index: 4; right: 0; bottom: 0.2rem; margin: 0; padding: 0.55rem 0.7rem; color: var(--ink); background: var(--accent); font: 600 0.52rem/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; }
 
-.manifesto-section { min-height: 100svh; display: grid; align-items: center; overflow: clip; }
+.manifesto-section { position: relative; min-height: 100svh; display: grid; align-items: center; overflow: clip; }
 .manifesto-line { display: grid; grid-template-columns: 0.27fr 1fr; gap: 2rem; align-items: start; }
 .manifesto-copy { max-width: 23ch; margin: 0; font-size: clamp(2.2rem, 6.5vw, 6.4rem); line-height: 1.02; letter-spacing: -0.065em; font-weight: 500; }
 .manifesto-text-line { display: inline; }
 .manifesto-word { display: inline-block; color: var(--white); white-space: nowrap; }
 .manifesto-char { display: inline-block; will-change: transform, opacity; }
+.manifesto-scroll-cue { display: none; }
 
 .service-list { border-top: 1px solid var(--line); }
 .service-row { display: grid; grid-template-columns: 0.14fr 0.5fr 0.36fr auto; gap: 1.5rem; align-items: start; padding-block: 2rem; border-bottom: 1px solid var(--line); transition: background 180ms ease, padding 180ms ease; }
@@ -814,6 +815,8 @@ img, svg { display: block; max-width: 100%; }
   .manifesto-section { min-height: 100svh; }
   .manifesto-copy { font-size: clamp(2.15rem, 10.5vw, 3.4rem); line-height: 1.04; letter-spacing: -0.055em; }
   .manifesto-text-line { display: block; will-change: transform, opacity; }
+  .manifesto-scroll-cue { position: absolute; left: 50%; bottom: max(1.35rem, env(safe-area-inset-bottom)); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; color: var(--white); transform: translateX(-50%); font: 500 0.58rem/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; }
+  .manifesto-scroll-cue svg { width: 1.05rem; height: 1.45rem; fill: none; stroke: currentColor; stroke-width: 1.35; stroke-linecap: round; stroke-linejoin: round; animation: manifesto-cue 1.15s ease-in-out infinite; }
   .service-row { grid-template-columns: auto 1fr auto; gap: 1rem; }
   .service-row p { grid-column: 2 / -1; }
   .solutions-grid { grid-template-columns: 1fr; }
@@ -845,6 +848,11 @@ img, svg { display: block; max-width: 100%; }
   .about-statement, .vision-line { grid-template-columns: 1fr; gap: 2rem; }
   .form-grid { grid-template-columns: 1fr; }
   .field-full { grid-column: 1; }
+}
+
+@keyframes manifesto-cue {
+  0%, 100% { opacity: 0.42; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(0.45rem); }
 }
 
 @media (max-width: 410px) {

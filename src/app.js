@@ -377,6 +377,7 @@ function homePage() {
         <span class="page-code reveal">What we believe</span>
         <p class="manifesto-copy" aria-label="${manifesto}"><span class="manifesto-words" aria-hidden="true">${manifestoWords}</span></p>
       </div>
+      <div class="manifesto-scroll-cue" aria-hidden="true"><span>Scroll</span><svg viewBox="0 0 20 28"><path d="M10 2v22M4 18l6 6 6-6" /></svg></div>
     </section>
     <section class="section" id="services">
       <div class="shell">
@@ -894,6 +895,7 @@ function setupManifestoAnimation() {
 
     if (window.matchMedia("(max-width: 960px)").matches) {
       const lines = [...section.querySelectorAll(".manifesto-text-line")];
+      const scrollCue = section.querySelector(".manifesto-scroll-cue");
       const hold = { value: 0 };
       gsap.set(characters, {
         opacity: 1,
@@ -905,6 +907,7 @@ function setupManifestoAnimation() {
         clearProps: "transform"
       });
       gsap.set(lines, { opacity: 0, y: 40, force3D: true });
+      gsap.set(scrollCue, { opacity: 1, y: 0 });
       const mobileTimeline = gsap.timeline({
         scrollTrigger: {
           id: "manifesto-mobile-lines",
@@ -924,6 +927,7 @@ function setupManifestoAnimation() {
         stagger: 0.36,
         ease: "power1.out"
       });
+      mobileTimeline.to(scrollCue, { opacity: 0, y: 10, duration: 0.18, ease: "none" }, "-=0.08");
       mobileTimeline.to(hold, { value: 1, duration: 0.28, ease: "none" });
       return;
     }
