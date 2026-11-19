@@ -341,8 +341,9 @@ function projectCard(project, index = 0, featured = false) {
 }
 
 function homePage() {
-  const manifesto = "Technology should remove friction, reveal what matters, and make the next move easier to see.";
-  const manifestoWords = manifesto.split(" ").map((word) => `<span class="manifesto-word">${[...word].map((character) => `<span class="manifesto-char">${character}</span>`).join("")}</span>`).join(" ");
+  const manifestoLines = ["Technology should", "remove friction,", "reveal what matters,", "and make the next", "move easier to see."];
+  const manifesto = manifestoLines.join(" ");
+  const manifestoWords = manifestoLines.map((line) => `<span class="manifesto-text-line">${line.split(" ").map((word) => `<span class="manifesto-word">${[...word].map((character) => `<span class="manifesto-char">${character}</span>`).join("")}</span>`).join(" ")}</span>`).join(" ");
   const homeProjects = [projectBySlug["onsite-teams-replica"], projectBySlug.paytrack, projectBySlug["costarica-labourtrack"]].filter(Boolean);
   const principles = [
     ["01", "Built around the workflow", "We begin with how the business actually operates—not with a list of fashionable features."],
@@ -885,6 +886,7 @@ function setupManifestoAnimation() {
     const activeColor = getComputedStyle(section).getPropertyValue("--white").trim() || "#fafaf6";
 
     if (window.matchMedia("(max-width: 960px)").matches) {
+      const lines = [...section.querySelectorAll(".manifesto-text-line")];
       gsap.set(characters, {
         opacity: 1,
         color: activeColor,
@@ -893,6 +895,23 @@ function setupManifestoAnimation() {
         scale: 1,
         rotation: 0,
         clearProps: "transform"
+      });
+      gsap.set(lines, { opacity: 0.14, y: 34, force3D: true });
+      gsap.timeline({
+        scrollTrigger: {
+          id: "manifesto-mobile-lines",
+          trigger: section.querySelector(".manifesto-copy"),
+          start: "top 84%",
+          end: "bottom 42%",
+          scrub: 0.32,
+          invalidateOnRefresh: true
+        }
+      }).to(lines, {
+        opacity: 1,
+        y: 0,
+        duration: 0.72,
+        stagger: 0.38,
+        ease: "power2.out"
       });
       return;
     }

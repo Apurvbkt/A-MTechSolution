@@ -424,6 +424,7 @@ img, svg { display: block; max-width: 100%; }
 .manifesto-section { min-height: 100svh; display: grid; align-items: center; overflow: clip; }
 .manifesto-line { display: grid; grid-template-columns: 0.27fr 1fr; gap: 2rem; align-items: start; }
 .manifesto-copy { max-width: 23ch; margin: 0; font-size: clamp(2.2rem, 6.5vw, 6.4rem); line-height: 1.02; letter-spacing: -0.065em; font-weight: 500; }
+.manifesto-text-line { display: inline; }
 .manifesto-word { display: inline-block; color: var(--white); white-space: nowrap; }
 .manifesto-char { display: inline-block; will-change: transform, opacity; }
 
@@ -812,6 +813,7 @@ img, svg { display: block; max-width: 100%; }
   .manifesto-line { grid-template-columns: 1fr; }
   .manifesto-section { min-height: 78svh; }
   .manifesto-copy { font-size: clamp(2.15rem, 10.5vw, 3.4rem); line-height: 1.04; letter-spacing: -0.055em; }
+  .manifesto-text-line { display: block; will-change: transform, opacity; }
   .service-row { grid-template-columns: auto 1fr auto; gap: 1rem; }
   .service-row p { grid-column: 2 / -1; }
   .solutions-grid { grid-template-columns: 1fr; }

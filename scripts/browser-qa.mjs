@@ -174,6 +174,13 @@ try {
   if (mobile.blankLinks) throw new Error(`${mobile.blankLinks} empty or placeholder links found.`);
   const menu = await evaluate(`(() => { const button = document.querySelector(".menu-toggle"); button.click(); return { expanded: button.getAttribute("aria-expanded"), open: document.querySelector("#primary-navigation").classList.contains("open") }; })()`);
   if (menu.expanded !== "true" || !menu.open) throw new Error("Mobile menu did not open correctly.");
+  const mobileManifesto = await evaluate(`(() => { const trigger = window.ScrollTrigger?.getById("manifesto-mobile-lines"); return { lines: document.querySelectorAll(".manifesto-text-line").length, trigger: Boolean(trigger), pinned: Boolean(trigger?.pin), desktopOrbit: Boolean(window.ScrollTrigger?.getById("manifesto-orbit")) }; })()`);
+  if (mobileManifesto.lines !== 5 || !mobileManifesto.trigger || mobileManifesto.pinned || mobileManifesto.desktopOrbit) throw new Error(`Mobile manifesto line reveal failed QA: ${JSON.stringify(mobileManifesto)}`);
+  await evaluate(`(() => { document.querySelector(".menu-toggle")?.click(); const trigger = window.ScrollTrigger?.getById("manifesto-mobile-lines"); scrollTo(0, trigger.start + (trigger.end - trigger.start) * 0.42); })()`);
+  await delay(500);
+  const mobileManifestoMid = await evaluate(`(() => { const lines = [...document.querySelectorAll(".manifesto-text-line")]; const state = (line) => { const style = getComputedStyle(line); return { opacity: Number(style.opacity), y: new DOMMatrix(style.transform).m42 }; }; return { first: state(lines[0]), last: state(lines.at(-1)) }; })()`);
+  if (mobileManifestoMid.first.opacity < 0.9 || Math.abs(mobileManifestoMid.first.y) > 3 || mobileManifestoMid.last.opacity > 0.35 || mobileManifestoMid.last.y < 20) throw new Error(`Mobile manifesto did not reveal line by line: ${JSON.stringify(mobileManifestoMid)}`);
+  await evaluate(`(() => { scrollTo(0, 0); document.querySelector(".menu-toggle")?.click(); })()`);
   const mobileShot = await cdp("Page.captureScreenshot", { format: "png", fromSurface: true, captureBeyondViewport: false });
   await writeFile(resolve(artifacts, "home-mobile.png"), Buffer.from(mobileShot.data, "base64"));
 
@@ -323,7 +330,7 @@ try {
   if (browserErrors.length) throw new Error(`Browser errors detected: ${browserErrors.join(", ")}`);
   if (networkFailures.length) throw new Error(`Network failures detected: ${networkFailures.join(", ")}`);
 
-  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, staticSeo, loaderVerified: true, loaderDurations, analyticsConsentVerified: true, premiumVisualVerified: true, localSeoVerified: true, smoothScrollVerified: true, manifestoScrollVerified: true, routeTransitionVerified: true, contactStatusVerified: true, accessGateVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
+  console.log(JSON.stringify({ qaBaseUrl: baseUrl, deploymentBasePath: deploymentBasePath || "/", routes: routeResults.length, mobile, desktop, staticSeo, loaderVerified: true, loaderDurations, analyticsConsentVerified: true, premiumVisualVerified: true, localSeoVerified: true, smoothScrollVerified: true, mobileManifestoVerified: true, manifestoScrollVerified: true, routeTransitionVerified: true, contactStatusVerified: true, accessGateVerified: true, crmServiceVerified: true, projectRoutesVerified: 2, browserErrors: 0, networkFailures: 0, screenshots: [resolve(artifacts, "loader-mobile.png"), resolve(artifacts, "loader-desktop.png"), resolve(artifacts, "home-mobile.png"), resolve(artifacts, "home-desktop.png")] }, null, 2));
 } finally {
   socket.close();
   browser.kill();
