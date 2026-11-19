@@ -97,6 +97,22 @@ function structuredDataForRoute(route, title, description) {
     });
   }
 
+  if (/^\/insights\/[^/]+\/$/.test(route)) {
+    graph.push({
+      "@type": "Article",
+      "@id": `${siteUrl}${route}#article`,
+      headline: title.split(" — ")[0],
+      description,
+      url: `${siteUrl}${route}`,
+      datePublished: "2026-11-19",
+      dateModified: "2026-11-19",
+      author: { "@id": organizationId },
+      publisher: { "@id": organizationId },
+      mainEntityOfPage: `${siteUrl}${route}`,
+      inLanguage: "en-IN"
+    });
+  }
+
   return `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c")}</script>`;
 }
 

@@ -1,4 +1,4 @@
-import { company, services, solutions, process, projects, productCategories, legalPages, navItems } from "./content.js";
+import { company, services, solutions, process, projects, productCategories, articles, legalPages, navItems } from "./content.js";
 
 const isBrowserRuntime = typeof window !== "undefined" && typeof document !== "undefined";
 const app = isBrowserRuntime ? document.querySelector("#app") : null;
@@ -28,6 +28,7 @@ let analyticsEventsBound = false;
 
 const serviceBySlug = Object.fromEntries(services.map((service) => [service.slug, service]));
 const projectBySlug = Object.fromEntries(projects.map((project) => [project.slug, project]));
+const articleBySlug = Object.fromEntries(articles.map((article) => [article.slug, article]));
 const legalBySlug = legalPages;
 const localServiceSeo = {
   "website-development": {
@@ -41,6 +42,26 @@ const localServiceSeo = {
   "web-application-development": {
     title: "Web Application Development in Jamshedpur — A&M Tech Solutions",
     description: "Purpose-built web applications, client portals, and internal business tools from A&M Tech Solutions in Jamshedpur, Jharkhand."
+  },
+  "crm-development": {
+    title: "CRM Development Company in Jamshedpur — A&M Tech Solutions",
+    description: "Custom CRM development, lead tracking, sales pipelines, and follow-up workflows for businesses in Jamshedpur, Jharkhand and across India."
+  },
+  "erp-business-systems": {
+    title: "ERP & Inventory Software in Jamshedpur — A&M Tech Solutions",
+    description: "ERP, inventory, procurement, operations, and reporting systems built around workflows in Jamshedpur, Jharkhand and across India."
+  },
+  "saas-product-development": {
+    title: "SaaS Product Development in India — A&M Tech Solutions",
+    description: "Focused SaaS product discovery and development from Jamshedpur for founders and teams across India and worldwide."
+  },
+  "ui-ux-product-design": {
+    title: "UI/UX Design Company in Jamshedpur — A&M Tech Solutions",
+    description: "UI/UX design, product interfaces, responsive workflows, prototypes, and design systems from a Jamshedpur-based technology studio."
+  },
+  "maintenance-support": {
+    title: "Website & Software Maintenance in Jamshedpur — A&M Tech Solutions",
+    description: "Clearly scoped website and software maintenance, performance improvements, fixes, and technical support in Jamshedpur and remotely."
   }
 };
 
@@ -116,7 +137,7 @@ function footer() {
           </div>
           <nav class="footer-nav" aria-label="Footer navigation">
             <div class="footer-col"><h3>Build</h3>${link("/services/", "Services")}${link("/solutions/", "Solutions")}${link("/work/", "Work")}${link("/products/", "Products")}${link("/downloads/", "Software access")}</div>
-            <div class="footer-col"><h3>Company</h3>${link("/about/", "About")}${link("/contact/", "Contact")}${link("/contact/", "Start a project")}</div>
+            <div class="footer-col"><h3>Company</h3>${link("/about/", "About")}${link("/insights/", "Insights")}${link("/contact/", "Contact")}${link("/contact/", "Start a project")}</div>
             <div class="footer-col"><h3>Policies</h3>${link("/legal/terms-and-conditions/", "Terms")}${link("/legal/privacy-policy/", "Privacy")}${link("/legal/refund-cancellation-policy/", "Refunds & cancellations")}${link("/legal/cookie-policy/", "Cookies")}<button class="footer-cookie-settings" type="button" data-cookie-settings>Cookie settings</button></div>
             <div class="footer-col"><h3>Product terms</h3>${link("/legal/free-trial-terms/", "Free trial terms")}${link("/legal/saas-subscription-terms/", "SaaS terms")}<span>No public trials are active</span></div>
           </nav>
@@ -509,6 +530,16 @@ function productsPage() {
     <section class="section section-soft"><div class="shell two-col"><div>${eyebrow("Future subscriptions")}<h2 class="section-title small">Architecture before promotion.</h2></div><div class="prose"><p>When an eligible product is ready, its trial and subscription model should define eligibility, server-enforced entitlements, verification, billing, cancellation, notifications, renewal, and data handling as one coherent experience.</p><p>Until then, the useful action is a product conversation or an honest early-access request—not a simulated checkout.</p>${link("/legal/saas-subscription-terms/", "Review the subscription draft", "text-link")}</div></div></section>${finalCta()}`;
 }
 
+function insightsPage() {
+  return `${pageHero({ label: "Insights", title: "Useful thinking for practical digital work.", intro: "Original guides for businesses planning websites, operational systems, automation, and software projects—written from a Jamshedpur studio perspective without ranking promises or borrowed claims." })}
+    <section class="section section-soft"><div class="shell"><div class="project-index-head reveal"><span>${String(articles.length).padStart(2, "0")} articles</span><p>Planning guidance / No sales theatre</p></div><div class="directory-grid">${articles.map((article, index) => `<article class="directory-card ${index === 0 ? "primary" : ""} reveal"><div><span class="status-chip">${article.category} / ${article.readTime}</span><h${index === 0 ? "2" : "3"}>${article.title}</h${index === 0 ? "2" : "3"}><p>${article.description}</p></div>${link(`/insights/${article.slug}/`, "Read the guide", "text-link")}</article>`).join("")}</div></div></section>${finalCta()}`;
+}
+
+function insightDetailPage(article) {
+  return `${pageHero({ label: article.category, title: article.title, intro: article.intro, code: `${article.published} / ${article.readTime}`, crumbs: [{ label: "Insights", href: "/insights/" }, { label: article.title }] })}
+    <section class="section"><div class="shell legal-layout"><aside class="legal-toc"><h2>In this guide</h2>${article.sections.map(([heading], index) => `<a href="#section-${index + 1}">${heading}</a>`).join("")}<p class="page-code">Published ${article.published}<br />By A&amp;M Tech Solutions</p></aside><article>${article.sections.map(([heading, paragraphs], index) => `<section class="legal-section" id="section-${index + 1}"><h2>${heading}</h2>${paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}</section>`).join("")}</article></div></section>${finalCta()}`;
+}
+
 function productDetailPage(product) {
   return `${pageHero({ label: product.status, title: product.name, intro: product.description, code: "Product concept / No public release", crumbs: [{ label: "Products", href: "/products/" }, { label: product.name }] })}
     <section class="section"><div class="shell two-col"><div>${eyebrow("Intended audience")}<h2 class="section-title small">Designed for a specific operational moment.</h2></div><div class="prose"><p>${product.audience}</p><p class="verified-note">This is a product direction, not an available or contracted feature set.</p></div></div></section>
@@ -606,6 +637,9 @@ function resolveRoute(path) {
   const productMatch = path.match(/^\/products\/([^/]+)\/$/);
   const product = productMatch ? productCategories.find((item) => item.slug === productMatch[1]) : undefined;
   if (product) return { page: productDetailPage(product), title: `${product.name} — A&M Tech Solutions`, description: product.description };
+  if (path === "/insights/") return { page: insightsPage(), title: "Website, Software & Automation Insights — A&M Tech Solutions", description: "Practical original guides for businesses planning websites, inventory systems, AI automation, and custom software in Jamshedpur and across India." };
+  const insightMatch = path.match(/^\/insights\/([^/]+)\/$/);
+  if (insightMatch && articleBySlug[insightMatch[1]]) { const article = articleBySlug[insightMatch[1]]; return { page: insightDetailPage(article), title: `${article.title} — A&M Tech Solutions`, description: article.description }; }
   if (path === "/about/") return { page: aboutPage(), title: "Creative Technology Studio in Jamshedpur — A&M Tech Solutions", description: "Meet A&M Tech Solutions, a Jamshedpur-based creative technology studio building practical websites, applications, and business software." };
   if (path === "/contact/") return { page: contactPage(), title: "Start a Website or Software Project in Jamshedpur — A&M Tech Solutions", description: "Discuss a website, web application, business system, or custom software project with A&M Tech Solutions in Jamshedpur, Jharkhand." };
   const legalMatch = path.match(/^\/legal\/([^/]+)\/$/);

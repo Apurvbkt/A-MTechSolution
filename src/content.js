@@ -184,6 +184,57 @@ export const process = [
   ["06", "Improve", "Support agreed fixes, learning, and the next high-value improvements."]
 ];
 
+export const articles = [
+  {
+    slug: "business-website-cost-jamshedpur",
+    category: "Website planning",
+    title: "What does a business website cost in Jamshedpur?",
+    description: "A practical guide to website cost factors, quotation comparison, and planning a business website in Jamshedpur without choosing on price alone.",
+    published: "19 November 2026",
+    readTime: "7 min read",
+    intro: "A useful website quotation is not only a price for pages. It should explain what is being designed, written, built, connected, tested, launched, and supported. This guide helps Jamshedpur businesses compare proposals without pretending that every website has one standard price.",
+    sections: [
+      ["Why website prices vary", ["A focused five-page business website and a catalogue, booking flow, membership portal, or e-commerce store are different products. Cost changes with content strategy, custom interface design, the number of page templates, forms, integrations, editing tools, accessibility, performance work, analytics, and post-launch responsibility.", "The cheapest quotation may reuse a generic theme and expect you to supply finished content. A higher quotation may include discovery, information architecture, responsive design, copy guidance, quality assurance, deployment, and a maintainable editing workflow. Compare the scope behind the number—not only the number itself."]],
+      ["What a clear quotation should include", ["Ask which pages and reusable templates are included, who prepares the copy and images, whether mobile layouts are designed deliberately, and how enquiries will reach you. The proposal should state the hosting approach, domain responsibilities, analytics or SEO setup, revision boundaries, delivery stages, and what happens after launch.", "If a feature depends on a third-party service—payments, email, maps, booking, chat, or a content platform—the proposal should identify that dependency and any recurring provider cost. Private credentials should never be placed in frontend code."]],
+      ["SEO is not a single switch", ["Technical foundations matter: descriptive URLs, useful titles and descriptions, semantic headings, crawlable content, a sitemap, canonical URLs, mobile performance, and accurate structured data. They help search engines understand the site, but they do not guarantee a ranking.", "Sustained visibility also depends on helpful original content, a complete Google Business Profile, genuine reviews, consistent business details, reputable mentions, and evidence that people find the pages useful. A quotation promising an instant number-one position should be treated carefully."]],
+      ["How to choose the right first version", ["Start with the decision a visitor must make: understand the service, trust the business, view relevant proof, and contact the right person. Build the smallest website that supports that journey well, then add complex catalogues, portals, or automation when there is a clear operating reason.", "A&M Tech Solutions can meet businesses in the Jamshedpur area when in-person discovery is useful, and can deliver remotely across India and worldwide. The recommended stack and scope depend on the business, not on a preselected template."]],
+      ["Questions to ask before approving", ["Who owns the domain, source code, content, and accounts? Which claims and images still need approval? How will the form be tested? What is included in maintenance? What would count as a change request? A good proposal makes these answers visible before development begins.", "The most useful next step is a short requirements conversation. Bring the business goal, target audience, must-have content, examples you like, deadline constraints, and any systems the website must connect to."]]
+    ]
+  },
+  {
+    slug: "inventory-system-vs-spreadsheets",
+    category: "Business systems",
+    title: "When should a business replace spreadsheets with an inventory system?",
+    description: "Signs that inventory spreadsheets are becoming risky, and how businesses can move to a practical stock system in stages.",
+    published: "19 November 2026",
+    readTime: "8 min read",
+    intro: "Spreadsheets are useful. They become a problem when several people, locations, approvals, and stock movements depend on one file that no longer provides a trustworthy operational picture. The right time to change is determined by risk and workflow—not by company size alone.",
+    sections: [
+      ["The warning signs", ["Frequent stock differences, duplicate item names, overwritten formulas, unclear ownership, late updates, and multiple versions of the same file are strong signals. So are repeated calls to confirm availability, purchases that cannot be traced to a request, and reports that require hours of manual reconciliation.", "One occasional correction does not justify custom software. The case becomes stronger when the same problems delay orders, hide shortages, create excess purchasing, or prevent management from understanding what moved and why."]],
+      ["What a practical inventory system changes", ["A useful system records items, locations, receipts, issues, transfers, adjustments, and the person responsible for each action. Roles can control who views, requests, approves, or edits information. Dashboards and reports should be generated from those records rather than reconstructed at the end of the month.", "The interface must match the operating environment. A warehouse desk, construction site, retail counter, and multi-location distributor need different capture flows. Mobile usability and low-friction search may matter more than a large feature list."]],
+      ["Do not automate a broken process", ["Before development, define item identity, units, location rules, approval thresholds, stock states, and the exceptions people handle informally today. Decide which record is authoritative and who owns data quality. Software cannot resolve an unclear policy by itself.", "A&M Tech Solutions begins with workflow discovery because the best outcome may be a cleaner spreadsheet, configuration of an existing product, an integration, or a focused custom module. Custom development is not automatically the first answer."]],
+      ["Move in stages", ["A lower-risk rollout usually starts with a controlled item list and one important movement flow. Existing data is reviewed and cleaned before migration. Users test real scenarios, including corrections and returns, before the system becomes the daily source of truth.", "Later stages can add procurement, approvals, supplier records, job allocation, alerts, or management reporting. Each stage should have an owner, acceptance criteria, a backup plan, and a way to confirm that records remain accurate."]],
+      ["Local discovery, wider delivery", ["For construction, service, retail, and distribution teams in Jamshedpur and Jharkhand, observing the real hand-offs in person can expose details that a feature checklist misses. When useful, discovery can happen at the operating location and development can continue through documented remote reviews.", "The decision to replace spreadsheets should be based on measurable friction: time lost, errors repeated, decisions delayed, or risk increased. Start by documenting one week of stock-related problems and the people involved; that evidence creates a much better software brief."]]
+    ]
+  },
+  {
+    slug: "ai-automation-readiness-small-business",
+    category: "AI & automation",
+    title: "Is your business ready for AI automation or an AI agent?",
+    description: "A practical readiness checklist for businesses considering AI automation, AI agents, and workflow integration without the hype.",
+    published: "19 November 2026",
+    readTime: "7 min read",
+    intro: "AI automation is useful when it supports a clear task, reliable information, and a defined review process. An agent cannot compensate for missing access rules, inconsistent data, or a workflow nobody owns. Readiness begins with the business decision—not the model name.",
+    sections: [
+      ["Choose a narrow job", ["Start with a repeated task that has a visible input and output: classifying enquiries, drafting a structured summary, extracting fields for human review, searching approved internal information, or preparing a recurring report. Avoid beginning with a vague goal such as ‘automate the business.’", "Document what a correct result looks like, how often exceptions occur, and what happens when the system is uncertain. If nobody can evaluate the output, the automation is not ready for production responsibility."]],
+      ["Check the data and permissions", ["List the information the workflow needs, where it comes from, who owns it, and whether it may be sent to an external model provider. Remove unnecessary personal or confidential data. Accounts, API credentials, and permissions must be enforced server-side and kept out of public frontend code.", "An AI agent should only access the tools and records required for its job. Logging, rate limits, approval steps, and revocation matter as much as the prompt. High-impact actions should remain reviewable and reversible."]],
+      ["Design for failure", ["Model outputs can be incomplete or wrong. The interface should show sources or context where possible, ask for clarification when confidence is low, and route important decisions to a person. Monitoring should reveal failures instead of silently repeating them.", "A safe pilot uses representative examples, including unusual cases, and measures useful outcomes such as time saved, corrections required, and tasks completed—not only whether the response sounds impressive."]],
+      ["Agent, automation, or ordinary software?", ["A deterministic rule is often better for calculations, permissions, and predictable data movement. AI is more useful where language, classification, summarisation, or flexible retrieval is genuinely required. Many strong solutions combine conventional software with one bounded AI step.", "We compare custom development with existing tools and supported integrations before recommending an agent. The ongoing cost of model usage, monitoring, updates, and human oversight belongs in the decision."]],
+      ["A sensible first pilot", ["Choose one owner, one workflow, a small approved dataset, and a short evaluation period. Define success and stop conditions before connecting production systems. Keep a manual fallback until the process is understood.", "A&M Tech Solutions can map AI automation and agent opportunities with businesses in Jamshedpur, across India, and remotely worldwide. We do not present an experimental interface as proof that a secure backend workflow is ready."]]
+    ]
+  }
+];
+
 export const projects = [
   {
     slug: "costarica-labourtrack",
