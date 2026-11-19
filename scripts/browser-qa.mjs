@@ -34,7 +34,7 @@ const staticSeo = {
   crawlableServices: builtHomeHtml.includes("Website Development") && builtHomeHtml.includes("Custom Software & Automation"),
   noScriptFallback: builtHomeHtml.includes("<noscript><style>.site-loader{display:none!important}</style></noscript>"),
   twitterCard: builtHomeHtml.includes('<meta name="twitter:card" content="summary_large_image" />'),
-  favicon: builtHomeHtml.includes('<link rel="icon" href="/favicon.png" type="image/png" sizes="512x512" />'),
+  favicon: builtHomeHtml.includes('<link rel="icon" href="/amtech-favicon-192.png" type="image/png" sizes="192x192" />') && builtHomeHtml.includes('<link rel="apple-touch-icon" href="/amtech-logo-512.png" />'),
   socialImage: builtHomeHtml.includes(`<meta property="og:image" content="${expectedSiteUrl}/social-card.png" />`) && builtHomeHtml.includes('<meta property="og:image:width" content="1200" />') && builtHomeHtml.includes('<meta property="og:image:height" content="630" />') && builtHomeHtml.includes(`<meta name="twitter:image" content="${expectedSiteUrl}/social-card.png" />`),
   organizationSchema: builtHomeHtml.includes('"@type":"Organization"') && builtHomeHtml.includes('"name":"A&M Tech Solutions"') && builtHomeHtml.includes('"alternateName":["A&M Tech","A&M Tech Solutions India"]') && builtHomeHtml.includes('"name":"Jamshedpur"'),
   websiteSchema: builtHomeHtml.includes('"@type":"WebSite"') && builtHomeHtml.includes('"name":"A&M Tech Solutions"') && builtHomeHtml.includes('"alternateName":"A&M Tech"') && !builtHomeHtml.includes('"alternateName":["A&M Tech Solutions India","amteches.in"]'),

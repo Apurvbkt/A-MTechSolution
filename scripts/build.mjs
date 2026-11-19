@@ -47,7 +47,12 @@ function structuredDataForRoute(route, title, description) {
     name: "A&M Tech Solutions",
     alternateName: ["A&M Tech", "A&M Tech Solutions India"],
     url: `${siteUrl}/`,
-    logo: `${siteUrl}/favicon.png${assetSuffix}`,
+    logo: {
+      "@type": "ImageObject",
+      url: `${siteUrl}/amtech-logo-512.png${assetSuffix}`,
+      width: 512,
+      height: 512
+    },
     image: `${siteUrl}/social-card.png${assetSuffix}`,
     email: "hello.amtechsolutions@outlook.com",
     telephone: "+91 70043 75813",
@@ -128,7 +133,8 @@ function htmlForRoute(route, title, description) {
     .replace(/<meta name="twitter:description" content=".*?" \/>/, `<meta name="twitter:description" content="${escapeAttribute(description)}" />`)
     .replace('<meta property="og:image" content="/social-card.png" />', `<meta property="og:image" content="${siteUrl}/social-card.png${assetSuffix}" />`)
     .replace('<meta name="twitter:image" content="/social-card.png" />', `<meta name="twitter:image" content="${siteUrl}/social-card.png${assetSuffix}" />`)
-    .replace('href="/favicon.png"', `href="${basePath}/favicon.png"`)
+    .replace('href="/amtech-favicon-192.png"', `href="${basePath}/amtech-favicon-192.png"`)
+    .replace('href="/amtech-logo-512.png"', `href="${basePath}/amtech-logo-512.png"`)
     .replace('href="/src/styles.css?v=dev-6"', `href="${basePath}/src/styles.css${assetSuffix}"`)
     .replace('src="/vendor/gsap.min.js"', `src="${basePath}/vendor/gsap.min.js${assetSuffix}"`)
     .replace('src="/vendor/ScrollToPlugin.min.js"', `src="${basePath}/vendor/ScrollToPlugin.min.js${assetSuffix}"`)
