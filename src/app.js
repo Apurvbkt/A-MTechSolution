@@ -897,7 +897,7 @@ function setupManifestoAnimation() {
         rotation: 0,
         clearProps: "transform"
       });
-      gsap.set(lines, { opacity: 0.1, y: 52, force3D: true });
+      gsap.set(lines, { opacity: 0, y: 52, force3D: true });
       const mobileTimeline = gsap.timeline({
         scrollTrigger: {
           id: "manifesto-mobile-lines",
