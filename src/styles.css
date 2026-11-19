@@ -451,6 +451,9 @@ img, svg { display: block; max-width: 100%; }
 .process-num { font: 400 0.73rem/1 var(--mono); }
 .process-item h3 { margin: -0.2rem 0 0; font-size: clamp(1.55rem, 3vw, 2.7rem); letter-spacing: -0.045em; }
 .process-item p { max-width: 34rem; margin: 0; color: var(--muted); }
+.service-path { transition: padding 180ms ease, background 180ms ease; }
+.service-path:hover { padding-inline: 1rem; background: var(--accent); }
+.service-path-action { display: block; width: fit-content; margin-top: 1rem; color: var(--ink); font: 500 0.65rem/1.2 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; }
 
 .work-placeholder { display: grid; grid-template-columns: 1.25fr 0.75fr; min-height: 33rem; border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; }
 .work-visual { position: relative; padding: 3rem; background: var(--accent); display: grid; place-items: center; }

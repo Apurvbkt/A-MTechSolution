@@ -269,8 +269,8 @@ try {
   const routeTransitionStarted = await evaluate(`(() => { const link = [...document.querySelectorAll("[data-link]")].find(a => new URL(a.href).pathname.endsWith("/services/")); link?.click(); return document.querySelector("#route-curtain")?.classList.contains("is-active") === true; })()`);
   if (!routeTransitionStarted) throw new Error("The internal route curtain did not start.");
   await delay(380);
-  const routeTransitionPage = await evaluate(`({ path: location.pathname, heading: document.querySelector("h1")?.textContent.trim() })`);
-  if (!routeTransitionPage.path.endsWith("/services/") || routeTransitionPage.heading !== "Technology shaped around the work.") throw new Error(`Route transition did not commit the destination: ${JSON.stringify(routeTransitionPage)}`);
+  const routeTransitionPage = await evaluate(`({ path: location.pathname, heading: document.querySelector("h1")?.textContent.trim(), startingPoints: document.querySelectorAll(".service-path").length, services: document.querySelectorAll(".service-row").length, overflow: document.documentElement.scrollWidth > innerWidth })`);
+  if (!routeTransitionPage.path.endsWith("/services/") || routeTransitionPage.heading !== "The right digital move starts with the work." || routeTransitionPage.startingPoints !== 4 || routeTransitionPage.services !== 8 || routeTransitionPage.overflow) throw new Error(`Route transition did not commit the refined services destination: ${JSON.stringify(routeTransitionPage)}`);
   await delay(450);
   const routeTransitionFinished = await evaluate(`document.querySelector("#route-curtain")?.classList.contains("is-active") === false`);
   if (!routeTransitionFinished) throw new Error("The internal route curtain did not finish.");
