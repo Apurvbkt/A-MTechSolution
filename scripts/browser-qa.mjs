@@ -34,9 +34,10 @@ const staticSeo = {
   crawlableServices: builtHomeHtml.includes("Website Development") && builtHomeHtml.includes("Custom Software & Automation"),
   noScriptFallback: builtHomeHtml.includes("<noscript><style>.site-loader{display:none!important}</style></noscript>"),
   twitterCard: builtHomeHtml.includes('<meta name="twitter:card" content="summary_large_image" />'),
+  favicon: builtHomeHtml.includes('<link rel="icon" href="/favicon.png" type="image/png" sizes="512x512" />'),
   socialImage: builtHomeHtml.includes(`<meta property="og:image" content="${expectedSiteUrl}/social-card.png" />`) && builtHomeHtml.includes('<meta property="og:image:width" content="1200" />') && builtHomeHtml.includes('<meta property="og:image:height" content="630" />') && builtHomeHtml.includes(`<meta name="twitter:image" content="${expectedSiteUrl}/social-card.png" />`),
-  organizationSchema: builtHomeHtml.includes('"@type":"Organization"') && builtHomeHtml.includes('"name":"A&M Tech Solutions"') && builtHomeHtml.includes('"alternateName":["A&M Tech Solutions India","amteches.in"]') && builtHomeHtml.includes('"name":"Jamshedpur"'),
-  websiteSchema: builtHomeHtml.includes('"@type":"WebSite"') && builtHomeHtml.includes('"name":"A&M Tech Solutions"'),
+  organizationSchema: builtHomeHtml.includes('"@type":"Organization"') && builtHomeHtml.includes('"name":"A&M Tech Solutions"') && builtHomeHtml.includes('"alternateName":["A&M Tech","A&M Tech Solutions India"]') && builtHomeHtml.includes('"name":"Jamshedpur"'),
+  websiteSchema: builtHomeHtml.includes('"@type":"WebSite"') && builtHomeHtml.includes('"name":"A&M Tech Solutions"') && builtHomeHtml.includes('"alternateName":"A&M Tech"') && !builtHomeHtml.includes('"alternateName":["A&M Tech Solutions India","amteches.in"]'),
   serviceSchema: builtWebsiteServiceHtml.includes('"@type":"Service"'),
   aboutIdentity: builtAppJs.includes("independent India-based studio") && builtAppJs.includes("not affiliated with similarly named businesses"),
   textSitemap: builtSitemapText.split(/\r?\n/).filter(Boolean).length === routes.length && builtSitemapText.startsWith(`${expectedSiteUrl}/`)
@@ -204,9 +205,9 @@ try {
       footerLocation: document.querySelector(".footer-location")?.textContent.includes("Jharkhand") === true,
       twitterCard: document.querySelector('meta[name="twitter:card"]')?.content,
       canonical: document.querySelector('link[rel="canonical"]')?.href,
-      organizationSchema: schemas.some(item => item["@type"] === "Organization" && item.name === "A&M Tech Solutions" && item.alternateName?.includes("A&M Tech Solutions India") && item.areaServed?.some(place => place.name === "Jamshedpur")),
+      organizationSchema: schemas.some(item => item["@type"] === "Organization" && item.name === "A&M Tech Solutions" && item.alternateName?.includes("A&M Tech Solutions India") && !item.alternateName?.includes("amteches.in") && item.areaServed?.some(place => place.name === "Jamshedpur")),
       indiaIdentity: document.body.textContent.includes("independent website development") && document.body.textContent.includes("Jamshedpur, Jharkhand, India"),
-      websiteSchema: schemas.some(item => item["@type"] === "WebSite" && item.name === "A&M Tech Solutions"),
+      websiteSchema: schemas.some(item => item["@type"] === "WebSite" && item.name === "A&M Tech Solutions" && item.alternateName === "A&M Tech"),
       basePathLinksValid: [...document.querySelectorAll("a[data-link]")].every(anchor => { const url = new URL(anchor.href); return url.origin !== location.origin || !expectedBase || url.pathname === expectedBase || url.pathname.startsWith(expectedBase + "/"); })
     };
   })()`);

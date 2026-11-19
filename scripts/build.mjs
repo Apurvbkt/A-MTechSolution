@@ -45,7 +45,7 @@ function structuredDataForRoute(route, title, description) {
     "@type": "Organization",
     "@id": organizationId,
     name: "A&M Tech Solutions",
-    alternateName: ["A&M Tech Solutions India", "amteches.in"],
+    alternateName: ["A&M Tech", "A&M Tech Solutions India"],
     url: `${siteUrl}/`,
     logo: `${siteUrl}/brand-card.svg${assetSuffix}`,
     email: "hello.amtechsolutions@outlook.com",
@@ -65,7 +65,7 @@ function structuredDataForRoute(route, title, description) {
       "@id": `${siteUrl}/#website`,
       url: `${siteUrl}/`,
       name: "A&M Tech Solutions",
-      alternateName: ["A&M Tech Solutions India", "amteches.in"],
+      alternateName: "A&M Tech",
       publisher: { "@id": organizationId },
       inLanguage: "en-IN"
     });
@@ -102,7 +102,7 @@ function htmlForRoute(route, title, description) {
     .replace(/<meta name="twitter:description" content=".*?" \/>/, `<meta name="twitter:description" content="${escapeAttribute(description)}" />`)
     .replace('<meta property="og:image" content="/social-card.png" />', `<meta property="og:image" content="${siteUrl}/social-card.png${assetSuffix}" />`)
     .replace('<meta name="twitter:image" content="/social-card.png" />', `<meta name="twitter:image" content="${siteUrl}/social-card.png${assetSuffix}" />`)
-    .replace('href="/favicon.svg"', `href="${basePath}/favicon.svg${assetSuffix}"`)
+    .replace('href="/favicon.png"', `href="${basePath}/favicon.png"`)
     .replace('href="/src/styles.css?v=dev-6"', `href="${basePath}/src/styles.css${assetSuffix}"`)
     .replace('src="/vendor/gsap.min.js"', `src="${basePath}/vendor/gsap.min.js${assetSuffix}"`)
     .replace('src="/vendor/ScrollToPlugin.min.js"', `src="${basePath}/vendor/ScrollToPlugin.min.js${assetSuffix}"`)
