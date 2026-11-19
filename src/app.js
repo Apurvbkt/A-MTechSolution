@@ -884,32 +884,15 @@ function setupManifestoAnimation() {
   manifestoAnimationContext = gsap.context(() => {
     const activeColor = getComputedStyle(section).getPropertyValue("--white").trim() || "#fafaf6";
 
-    if (window.matchMedia("(max-width: 680px)").matches) {
+    if (window.matchMedia("(max-width: 960px)").matches) {
       gsap.set(characters, {
-        opacity: 0.16,
+        opacity: 1,
         color: activeColor,
         x: 0,
-        y: 18,
+        y: 0,
         scale: 1,
         rotation: 0,
-        transformOrigin: "50% 100%",
-        force3D: true
-      });
-      gsap.timeline({
-        scrollTrigger: {
-          id: "manifesto-mobile-reveal",
-          trigger: section,
-          start: "top 76%",
-          end: "top 20%",
-          scrub: 0.28,
-          invalidateOnRefresh: true
-        }
-      }).to(characters, {
-        opacity: 1,
-        y: 0,
-        duration: 0.42,
-        stagger: 0.006,
-        ease: "power2.out"
+        clearProps: "transform"
       });
       return;
     }
