@@ -244,7 +244,7 @@ export const projects = [
     visual: "onsite",
     visualCode: "ON",
     visualLine: "Projects / Finance / Field",
-    media: "/projects/onsite-replica-login.png",
+    media: "/projects/onsite-replica-login-1090.webp",
     note: "Independent full-stack prototype built for product study and implementation practice. Public demo and source access require administrator approval."
   },
   {

@@ -271,7 +271,17 @@ function interfaceVisual() {
       <div class="premium-stage-index" data-hero-layer data-depth="1"><span>Selected systems</span><span>01—03 / 2026</span></div>
       <div class="premium-screen" data-hero-layer data-depth="2">
         <div class="premium-browser-bar"><span><i></i><i></i><i></i></span><b>Custom inventory / independent product study</b></div>
-        <img src="${sitePath("/projects/onsite-replica-login.png")}" alt="Custom Inventory System login interface preview" loading="eager" fetchpriority="high" />
+        <img
+          src="${sitePath("/projects/onsite-replica-login-720.webp")}"
+          srcset="${sitePath("/projects/onsite-replica-login-480.webp")} 480w, ${sitePath("/projects/onsite-replica-login-720.webp")} 720w, ${sitePath("/projects/onsite-replica-login-1090.webp")} 1090w"
+          sizes="(max-width: 700px) calc(100vw - 2.8rem), (max-width: 980px) calc(100vw - 6rem), 45vw"
+          width="1090"
+          height="757"
+          alt="Custom Inventory System login interface preview"
+          loading="lazy"
+          decoding="async"
+          fetchpriority="low"
+        />
       </div>
       <div class="premium-card premium-card-paytrack" data-hero-layer data-depth="3" aria-label="PayTrack project summary">
         <div><span>PAY / 02</span><i>Production PWA</i></div>
@@ -915,19 +925,22 @@ function setupPremiumMotion() {
     const titleLines = heroIntro ? [...heroIntro.querySelectorAll(".hero-title-line-inner")] : [];
     const heroEyebrow = heroIntro?.querySelector("[data-hero-eyebrow]");
     const heroSupport = heroIntro ? [...heroIntro.querySelectorAll("[data-hero-support]")] : [];
+    const animateHeroSupport = !window.matchMedia("(max-width: 760px)").matches;
 
     if (heroIntro && titleLines.length) {
       gsap.set(titleLines, { yPercent: 112, rotation: 1.5, transformOrigin: "0 100%" });
       gsap.set(heroEyebrow, { y: 10, opacity: 0 });
-      gsap.set(heroSupport, { y: 18, opacity: 0 });
+      if (animateHeroSupport) gsap.set(heroSupport, { y: 18, opacity: 0 });
       gsap.set(layers, { y: 30, opacity: 0 });
 
       const introTimeline = gsap.timeline({ paused: true });
       introTimeline
         .to(heroEyebrow, { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" })
-        .to(titleLines, { yPercent: 0, rotation: 0, duration: 0.86, stagger: 0.1, ease: "power4.out" }, "-=0.12")
-        .to(heroSupport, { y: 0, opacity: 1, duration: 0.58, stagger: 0.07, ease: "power3.out" }, "-=0.48")
-        .to(layers, { y: 0, opacity: 1, duration: 0.92, stagger: 0.07, ease: "power3.out" }, "-=0.72");
+        .to(titleLines, { yPercent: 0, rotation: 0, duration: 0.86, stagger: 0.1, ease: "power4.out" }, "-=0.12");
+      if (animateHeroSupport) {
+        introTimeline.to(heroSupport, { y: 0, opacity: 1, duration: 0.58, stagger: 0.07, ease: "power3.out" }, "-=0.48");
+      }
+      introTimeline.to(layers, { y: 0, opacity: 1, duration: 0.92, stagger: 0.07, ease: "power3.out" }, "-=0.72");
 
       const playHeroIntro = () => introTimeline.play(0);
       if (siteLoader?.classList.contains("is-hidden")) playHeroIntro();
@@ -965,13 +978,12 @@ async function playInitialLoader() {
   if (!siteLoader) return;
   document.body.classList.add("loader-active");
 
-  const minimumDuration = prefersReducedMotion ? 40 : 600;
+  const minimumDuration = prefersReducedMotion ? 40 : 520;
   const startedAt = performance.now();
 
-  const pageReady = document.readyState === "complete"
+  const documentReady = document.readyState !== "loading"
     ? Promise.resolve()
-    : new Promise((resolve) => window.addEventListener("load", resolve, { once: true }));
-  const fontsReady = document.fonts?.ready || Promise.resolve();
+    : new Promise((resolve) => document.addEventListener("DOMContentLoaded", resolve, { once: true }));
   const minimumElapsed = new Promise((resolve) => window.setTimeout(resolve, minimumDuration));
 
   setLoaderProgress(4);
@@ -980,7 +992,7 @@ async function playInitialLoader() {
     setLoaderProgress(Math.min(96, 4 + (elapsed / minimumDuration) * 92));
   }, 40);
 
-  await Promise.all([pageReady, fontsReady, minimumElapsed]);
+  await Promise.all([documentReady, minimumElapsed]);
   window.clearInterval(progressTimer);
   setLoaderProgress(100);
   await new Promise((resolve) => window.setTimeout(resolve, prefersReducedMotion ? 10 : 60));
